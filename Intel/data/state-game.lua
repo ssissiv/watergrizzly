@@ -58,8 +58,8 @@ skins =
         isVisible = true,
         x = 0,
         y = 0,
-        w = 0.1,
-        h = 0.1220689,
+        w = 0.09999999,
+        h = 0.08353446,
         ctor = [[group]],
         children =
         {
@@ -67,9 +67,9 @@ skins =
                 name = [[selectImg]],
                 isVisible = true,
                 x = 0,
-                y = -0.009375,
-                w = 0.1,
-                h = 0.1,
+                y = 0,
+                w = 0.032,
+                h = 0.045,
                 ctor = [[image]],
                 color =
                 {
@@ -81,17 +81,17 @@ skins =
                 images =
                 {
                     {
-                        file = [[white.png]],
+                        file = [[select.png]],
                     },
                 },
             },
             {
                 name = [[unitBtn]],
                 isVisible = true,
-                x = 1.490116E-08,
-                y = 0.02603449,
-                w = 0.05,
-                h = 0.07,
+                x = 0,
+                y = 0,
+                w = 0.03,
+                h = 0.04,
                 ctor = [[button]],
                 str = [[Button]],
                 halign = MOAITextBox.CENTER_JUSTIFY,
@@ -117,6 +117,82 @@ skins =
                 isVisible = true,
                 x = 1.490116E-08,
                 y = -0.03603446,
+                w = 0.1,
+                h = 0.05,
+                ctor = [[label]],
+                halign = MOAITextBox.CENTER_JUSTIFY,
+                valign = MOAITextBox.LEFT_JUSTIFY,
+                text_style = [[detail]],
+                padleft = 0,
+                padright = 0,
+                str = [[Name]],
+            },
+        },
+    },
+    {
+        name = [[AwayUnit]],
+        isVisible = true,
+        x = 0,
+        y = 0,
+        w = 0.09999999,
+        h = 0.08353446,
+        ctor = [[group]],
+        children =
+        {
+            {
+                name = [[awaySelectImg]],
+                isVisible = true,
+                x = 0,
+                y = 0.02001724,
+                w = 0.032,
+                h = 0.045,
+                ctor = [[image]],
+                color =
+                {
+                    0.345098039215686,
+                    0.345098039215686,
+                    0.345098039215686,
+                    0.635294117647059,
+                },
+                images =
+                {
+                    {
+                        file = [[select.png]],
+                    },
+                },
+            },
+            {
+                name = [[awayUnitBtn]],
+                isVisible = true,
+                x = 0,
+                y = 0.02001724,
+                w = 0.03,
+                h = 0.04,
+                ctor = [[button]],
+                str = [[Button]],
+                halign = MOAITextBox.CENTER_JUSTIFY,
+                valign = MOAITextBox.CENTER_JUSTIFY,
+                text_style = [[]],
+                padleft = 0,
+                padright = 0,
+                images =
+                {
+                    {
+                        file = [[unit_scout.png]],
+                    },
+                    {
+                        file = [[unit_scout.png]],
+                    },
+                    {
+                        file = [[unit_scout.png]],
+                    },
+                },
+            },
+            {
+                name = [[awayUnitName]],
+                isVisible = true,
+                x = 1.490116E-08,
+                y = -0.01601723,
                 w = 0.1,
                 h = 0.05,
                 ctor = [[label]],
@@ -181,7 +257,7 @@ widgets =
         name = [[homeAwayLabel]],
         isVisible = true,
         x = 0.08896551,
-        y = 0.14,
+        y = 0.10875,
         w = 0.1,
         h = 0.2,
         ctor = [[label]],
@@ -198,7 +274,7 @@ Away:
     {
         name = [[home0]],
         isVisible = true,
-        x = 0.2076436,
+        x = 0.2076437,
         y = 0.2124353,
         w = 1,
         h = 1,
@@ -207,7 +283,7 @@ Away:
     {
         name = [[home1]],
         isVisible = true,
-        x = 0.3179885,
+        x = 0.265977,
         y = 0.2124353,
         w = 1,
         h = 1,
@@ -216,7 +292,7 @@ Away:
     {
         name = [[home2]],
         isVisible = true,
-        x = 0.4255747,
+        x = 0.3243102,
         y = 0.2124353,
         w = 1,
         h = 1,
@@ -225,7 +301,7 @@ Away:
     {
         name = [[home3]],
         isVisible = true,
-        x = 0.5359195,
+        x = 0.3826436,
         y = 0.2124353,
         w = 1,
         h = 1,
@@ -234,11 +310,164 @@ Away:
     {
         name = [[home4]],
         isVisible = true,
-        x = 0.6490229,
+        x = 0.4409771,
         y = 0.2124353,
         w = 1,
         h = 1,
         skin = [[Unit]],
+    },
+    {
+        name = [[fighterBtn]],
+        isVisible = true,
+        x = 0.07928157,
+        y = 0.7331681,
+        w = 0.1,
+        h = 0.06,
+        ctor = [[button]],
+        str = [[Buy Fighter]],
+        halign = MOAITextBox.CENTER_JUSTIFY,
+        valign = MOAITextBox.CENTER_JUSTIFY,
+        text_style = [[detail]],
+        padleft = 0,
+        padright = 0,
+        images =
+        {
+            {
+                file = [[dkgrey.png]],
+            },
+            {
+                file = [[dkgrey.png]],
+            },
+            {
+                file = [[dkgrey.png]],
+            },
+        },
+    },
+    {
+        name = [[scoutBtn]],
+        isVisible = true,
+        x = 0.07793099,
+        y = 0.8066379,
+        w = 0.1,
+        h = 0.06,
+        ctor = [[button]],
+        str = [[Buy Scout]],
+        halign = MOAITextBox.CENTER_JUSTIFY,
+        valign = MOAITextBox.CENTER_JUSTIFY,
+        text_style = [[detail]],
+        padleft = 0,
+        padright = 0,
+        images =
+        {
+            {
+                file = [[dkgrey.png]],
+            },
+            {
+                file = [[dkgrey.png]],
+            },
+            {
+                file = [[dkgrey.png]],
+            },
+        },
+    },
+    {
+        name = [[captainBtn]],
+        isVisible = true,
+        x = 0.08081885,
+        y = 0.6593788,
+        w = 0.1,
+        h = 0.06,
+        ctor = [[button]],
+        str = [[Buy Captain]],
+        halign = MOAITextBox.CENTER_JUSTIFY,
+        valign = MOAITextBox.CENTER_JUSTIFY,
+        text_style = [[detail]],
+        padleft = 0,
+        padright = 0,
+        images =
+        {
+            {
+                file = [[dkgrey.png]],
+            },
+            {
+                file = [[dkgrey.png]],
+            },
+            {
+                file = [[dkgrey.png]],
+            },
+        },
+    },
+    {
+        name = [[generalBtn]],
+        isVisible = true,
+        x = 0.07928157,
+        y = 0.5902012,
+        w = 0.1,
+        h = 0.06,
+        ctor = [[button]],
+        str = [[Buy General]],
+        halign = MOAITextBox.CENTER_JUSTIFY,
+        valign = MOAITextBox.CENTER_JUSTIFY,
+        text_style = [[detail]],
+        padleft = 0,
+        padright = 0,
+        images =
+        {
+            {
+                file = [[dkgrey.png]],
+            },
+            {
+                file = [[dkgrey.png]],
+            },
+            {
+                file = [[dkgrey.png]],
+            },
+        },
+    },
+    {
+        name = [[away0]],
+        isVisible = true,
+        x = 0.2118002,
+        y = 0.08519477,
+        w = 1,
+        h = 1,
+        skin = [[AwayUnit]],
+    },
+    {
+        name = [[away1]],
+        isVisible = true,
+        x = 0.2701335,
+        y = 0.08519477,
+        w = 1,
+        h = 1,
+        skin = [[AwayUnit]],
+    },
+    {
+        name = [[away2]],
+        isVisible = true,
+        x = 0.3284668,
+        y = 0.08519477,
+        w = 1,
+        h = 1,
+        skin = [[AwayUnit]],
+    },
+    {
+        name = [[away3]],
+        isVisible = true,
+        x = 0.3868001,
+        y = 0.08519477,
+        w = 1,
+        h = 1,
+        skin = [[AwayUnit]],
+    },
+    {
+        name = [[away4]],
+        isVisible = true,
+        x = 0.4451335,
+        y = 0.08519477,
+        w = 1,
+        h = 1,
+        skin = [[AwayUnit]],
     },
 }
 properties =

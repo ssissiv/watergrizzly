@@ -7,6 +7,7 @@ local gnode = require("game/gnode")
 local glink = require("game/glink")
 local gunit = require("game/gunit")
 local gintel = require("game/gintel")
+local gamedefs = require("game/gamedefs")
 
 ----------------------------------------------------------------
 
@@ -175,6 +176,10 @@ function game:dispatchEvent( evType, evData )
 	end
 end
 
+function game:getCamera()
+	return self.camhandler
+end
+
 function game:wndToWorld( x, y )
 	return self.layer:wndToWorld( x, y )
 end
@@ -262,9 +267,24 @@ function game:findHomeNode()
 	return self.nodes[1]
 end
 
-function game:buyUnit()
+function game:buyUnit( unittype )
 	
-	local unit = gunit()
+	local unit
+
+	if unittype == gamedefs.UNIT_SCOUT then
+		unit = gunit(
+			{
+				unittype = unittype,
+				icon = "unit_scout.png", mapIcon = "map_scout.png"
+			} )
+	elseif unittype == gamedefs.UNIT_FIGHTER then
+		unit = gunit(
+			{
+				unittype = unittype,
+				icon = "unit_fighter.png", mapIcon = "map_fighter.png",
+				attack = 20
+			} )
+	end
 	
 	self:spawnUnit( unit, self:findHomeNode() )
 end
@@ -274,6 +294,10 @@ function game:doPhaseIn()
 	if not self.nodes[i].isHome then
 		self.nodes[i]:doPhaseIn()
 	end
+end
+
+function game:getAllUnits()
+	return self.units
 end
 
 function game:getIntel()

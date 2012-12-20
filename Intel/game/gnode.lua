@@ -104,6 +104,15 @@ function gnode:doPhaseIn()
 	self.enemies = self.enemies + 100
 end
 
+function gnode:createIntelData()
+	local data =
+	{
+		enemies = self.enemies,
+	}
+
+	return data
+end
+
 function gnode:refreshViz( intel )
 	local data = intel:find( self ) or {}
 

@@ -15,32 +15,55 @@ local UNIT_VELOCITY = 100
 
 local gunit = class()
 
-function gunit:init()
+function gunit:init( traits )
+	assert( traits )
+	
 	self.name = UNITNAMES[ math.random( #UNITNAMES ) ]
 	self.node = nil
 	self.orders = {}
+	self.traits = traits
 end
 
 function gunit:getName()
 	return self.name
 end
 
+function gunit:getTraits()
+	return self.traits
+end
+
 function gunit:getIcon()
-	return "unit_scout.png"
+	return self.traits.icon
+end
+
+function gunit:getNode()
+	return self.node
 end
 
 function gunit:onSpawn( game, node )
 	self.game = game
 	self.node = node
 	self.intel = gintel( game )
-	self.prop = texprop( "map_scout.png", 8, self.game.layer )
+	self.prop = texprop( self.traits.mapIcon, 8, self.game.layer )
 	self.prop:setLoc( node:getPosition() )
+
+	self.game:dispatchEvent( gamedefs.EV_UNIT_ARRIVED )
 end
 
-function gunit:issueOrder( node )
+function gunit:issueDefaultOrder( node )
+	if self.traits.unittype == gamedefs.UNIT_SCOUT then
+		-- Go and return
+		self:issueOrder( { targetNode = node } )
+		self:issueOrder( { targetNode = self.game:findHomeNode() } )
+		
+	elseif self.traits.unittype == gamedefs.UNIT_FIGHTER then
+		-- Go and stay
+		self:issueOrder( { targetNode = node } )
+	end
+end
 
-	local order = { targetNode = node }
-	
+function gunit:issueOrder( order )
+
 	table.insert( self.orders, order )
 
 	if #self.orders == 1 then
@@ -96,10 +119,7 @@ function gunit:arriveAt( targetNode )
 	self.node = targetNode
 	self.node:addUnit( self )
 	
-	self.intel:add( self.node,
-		{
-			enemies = self.node.enemies
-		})
+	self.intel:add( self.node, self.node:createIntelData() )
 	
 	if targetNode == self.game:findHomeNode() then
 		self.game:getIntel():merge( self.intel )

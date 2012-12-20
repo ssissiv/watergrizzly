@@ -59,13 +59,11 @@ local function onInputEvent( self, event )
 		end
 
 	elseif self._state == STATE_PANNING then
-		
 		if event.eventType == mui_defs.EVENT_MouseMove then
 			local x0, y0 = self._layer:wndToWorld2D( self._panStart.wx, self._panStart.wy )
 			local x1, y1 = self._layer:wndToWorld2D( event.wx, event.wy )
 			self._panStart = { wx = event.wx, wy = event.wy }
 			self._camera:moveLoc( x0 - x1, y0 - y1, 0 )
-
 		elseif event.eventType == mui_defs.EVENT_MouseUp then
 			self._state = STATE_NULL
 		end

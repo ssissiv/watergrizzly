@@ -56,6 +56,11 @@ function stategame:updateTooltip( wx, wy )
 end
 
 function stategame:updateUnitPanel()
+	self:updateHomePanel()
+	self:updateAwayPanel()
+end
+
+function stategame:updateHomePanel()
 	local panel = self.screen:findWidget("home0")
 	local i = 1
 	local units = {}
@@ -85,10 +90,56 @@ function stategame:updateUnitPanel()
 	end
 end
 
+function stategame:updateAwayPanel()
+	local panel = self.screen:findWidget("away0")
+	local i, j = 1, 1
+	local units = self.game:getAllUnits()
+	local homeNode = self.game:findHomeNode()
+	
+	while panel do
+		local unitBtn = panel:findWidget("awayUnitBtn")
+		local unitName = panel:findWidget("awayUnitName")
+		local selectImg = panel:findWidget("awaySelectImg")
+
+		while j <= #units and (units[j]:getNode() == nil or units[j]:getNode() == homeNode) do
+			j = j + 1
+		end
+		
+		if units[j] == nil then
+			panel:setVisible(false)
+		else
+			panel:setVisible(true)
+			unitBtn:setInactiveImage( units[j]:getIcon() )
+			unitBtn:setActiveImage( units[j]:getIcon() )
+			unitBtn:setHoverImage( units[j]:getIcon() )
+			--unitBtn.onClick = util.makeDelegate( self, "onSelectUnit", units[i] )
+			unitName:setText( units[j]:getName() )
+			selectImg:setVisible( self.selectedUnit == units[j] )
+		end
+
+		panel = self.screen:findWidget("away"..i)
+		i = i + 1
+	end
+end
+
 function stategame:onSimEvent( evType, evData )
 	if evType == gamedefs.EV_UNIT_ARRIVED or evType == gamedefs.EV_UNIT_LEFT then
 		self:updateUnitPanel()
 	end
+end
+
+function stategame:onClickBuyScout()
+	self.game:buyUnit( gamedefs.UNIT_SCOUT )
+end
+
+function stategame:onClickBuyFighter()
+	self.game:buyUnit( gamedefs.UNIT_FIGHTER )
+end
+
+function stategame:onClickBuyCaptain()
+end
+
+function stategame:onClickBuyGeneral()
 end
 
 ----------------------------------------------------------------
@@ -101,6 +152,10 @@ stategame.onLoad = function ( self, game )
 
 	self.screen = mui.createScreen( "state-game.lua" )
 	mui.activateScreen( self.screen )
+	self.screen.binder.fighterBtn.onClick = util.makeDelegate( stategame, "onClickBuyFighter" )
+	self.screen.binder.scoutBtn.onClick = util.makeDelegate( stategame, "onClickBuyScout" )
+	self.screen.binder.captainBtn.onClick = util.makeDelegate( stategame, "onClickBuyCaptain" )
+	self.screen.binder.generalBtn.onClick = util.makeDelegate( stategame, "onClickBuyGeneral" )
 
 	self:updateUnitPanel()
 
@@ -122,6 +177,11 @@ end
 ----------------------------------------------------------------
 stategame.onInputEvent = function ( self, event )
 
+
+	if self.game:getCamera():onInputEvent( event ) then
+		return true
+	end
+	
 	if event.eventType == mui_defs.EVENT_KeyUp then
 		if event.key == mui_defs.K_ESCAPE then
 			statemgr.deactivate( self )
@@ -136,13 +196,9 @@ stategame.onInputEvent = function ( self, event )
 		local x, y = self.game:wndToWorld( event.wx, event.wy )
 		local node = self.game:findNode( x, y )
 
-		if node and node == self.game:findHomeNode() then
-			self.game:buyUnit()
-			self:updateUnitPanel()
-		elseif node and self.selectedUnit then
+		if node and self.selectedUnit then
 			-- There and back
-			self.selectedUnit:issueOrder( node )
-			self.selectedUnit:issueOrder( self.game:findHomeNode() )
+			self.selectedUnit:issueDefaultOrder( node )
 		end
 		
 		return true
