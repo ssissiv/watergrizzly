@@ -113,7 +113,7 @@ stateEdit.onInputEvent = function ( self, event )
 		
 		elseif event.eventType == mui_defs.EVENT_MouseDown then
 			local x, y = self.game:wndToWorld( event.wx, event.wy )
-			local node = self.game:findNode( x, y ) or (event.controlDown and self:createNode( x, y ))
+			local node = self.game:findNode( x, y ) or (event.button == mui_defs.MB_Right and self:createNode( x, y ))
 			self.selection:select( node )
 			return true
 

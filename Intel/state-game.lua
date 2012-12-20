@@ -8,6 +8,7 @@ local util = require( "modules/util" )
 local mui = require("mui/mui")
 local mui_defs = require("mui/mui_defs")
 local nselect = require( "game/nselect" )
+local indicator = require("game/indicator")
 local gamedefs = require("game/gamedefs")
 
 ----------------------------------------------------------------
@@ -91,6 +92,7 @@ function stategame:updateHomePanel()
 end
 
 function stategame:updateAwayPanel()
+	
 	local panel = self.screen:findWidget("away0")
 	local i, j = 1, 1
 	local units = self.game:getAllUnits()
@@ -101,7 +103,7 @@ function stategame:updateAwayPanel()
 		local unitName = panel:findWidget("awayUnitName")
 		local selectImg = panel:findWidget("awaySelectImg")
 
-		while j <= #units and (units[j]:getNode() == nil or units[j]:getNode() == homeNode) do
+		while j <= #units and (units[j]:getNode() == homeNode) do
 			j = j + 1
 		end
 		
@@ -115,6 +117,7 @@ function stategame:updateAwayPanel()
 			--unitBtn.onClick = util.makeDelegate( self, "onSelectUnit", units[i] )
 			unitName:setText( units[j]:getName() )
 			selectImg:setVisible( self.selectedUnit == units[j] )
+			j = j + 1
 		end
 
 		panel = self.screen:findWidget("away"..i)
@@ -125,6 +128,7 @@ end
 function stategame:onSimEvent( evType, evData )
 	if evType == gamedefs.EV_UNIT_ARRIVED or evType == gamedefs.EV_UNIT_LEFT then
 		self:updateUnitPanel()
+	elseif evType == gamedefs.EV_PHASEIN then
 	end
 end
 
@@ -193,15 +197,17 @@ stategame.onInputEvent = function ( self, event )
 		end
 		
 	elseif event.eventType == mui_defs.EVENT_MouseUp then
-		local x, y = self.game:wndToWorld( event.wx, event.wy )
-		local node = self.game:findNode( x, y )
+		if event.button == mui_defs.MB_Right then
+			local x, y = self.game:wndToWorld( event.wx, event.wy )
+			local node = self.game:findNode( x, y )
 
-		if node and self.selectedUnit then
-			-- There and back
-			self.selectedUnit:issueDefaultOrder( node )
+			if node and self.selectedUnit then
+				-- There and back
+				self.selectedUnit:issueDefaultOrder( node )
+				local tmp = indicator( self.game, "fx_move.png", x, y )
+			end
+			return true
 		end
-		
-		return true
 
 	elseif event.eventType == mui_defs.EVENT_MouseMove then
 		local x, y = self.game:wndToWorld( event.wx, event.wy )

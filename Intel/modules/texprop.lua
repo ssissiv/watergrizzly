@@ -7,18 +7,24 @@ function texprop:init( filename, size, layer )
 	local image = MOAIImage.new()
 	image:load( "data/" ..filename, MOAIImage.PREMULTIPLY_ALPHA )
 	
-    local gfxQuad = MOAIGfxQuad2D.new ()
-    gfxQuad:setTexture ( image )
-    gfxQuad:setRect ( -size, -size, size, size)
-
-    local prop = MOAIProp2D.new ()
-    prop:setDeck ( gfxQuad )
+	local gfxQuad = MOAIGfxQuad2D.new ()
+	gfxQuad:setTexture ( image )
+	
+	if size then
+		gfxQuad:setRect ( -size, -size, size, size)
+	else
+		local w,h = image:getSize()
+		
+	end
+	
+	local prop = MOAIProp2D.new ()
+	prop:setDeck ( gfxQuad )
 	prop:setBlendMode( MOAIProp.GL_SRC_ALPHA, MOAIProp.GL_ONE_MINUS_SRC_ALPHA )    
 	
 	self.prop = prop
 	self.layer = layer
 	
-    layer:insertProp( prop )
+	layer:insertProp( prop )
 	
 	return prop
 end

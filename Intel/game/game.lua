@@ -12,7 +12,7 @@ local gamedefs = require("game/gamedefs")
 ----------------------------------------------------------------
 
 -- Time to open an enemy gate
-local PHASE_IN = 60 * 60 -- 1 minute.
+local PHASE_IN = 60 * 6 -- 1 minute.
 
 ----------------------------------------------------------------
 
@@ -269,6 +269,10 @@ end
 
 function game:buyUnit( unittype )
 	
+	if self:findHomeNode() == nil then
+		return
+	end
+	
 	local unit
 
 	if unittype == gamedefs.UNIT_SCOUT then
@@ -294,6 +298,8 @@ function game:doPhaseIn()
 	if not self.nodes[i].isHome then
 		self.nodes[i]:doPhaseIn()
 	end
+	
+	self:dispatchEvent( gamedefs.EV_PHASEIN )
 end
 
 function game:getAllUnits()
