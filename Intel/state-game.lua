@@ -1,0 +1,171 @@
+--==============================================================
+-- Copyright (c) 2010-2012 Zipline Games, Inc. 
+-- All Rights Reserved. 
+-- http://getmoai.com
+--==============================================================
+
+local util = require( "modules/util" )
+local mui = require("mui/mui")
+local mui_defs = require("mui/mui_defs")
+local nselect = require( "game/nselect" )
+local gamedefs = require("game/gamedefs")
+
+----------------------------------------------------------------
+
+local stategame = {}
+
+function stategame:setPaused( isPaused )
+	self.isPaused = isPaused
+	self.screen.binder.pauseLabel:setVisible( self.isPaused )
+end
+
+function stategame:onSelectUnit( unit )
+	self.selectedUnit = unit
+	self:updateUnitPanel()
+end
+
+function stategame:updateTooltip( wx, wy )
+
+	local tooltipLabel = self.screen.binder.tooltipTxt
+	local x, y = self.game:wndToWorld( wx, wy )
+	local txt = ""
+	local node = self.game:findNode( x, y )
+	if node then
+		txt = txt .. node:getName() .."\n"
+		local info = self.game:getIntel():find( node )
+		if info == nil or info.tick == nil then
+			txt = txt .. "Status Unknown"
+		elseif info == node then
+			if #node:getUnits() > 0 then
+				for _,unit in pairs(node:getUnits()) do
+					txt = txt .. " " .. unit:getName() .. ","
+				end
+			end
+		else
+			local age = (self.game:getTick() - info.tick) * MOAISim.getStep()
+			txt = txt .. "Last scouted: " ..util.ftime( age )
+		end
+	end
+
+	local tw, th = tooltipLabel:getSize()
+	local tx, ty = self.screen:wndToUI(wx + 14, wy + 14)
+
+	tooltipLabel:setText( txt )
+	tooltipLabel:setPosition( tx + tw/2, ty - th/2 )
+	tooltipLabel:setVisible( true )
+end
+
+function stategame:updateUnitPanel()
+	local panel = self.screen:findWidget("home0")
+	local i = 1
+	local units = {}
+	if self.game:findHomeNode() then
+		units = self.game:findHomeNode():getUnits()
+	end
+	
+	while panel do
+		local unitBtn = panel:findWidget("unitBtn")
+		local unitName = panel:findWidget("unitName")
+		local selectImg = panel:findWidget("selectImg")
+
+		if units[i] == nil then
+			panel:setVisible(false)
+		else
+			panel:setVisible(true)
+			unitBtn:setInactiveImage( units[i]:getIcon() )
+			unitBtn:setActiveImage( units[i]:getIcon() )
+			unitBtn:setHoverImage( units[i]:getIcon() )
+			unitBtn.onClick = util.makeDelegate( self, "onSelectUnit", units[i] )
+			unitName:setText( units[i]:getName() )
+			selectImg:setVisible( self.selectedUnit == units[i] )
+		end
+
+		panel = self.screen:findWidget("home"..i)
+		i = i + 1
+	end
+end
+
+function stategame:onSimEvent( evType, evData )
+	if evType == gamedefs.EV_UNIT_ARRIVED or evType == gamedefs.EV_UNIT_LEFT then
+		self:updateUnitPanel()
+	end
+end
+
+----------------------------------------------------------------
+stategame.onLoad = function ( self, game )
+
+	self.game = game
+	self.isPaused = false
+	
+	self.selection = nselect( game )
+
+	self.screen = mui.createScreen( "state-game.lua" )
+	mui.activateScreen( self.screen )
+
+	self:updateUnitPanel()
+
+	self.game:addListener( self )
+	inputmgr.addListener( self )
+end
+
+----------------------------------------------------------------
+stategame.onUnload = function ( self )
+	self.selection:clear()
+
+	inputmgr.removeListener( self )
+
+	mui.deactivateScreen( self.screen )
+	self.screen = nil
+end
+
+
+----------------------------------------------------------------
+stategame.onInputEvent = function ( self, event )
+
+	if event.eventType == mui_defs.EVENT_KeyUp then
+		if event.key == mui_defs.K_ESCAPE then
+			statemgr.deactivate( self )
+			local stateEdit = require("state-edit")
+			statemgr.activate( stateEdit, self.game )
+			return true
+		elseif event.key == mui_defs.K_SPACE then
+			self:setPaused( not self.isPaused )		
+		end
+		
+	elseif event.eventType == mui_defs.EVENT_MouseUp then
+		local x, y = self.game:wndToWorld( event.wx, event.wy )
+		local node = self.game:findNode( x, y )
+
+		if node and node == self.game:findHomeNode() then
+			self.game:buyUnit()
+			self:updateUnitPanel()
+		elseif node and self.selectedUnit then
+			-- There and back
+			self.selectedUnit:issueOrder( node )
+			self.selectedUnit:issueOrder( self.game:findHomeNode() )
+		end
+		
+		return true
+
+	elseif event.eventType == mui_defs.EVENT_MouseMove then
+		local x, y = self.game:wndToWorld( event.wx, event.wy )
+		self.selection:preselect( self.game:findNode( x, y ))
+		
+		self:updateTooltip( event.wx, event.wy )
+		return true
+
+	end
+end
+
+
+----------------------------------------------------------------
+stategame.onUpdate = function ( self )
+	if not self.isPaused then
+		self.game:doTick(1)
+	end
+	
+	local secs = self.game:getTick() * MOAISim.getStep()
+	self.screen.binder.timeLabel:setText( "Time: " ..util.ftime( secs ))
+end
+
+return stategame
