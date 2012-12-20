@@ -35,7 +35,7 @@ function stategame:updateTooltip( wx, wy )
 		txt = txt .. node:getName() .."\n"
 		local info = self.game:getIntel():find( node )
 		if info == nil or info.tick == nil then
-			txt = txt .. "Status Unknown"
+			txt = txt .. "???"
 		elseif info == node then
 			if #node:getUnits() > 0 then
 				for _,unit in pairs(node:getUnits()) do
@@ -227,7 +227,15 @@ stategame.onUpdate = function ( self )
 	end
 	
 	local secs = self.game:getTick() * MOAISim.getStep()
-	self.screen.binder.timeLabel:setText( "Time: <bigred>" ..util.ftime( secs ) .."</>")
+	local txt = "Time: <bigred>" ..util.ftime( secs ) .."</>"
+	local integrity = self.game:getIntegrity()
+	if integrity <= 0 then
+		txt = txt .. " <bigred>GAMEOVER</>"
+	else
+		txt = txt .. " System integrity: <bigred>\%" .. math.ceil(integrity*100).. "</>"
+	end
+	
+	self.screen.binder.timeLabel:setText( txt )
 end
 
 return stategame

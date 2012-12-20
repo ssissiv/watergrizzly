@@ -318,18 +318,34 @@ function game:getTick()
 	return self.tick
 end
 
+function game:getIntegrity()
+	return self.integrity or 1
+end
+
+function game:calculateIntegrity()
+	local total = 0
+	for _,unit in pairs(self.nodes) do
+		total = total + (unit:getTraits().enemies or 0)
+	end
+	
+	return 1 - math.min( total / 100, 1 )
+end
+
 function game:doTick( ticks )
 	self.tick = self.tick + ticks
+	self.integrity = self:calculateIntegrity()
 	
-	if self.tick % PHASE_IN == 0 then
-		self:doPhaseIn()
-	end
-	
-	for _,node in pairs(self.nodes) do
-		node:refreshViz( self.intel )
-	end
-	for _,unit in pairs(self.units) do
-		unit:refreshViz()
+	if self.integrity > 0 then
+		if self.tick % PHASE_IN == 0 then
+			self:doPhaseIn()
+		end
+		
+		for _,node in pairs(self.nodes) do
+			node:refreshViz( self.intel )
+		end
+		for _,unit in pairs(self.units) do
+			unit:refreshViz()
+		end
 	end
 end
 
