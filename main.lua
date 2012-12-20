@@ -1,107 +1,71 @@
 ----------------------------------------------------------------
--- GAME JAM! 2012
+-- Copyright (c) 2010-2011 Zipline Games, Inc. 
+-- All Rights Reserved. 
+-- http://getmoai.com
 ----------------------------------------------------------------
 
-WIN_HEIGHT, WIN_WIDTH = 1280, 720
-local NEBULA = MOAIImage.new()
+print ( 'hello, moai!' )
 
+MOAISim.openWindow ( "test", 512, 512 )
 
-MOAISim.openWindow ( "test", WIN_HEIGHT, WIN_WIDTH )
+viewport = MOAIViewport.new ()
+viewport:setSize ( 512, 512 )
+viewport:setScale ( 512, 512 )
 
-game = {}
+layer = MOAILayer2D.new ()
+layer:setViewport ( viewport )
+MOAISim.pushRenderPass ( layer )
 
-game.viewport = MOAIViewport.new ()
-game.viewport:setSize ( WIN_HEIGHT, WIN_WIDTH )
-game.viewport:setScale (WIN_HEIGHT, WIN_WIDTH )
+file = assert ( io.open ( 'shader.vsh', mode ))
+vsh = file:read ( '*all' )
+file:close ()
 
-game.layer = MOAILayer2D.new ()
-game.layer:setViewport ( game.viewport )
-MOAISim.pushRenderPass ( game.layer )
+file = assert ( io.open ( 'shader.fsh', mode ))
+fsh = file:read ( '*all' )
+file:close ()
 
-game.camera = MOAICamera2D.new()
-game.layer:setCamera( game.camera )
+tileDeck = MOAITileDeck2D.new ()
+tileDeck:setTexture ( "numbers.png" )
+tileDeck:setSize ( 8, 8 )
+tileDeck:setRect ( -0.5, 0.5, 0.5, -0.5 )
 
-----------------------------------------------------------------
+grid = MOAIGrid.new ()
+grid:setSize ( 8, 8, 32, 32 )
+grid:setRepeat ( true ) -- wrap the grid when drawing
 
-local function createCurve( pts, duration, prop, attr )
+grid:setRow ( 1, 	0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08 )
+grid:setRow ( 2, 	0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f, 0x10 )
+grid:setRow ( 3, 	0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18 )
+grid:setRow ( 4, 	0x19, 0x1a, 0x1b, 0x1c, 0x1d, 0x1e, 0x1f, 0x20 )
+grid:setRow ( 5, 	0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28 )
+grid:setRow ( 6, 	0x29, 0x2a, 0x2b, 0x2c, 0x2d, 0x2e, 0x2f, 0x30 )
+grid:setRow ( 7, 	0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38 )
+grid:setRow ( 8, 	0x39, 0x3a, 0x3b, 0x3c, 0x3d, 0x3e, 0x3f, 0x40 )
 
-	local curve = MOAIAnimCurve.new ()
-	curve:reserveKeys ( #pts )
-	for i,v in pairs(pts) do
-		curve:setKey ( i, (i-1) * duration/#pts, v, MOAIEaseType.LINEAR )
-	end
+prop = MOAIProp2D.new ()
+prop:setDeck ( tileDeck )
+prop:setGrid ( grid )
+prop:setLoc ( -128, 128 )
+prop:setScl ( 1, -1 )
+layer:insertProp ( prop )
 
-	prop:setAttrLink ( attr, curve, MOAIAnimCurve.ATTR_VALUE )
+prop:moveRot ( 360, 6 )
+prop:moveLoc ( -512, 0, 6 )
 
-	local timer = MOAITimer.new ()
-	timer:setMode( MOAITimer.LOOP )
-	timer:setSpan ( 0, curve:getLength ())
-	timer:setTime( math.random() * curve:getLength() )
+shader = MOAIShader.new ()
+shader:reserveUniforms ( 2 )
+shader:declareUniform ( 1, 'xWarp', MOAIShader.UNIFORM_FLOAT )
+shader:declareUniform ( 2, 'yWarp', MOAIShader.UNIFORM_FLOAT )
 
-	curve:setAttrLink ( MOAIAnimCurve.ATTR_TIME, timer, MOAITimer.ATTR_TIME )
+shader:setAttr ( 1, 2 )
+shader:setAttr ( 2, 0 )
 
-	timer:start()
-end
+shader:moveAttr ( 1, -2, 6 )
+shader:moveAttr ( 2, 2, 6 )
 
-local function createNebula( layer, filename )
+shader:setVertexAttribute ( 1, 'position' )
+shader:setVertexAttribute ( 2, 'uv' )
+shader:setVertexAttribute ( 3, 'color' )
+shader:load ( vsh, fsh )
 
-	local r = math.random( -640, 640) 
-	local x0, y0 = math.random( -1280, 1280 ), math.random( -720, 720 )
-	local xs, ys = { x0 + r }, {y0}
-	for i = 1,16 do
-		local x, y = math.cos( i * 2 * math.pi / 16 ) * r, math.sin( i * 2 * math.pi / 16 ) * r
-		table.insert( xs, x + x0 )
-		table.insert( ys, y + y0 )
-	end
-	local r0, dr = math.random() * 360, math.random( -3, 3 ) * 360
-	local duration = math.random() * 600 + 1000
-	local s0, s1 = math.random() * 3 + 1, math.random() * 3 + 1
-	
-	local gfxQuad = MOAIGfxQuad2D.new ()
-	gfxQuad:setTexture ( filename )
-	gfxQuad:setRect ( -256, -256, 256, 256 )
-	gfxQuad:setUVRect ( 0, 0, 1, 1 )
-
-	local prop = MOAIProp2D.new ()
-	prop:setDeck ( gfxQuad )
-	prop:setLoc( x0, y0 )
-	prop:setRot( r0 )
-	prop:setScl( s0, s1 )
-	
-	local c1 = createCurve( { r0, r0 + dr}, duration, prop, MOAIProp2D.ATTR_Z_ROT )
-	local c2 = createCurve( xs, duration, prop, MOAIProp2D.ATTR_X_LOC )
-	local c3 = createCurve( ys, duration, prop, MOAIProp2D.ATTR_Y_LOC )
-	
-	layer:insertProp( prop )
-	
-	return { prop = prop,  c1 = c1, c2 = c2, c3 = c3 }
-end
-
-local function createBG( layer )
-
-	local gfxQuad = MOAIGfxQuad2D.new ()
-	gfxQuad:setTexture ( "space.png" )
-	gfxQuad:setRect ( -640, -360, 640, 360 )
-	gfxQuad:setUVRect ( 0, 0, 1, 1 )
-
-	local prop = MOAIProp2D.new ()
-	prop:setDeck ( gfxQuad )
-	
-	layer:insertProp( prop )
-end
-
-
-createBG( game.layer )
-
-game.nebula = {}
-for i = 1,8 do
-	game.nebula[i] = createNebula( game.layer, "nebula1.png" )
-end
-for i = 1,8 do
-	game.nebula[i] = createNebula( game.layer, "nebula2.png" )
-end
-for i = 1,8 do
-	game.nebula[i] = createNebula( game.layer, "nebula3.png" )
-end
-
-
+tileDeck:setShader ( shader )
