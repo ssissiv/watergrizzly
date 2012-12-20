@@ -21,7 +21,6 @@ function gnode:init( x, y, traits )
 	self.x, self.y = x, y
 	self.game = nil
 	self.name = generateName()
-	self.enemies = 0
 	self.links = {}
 	self.units = {}
 	self.traits = traits or {}
@@ -100,14 +99,34 @@ end
 
 function gnode:doPhaseIn()
 	log:write("PHASE IN: %s", self:getName())
+	self.traits.enemyRate = (self.traits.enemyRate or 0) + 5
 	
-	self.enemies = self.enemies + 100
+	self:scheduleUpdate()
 end
+
+function gnode:scheduleUpdate()
+	if self.timer then
+		return -- already updating shit
+	end
+	
+	self.timer = MOAITimer.new()
+	self.timer:setMode( MOAITimer.LOOP )
+	self.timer:setSpan( 0, 10 )
+	self.timer:setListener( MOAITimer.EVENT_TIMER_END_SPAN, function() self:performUpdate() end )
+	self.timer:start()
+	
+end
+
+function gnode:performUpdate()
+	log:write("%s updated (+%d enemies)", self:getName(), self.traits.enemyRate)
+	self.traits.enemies = (self.traits.enemies or 0) + self.traits.enemyRate
+end
+
 
 function gnode:createIntelData()
 	local data =
 	{
-		enemies = self.enemies,
+		enemies = self.traits.enemies,
 	}
 
 	return data
@@ -137,7 +156,7 @@ function gnode:refreshViz( intel )
 	end
 	if enemies > 0 then
 		self.prop:setColor( 1, 0, 0, c )
-		local sx = math.max( 1.0, math.min( 3.0, self.enemies / 80 ))
+		local sx = math.max( 1.0, math.min( 3.0, enemies / 80 ))
 		self.prop:setScl( sx )
 	else
 		self.prop:setColor( 1, 1, 1, c )

@@ -53,6 +53,8 @@ local function processWidgetDef( def )
 		assert(MUI._textStyles[ def.text_style ], "Text style not found: " ..def.text_style)
 		def.text_style = MUI._textStyles[ def.text_style ]
 	end
+	
+	def.all_styles = MUI._textStyles
 
 	return def
 end
@@ -132,6 +134,9 @@ local function createListBox( def )
 	return mui_listbox( MUI._internals, processWidgetDef( def ) )
 end
 
+local function getStyles()
+	return MUI._textStyles
+end
 
 local function parseUI( key, t )
 
@@ -314,6 +319,7 @@ return
 
 	loadUI = loadUI,
 	parseUI = parseUI,
+	getStyles = getStyles,
 
 	createScreen = createScreen,
 	activateScreen = activateScreen,

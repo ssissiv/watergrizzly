@@ -11,12 +11,17 @@ require( "modules/class" )
 
 --------------------------------------------------------
 
-local function createTextBox( w, h, text_style, halign, valign )
+local function createTextBox( w, h, text_style, halign, valign, all_styles )
 	assert( text_style )
 	
 	local prop = MOAITextBox.new()
 	prop:setRect( -w/2, -h/2, w/2, h/2 )
 	prop:setStyle( text_style )
+	if all_styles then
+		for k,v in pairs(all_styles) do
+			prop:setStyle( k, v)
+		end
+	end
 	prop:setAlignment( halign, valign )
 	prop:setYFlip ( true )
 	
@@ -28,7 +33,7 @@ end
 local mui_label = class( mui_widget )
 
 function mui_label:init( def )
-	mui_widget.init( self, createTextBox( def.w, def.h, def.text_style, def.halign, def.valign ), def )
+	mui_widget.init( self, createTextBox( def.w, def.h, def.text_style, def.halign, def.valign, def.all_styles ), def )
 
 	self._w, self._h = def.w, def.h
 	self:setText( def.str )

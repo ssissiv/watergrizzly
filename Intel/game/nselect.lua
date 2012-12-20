@@ -10,12 +10,12 @@ function nselect:init( game )
 
 	self.selectionProp = texprop( "select.png", 32, game.layer )
 	self.selectionProp:setVisible( false )
-	self.selectionProp:setColor( 1, 0, 1, 1 )
+	self.selectionProp:setColor( 1, 0, 1, 0.5 )
 	self.selection = nil
 
 	self.preselectionProp = texprop( "select.png", 32, game.layer )
 	self.preselectionProp:setVisible( false )
-	self.preselectionProp:setColor( 1, 1, 1, 1 )
+	self.preselectionProp:setColor( 1, 1, 1, 0.8 )
 	self.preselection = nil
 end
 

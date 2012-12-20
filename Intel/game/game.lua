@@ -47,7 +47,7 @@ local function createNebula( layer, filename )
         table.insert( ys, y + y0 )
     end
     local r0, dr = math.random() * 360, math.random( -3, 3 ) * 360
-    local duration = math.random() * 600 + 1000
+    local dt0, dt1 = math.random() * 600 + 1000, math.random() * 500 + 500
     local s0, s1 = math.random() * 3 + 1, math.random() * 3 + 1
     
     local gfxQuad = MOAIGfxQuad2D.new ()
@@ -61,9 +61,9 @@ local function createNebula( layer, filename )
     prop:setRot( r0 )
     prop:setScl( s0, s1 )
     
-    local c1 = createCurve( { r0, r0 + dr}, duration, prop, MOAIProp2D.ATTR_Z_ROT )
-    local c2 = createCurve( xs, duration, prop, MOAIProp2D.ATTR_X_LOC )
-    local c3 = createCurve( ys, duration, prop, MOAIProp2D.ATTR_Y_LOC )
+    local c1 = createCurve( { r0, r0 + dr}, dt0, prop, MOAIProp2D.ATTR_Z_ROT )
+    local c2 = createCurve( xs, dt1, prop, MOAIProp2D.ATTR_X_LOC )
+    local c3 = createCurve( ys, dt1, prop, MOAIProp2D.ATTR_Y_LOC )
     
     layer:insertProp( prop )
     
@@ -152,6 +152,8 @@ function game:init( viewport )
 	self.units = {}
 	self.links = {}
 	self.intel = gintel( self )
+	
+	self:loadTopography( "defaultmap.lua" )
 end
 
 function game:destroy()
@@ -202,6 +204,7 @@ function game:saveTopography( filename )
 		end
 		
 		fl:close()
+		log:write("\tSuccess!")
 	end
 end
 
@@ -226,6 +229,7 @@ function game:loadTopography( filename )
 			end
 		end
 		fl:close()
+		log:write("\tSuccess!")
 	end
 end
 

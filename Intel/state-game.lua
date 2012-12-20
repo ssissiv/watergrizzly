@@ -204,7 +204,7 @@ stategame.onInputEvent = function ( self, event )
 			if node and self.selectedUnit then
 				-- There and back
 				self.selectedUnit:issueDefaultOrder( node )
-				local tmp = indicator( self.game, "fx_move.png", x, y )
+				self.tmp = indicator( self.game, "fx_move.png", x, y )
 			end
 			return true
 		end
@@ -227,7 +227,7 @@ stategame.onUpdate = function ( self )
 	end
 	
 	local secs = self.game:getTick() * MOAISim.getStep()
-	self.screen.binder.timeLabel:setText( "Time: " ..util.ftime( secs ))
+	self.screen.binder.timeLabel:setText( "Time: <bigred>" ..util.ftime( secs ) .."</>")
 end
 
 return stategame

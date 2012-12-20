@@ -122,6 +122,12 @@ local function onMouseRight( down )
 	end
 end
 
+local function onMouseWheel( ... )
+	for i,v in pairs({...}) do
+		print(i,v)
+	end
+end
+
 ----------------------------------------------------------------
 -- exposed functions
 ----------------------------------------------------------------
@@ -138,4 +144,5 @@ function init()
 	MOAIInputMgr.device.mouseLeft:setCallback( onMouseLeft )
 	MOAIInputMgr.device.mouseMiddle:setCallback( onMouseMiddle )	
 	MOAIInputMgr.device.mouseRight:setCallback( onMouseRight )
+	--MOAIInputMgr.device.mouseWheel:setCallback( onMouseWheel )
 end

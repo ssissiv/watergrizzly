@@ -14,7 +14,7 @@ function texprop:init( filename, size, layer )
 		gfxQuad:setRect ( -size, -size, size, size)
 	else
 		local w,h = image:getSize()
-		
+		gfxQuad:setRect ( -w/2, -h/2, w/2, h/2 )
 	end
 	
 	local prop = MOAIProp2D.new ()
