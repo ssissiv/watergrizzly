@@ -12,9 +12,13 @@ function gintel:setOmniscient( omni )
 	self.omniscient = omni
 end
 
+function gintel:isOmniscient()
+	return self.omniscient
+end
+
+
 function gintel:add( key, data )
 	self.data[ key ] = data
-	data.tick = self.game:getTick()
 end
 
 function gintel:rmv( key )
@@ -22,8 +26,8 @@ function gintel:rmv( key )
 end
 
 function gintel:find( key )
-	if self.omniscient then
-		return key
+	if self.omniscient or self.data[ key ] == key then
+		return key:createIntelData()
 	end
 	
 	return self.data[ key ]

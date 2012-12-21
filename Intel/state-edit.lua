@@ -89,6 +89,10 @@ end
 ----------------------------------------------------------------
 stateEdit.onInputEvent = function ( self, event )
 
+	if self.game:getCamera():onInputEvent( event ) then
+		return true
+	end
+
 	if self.mode == MODE_SELECT then
 		if event.eventType == mui_defs.EVENT_KeyUp then
 			local keycode = event.key + (mui_defs.K_A - 1)

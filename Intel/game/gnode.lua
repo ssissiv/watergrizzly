@@ -2,8 +2,12 @@ require("modules/class")
 local array = require("modules/array")
 local texprop = require("modules/texprop")
 local mathutil = require("modules/mathutil")
+local gamedefs = require("game/gamedefs")
+local gunit = require("game/gunit")
 
 ------------------------------------------------------
+
+local ACTIVITY_FADE = 2
 
 local function generateName()
 	
@@ -73,6 +77,8 @@ function gnode:onSpawn( game )
 		self.prop = texprop( "node.png", 16, game.layer )
 	end
     self.prop:setLoc( self.x, self.y )
+	
+	self:scheduleUpdate()
 end
 
 function gnode:addLink( link )
@@ -82,7 +88,7 @@ function gnode:addLink( link )
 end
 
 function gnode:addUnit( unit )
-	assert( unit )
+	assert( unit and array.find( self.units, unit ) == nil )
 	table.insert( self.units, unit )
 end
 
@@ -101,51 +107,91 @@ function gnode:doPhaseIn()
 	log:write("PHASE IN: %s", self:getName())
 	self.traits.enemyRate = (self.traits.enemyRate or 0) + 5
 	
-	self:scheduleUpdate()
+	self.game:spawnUnit( gunit( gamedefs.UNIT_MERC ), self )
+end
+
+function gnode:tallyActivity()
+	local activity = self:getTraits().activity or 0
+	for i,unit in pairs(self.units) do
+		activity = activity + (unit:getTraits().activity or 0)
+	end
+	return activity
 end
 
 function gnode:scheduleUpdate()
-	if self.timer then
-		return -- already updating shit
-	end
+	assert(self.timer == nil)
 	
 	self.timer = MOAITimer.new()
 	self.timer:setMode( MOAITimer.LOOP )
-	self.timer:setSpan( 0, 10 )
+	self.timer:setSpan( 0, 5 )
+	self.timer:setTime( math.random() * 5 )
 	self.timer:setListener( MOAITimer.EVENT_TIMER_END_SPAN, function() self:performUpdate() end )
 	self.timer:start()
 	
 end
 
 function gnode:performUpdate()
-	log:write("%s updated (+%d enemies)", self:getName(), self.traits.enemyRate)
-	self.traits.enemies = (self.traits.enemies or 0) + self.traits.enemyRate
+	if self.traits.creds then
+		local playerUnit = self.game:findPlayer()
+		if playerUnit:getNode() == self then
+			self.game:addResource( "creds", self.traits.creds )
+			self.traits.creds = 0
+		end
+	end
+	
+	if math.random() < 0.2 then
+		self:getTraits().creds = (self:getTraits().creds or 0) + math.random(5, 20)
+	end
+	
+	if self.traits.activity then
+		self.traits.activity = self.traits.activity - ACTIVITY_FADE
+		if self.traits.activity <= 0 then
+			self.traits.activity = nil
+		end
+	end
 end
 
+
+function gnode:pause( paused )
+	if self.timer then
+		self.timer:pause( paused )
+	end
+end
 
 function gnode:createIntelData()
 	local data =
 	{
-		enemies = self.traits.enemies,
+		name = self.name,
+		activity = self:tallyActivity(),
+		creds = self.traits.creds,
+		tick = self.game:getTick(),
 	}
+	
+	if #self.units > 0 then
+		for _,unit in pairs(self.units) do
+			if not unit:getTraits().notooltip then
+				if data.units == nil then data.units = {} end
+				table.insert(data.units, unit:getName())
+			end
+		end
+	end
 
 	return data
 end
 
 function gnode:refreshViz( intel )
-	local data = intel:find( self ) or {}
+	local data = intel:find( self )
 
 	local age = nil
-	local enemies = data.enemies or 0
 	
-	if data == self then
+	if data == nil then
+		-- No intel
+	elseif data.tick == nil then
 		-- Full intel
 		age = 0
-	elseif data.tick then
+	else
 		-- How old is this intel?  Scale from 0 (new) to 1 (maxold, at 2 mins)
 		age = (self.game:getTick() - data.tick) * MOAISim.getStep()
-	else
-		-- No intel
 	end
 
 	local c = 1
@@ -154,9 +200,9 @@ function gnode:refreshViz( intel )
 	else
 		c = (1.0 - math.min(1.0, age / 120)) * 0.9 + 0.1
 	end
-	if enemies > 0 then
+	if data and data.activity > 0 then
 		self.prop:setColor( 1, 0, 0, c )
-		local sx = math.max( 1.0, math.min( 3.0, enemies / 80 ))
+		local sx = math.max( 1.0, math.min( 3.0, data.activity / 30 ))
 		self.prop:setScl( sx )
 	else
 		self.prop:setColor( 1, 1, 1, c )

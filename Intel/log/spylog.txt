@@ -1,0 +1,6 @@
+19:37:46> ### SPY SOCIETY 0.1.0 ###
+19:37:46> DATE: 12/20/12 19:37:46
+19:37:47> game:init()
+19:37:47> Loading topography from 'defaultmap.lua'
+19:37:47> 	Success!
+19:37:47> PAUSE: false

@@ -12,7 +12,9 @@ local gamedefs = require("game/gamedefs")
 ----------------------------------------------------------------
 
 -- Time to open an enemy gate
-local PHASE_IN = 60 * 6 -- 1 minute.
+local PHASE_IN = 60 * 30
+local PHASE_IN_DIST = 400
+local START_CREDS = 100
 
 ----------------------------------------------------------------
 
@@ -47,7 +49,7 @@ local function createNebula( layer, filename )
         table.insert( ys, y + y0 )
     end
     local r0, dr = math.random() * 360, math.random( -3, 3 ) * 360
-    local dt0, dt1 = math.random() * 600 + 1000, math.random() * 500 + 500
+    local dt0, dt1 = math.random() * 600 + 400, math.random() * 300 + 300
     local s0, s1 = math.random() * 3 + 1, math.random() * 3 + 1
     
     local gfxQuad = MOAIGfxQuad2D.new ()
@@ -151,9 +153,14 @@ function game:init( viewport )
 	self.nodes = {}
 	self.units = {}
 	self.links = {}
+	self.resources = { creds = START_CREDS }
 	self.intel = gintel( self )
 	
 	self:loadTopography( "defaultmap.lua" )
+	
+	if #self.nodes > 0 then
+		self:spawnUnit( gunit( gamedefs.UNIT_PLAYER ), self.nodes[1] )
+	end
 end
 
 function game:destroy()
@@ -164,8 +171,11 @@ function game:destroy()
 	for _,node in pairs(self.nodes) do
 		node:destroy()
 	end
+	for _,unit in pairs(self.units) do
+		unit:destroy()
+	end
 		
-	self.nodes, self.links = nil, nil
+	self.nodes, self.links, self.units = nil, nil, nil
 end
 
 function game:addListener( listener )
@@ -237,6 +247,8 @@ function game:spawnNode( node )
 	if #self.nodes == 0 then
 		node:getTraits().isHome = true
 		self.intel:add( node, node )
+	elseif math.random() < 0.2 then
+		node:getTraits().creds = math.random(10, 100)
 	end
 	
 	table.insert( self.nodes, node )
@@ -251,12 +263,23 @@ function game:spawnLink( node0, node1 )
 	node1:addLink( link )
 end
 
-function game:spawnUnit( unit, node )
+function game:spawnUnit( unit, node, ... )
 	
 	table.insert( self.units, unit )
 
-	node:addUnit( unit )
-	unit:onSpawn( self, node )
+	unit:onSpawn( self, node, ... )
+end
+
+function game:despawnUnit( unit )
+	log:write(" DESPAWN %s", unit:getName() )
+	
+	array.removeElement( self.units, unit )
+	
+	if unit:getNode() then
+		unit:getNode():removeUnit( unit )
+	end
+	
+	unit:destroy()
 end
 
 function game:findNode( x, y )
@@ -268,40 +291,70 @@ function game:findNode( x, y )
 end
 
 function game:findHomeNode()
-	return self.nodes[1]
+	return self:findPlayer():getNode()
 end
 
-function game:buyUnit( unittype )
+function game:findPlayer()
+	for _,unit in pairs(self.units) do
+		if unit:getTraits().unittype == gamedefs.UNIT_PLAYER then
+			return unit
+		end
+	end
+end
+
+function game:getResource( name )
+	return self.resources[name]
+end
+
+function game:addResource( name, amt )
+	self.resources[name] = math.max( 0, self.resources[name] + amt )
+	self:dispatchEvent( gamedefs.EV_UPDATE_RESOURCES )
+end
+
+function game:addResources( resources )
+	for resource,cost in pairs(resources) do
+		self:addResource( resource, cost )
+	end
+end
+
+function game:buyUnit( unittype, ... )
 	
-	if self:findHomeNode() == nil then
+	if self:isGameOver() then
 		return
 	end
 	
-	local unit
-
-	if unittype == gamedefs.UNIT_SCOUT then
-		unit = gunit(
-			{
-				unittype = unittype,
-				icon = "unit_scout.png", mapIcon = "map_scout.png"
-			} )
-	elseif unittype == gamedefs.UNIT_FIGHTER then
-		unit = gunit(
-			{
-				unittype = unittype,
-				icon = "unit_fighter.png", mapIcon = "map_fighter.png",
-				attack = 20
-			} )
+	local homeNode = self:findHomeNode()
+	if homeNode == nil then
+		return
 	end
 	
-	self:spawnUnit( unit, self:findHomeNode() )
+	local unit = gunit( unittype )
+	for resource,cost in pairs(unit:getTraits().cost) do
+		if self.resources[resource] and self.resources[resource] < cost then
+			return
+		end
+	end
+	for resource,cost in pairs(unit:getTraits().cost) do
+		self:addResource( resource, -cost )
+	end
+
+	log:write("BUY : %s at %s", unit:getName(), homeNode:getName() )
+	self:spawnUnit( unit, homeNode, ... )
 end
 
 function game:doPhaseIn()
-	local i = math.random( #self.nodes )
-	if not self.nodes[i].isHome then
-		self.nodes[i]:doPhaseIn()
-	end
+	local homeNode = self:findHomeNode()
+	local px, py = self:findPlayer():getPosition()
+	
+	local i, dist
+	
+	repeat
+		i = math.random( #self.nodes )
+		dist = mathutil.dist2d( px, py, self.nodes[i]:getPosition() )
+	until dist > PHASE_IN_DIST
+	
+	log:write("PHASE IN - dist %.2f", dist)
+	self.nodes[i]:doPhaseIn()
 	
 	self:dispatchEvent( gamedefs.EV_PHASEIN )
 end
@@ -318,34 +371,62 @@ function game:getTick()
 	return self.tick
 end
 
-function game:getIntegrity()
-	return self.integrity or 1
+function game:isGameOver()
+	return self.gameOver == true
 end
 
-function game:calculateIntegrity()
-	local total = 0
-	for _,unit in pairs(self.nodes) do
-		total = total + (unit:getTraits().enemies or 0)
+function game:setGameOver()
+	log:write("GAME OVER at tick %d!", self.tick )
+	self.intel:setOmniscient( true )
+	self:pause( true )
+	self.gameOver = true
+end
+
+function game:pause( paused )
+	if self:isGameOver() then
+		return -- no changing pause status one game over hits
 	end
 	
-	return 1 - math.min( total / 100, 1 )
+	if paused ~= self.paused then
+		log:write("PAUSE: " ..tostring(paused))
+		self.paused = paused
+
+		for _,node in pairs(self.nodes) do
+			node:pause( paused )
+		end
+		for _,unit in pairs(self.units) do
+			unit:pause( paused )
+		end
+	end
+end
+
+function game:isPaused()
+	return self.paused == true
 end
 
 function game:doTick( ticks )
-	self.tick = self.tick + ticks
-	self.integrity = self:calculateIntegrity()
-	
-	if self.integrity > 0 then
+	if not self.paused and not self:isGameOver() then
+		self.tick = self.tick + ticks
+		
 		if self.tick % PHASE_IN == 0 then
 			self:doPhaseIn()
 		end
-		
-		for _,node in pairs(self.nodes) do
-			node:refreshViz( self.intel )
-		end
+
+		local px, py = self:findPlayer():getPosition()
 		for _,unit in pairs(self.units) do
-			unit:refreshViz()
+			local catchRadius = unit:getTraits().catchRadius
+			if catchRadius and catchRadius > mathutil.dist2d( px, py, unit:getPosition() ) then
+				self:setGameOver()
+				break
+			end
 		end
+	end
+	
+	for _,node in pairs(self.nodes) do
+		node:refreshViz( self.intel )
+	end
+	for _,unit in pairs(self.units) do
+		unit:refreshViz()
 	end
 end
 

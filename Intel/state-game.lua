@@ -13,16 +13,38 @@ local gamedefs = require("game/gamedefs")
 
 ----------------------------------------------------------------
 
+local MODE_NULL = 0
+local MODE_SCOUT = 1
+
+----------------------------------------------------------------
+
 local stategame = {}
 
 function stategame:setPaused( isPaused )
-	self.isPaused = isPaused
-	self.screen.binder.pauseLabel:setVisible( self.isPaused )
+	self.game:pause( isPaused )
+	self:updateInfoLabel()
 end
 
 function stategame:onSelectUnit( unit )
 	self.selectedUnit = unit
 	self:updateUnitPanel()
+end
+
+function stategame:updateInfoLabel()
+	local txt = ""
+	if self.game:isPaused() then
+		txt = "PAUSED"
+	elseif self.mode == MODE_SCOUT then
+		txt = "Click to deploy scout"
+	end
+	
+	self.screen.binder.infoLabel:setText( txt )
+	
+	if self.phaseTick == nil or self.game:getTick() > self.phaseTick + 120 then
+		self.screen.binder.enemyLabel:setVisible( false )
+	else
+		self.screen.binder.enemyLabel:setVisible( true )
+	end
 end
 
 function stategame:updateTooltip( wx, wy )
@@ -32,19 +54,36 @@ function stategame:updateTooltip( wx, wy )
 	local txt = ""
 	local node = self.game:findNode( x, y )
 	if node then
-		txt = txt .. node:getName() .."\n"
+		txt = txt
 		local info = self.game:getIntel():find( node )
-		if info == nil or info.tick == nil then
-			txt = txt .. "???"
-		elseif info == node then
-			if #node:getUnits() > 0 then
-				for _,unit in pairs(node:getUnits()) do
-					txt = txt .. " " .. unit:getName() .. ","
+		if info then
+			txt = txt .. info.name .."\n"
+			 
+			if info.creds then
+				txt = txt .. "Creds: <orange>+" ..info.creds .."</>\n"
+			end
+
+			if info.units and #info.units > 0 then
+				for _,unit in pairs(info.units) do
+					txt = txt .. unit ..", "
 				end
+				txt = txt .. "\n"
+			end
+			
+			if info.activity >= 20 then
+				txt = txt .. "<red>Activity: High</>\n"
+			elseif info.activity >= 10 then
+				txt = txt .. "<orange>Activity: Med</>\n"
+			elseif info.activity > 0 then
+				txt = txt .. "Activity: Low</>\n"
+			end
+
+			local age = (self.game:getTick() - info.tick) * MOAISim.getStep()
+			if age > 1 then
+				txt = txt .. "Last scouted: " ..util.ftime( age )
 			end
 		else
-			local age = (self.game:getTick() - info.tick) * MOAISim.getStep()
-			txt = txt .. "Last scouted: " ..util.ftime( age )
+			txt = txt .. "???"
 		end
 	end
 
@@ -57,110 +96,67 @@ function stategame:updateTooltip( wx, wy )
 end
 
 function stategame:updateUnitPanel()
-	self:updateHomePanel()
-	self:updateAwayPanel()
-end
-
-function stategame:updateHomePanel()
-	local panel = self.screen:findWidget("home0")
-	local i = 1
-	local units = {}
-	if self.game:findHomeNode() then
-		units = self.game:findHomeNode():getUnits()
-	end
-	
-	while panel do
-		local unitBtn = panel:findWidget("unitBtn")
-		local unitName = panel:findWidget("unitName")
-		local selectImg = panel:findWidget("selectImg")
-
-		if units[i] == nil then
-			panel:setVisible(false)
-		else
-			panel:setVisible(true)
-			unitBtn:setInactiveImage( units[i]:getIcon() )
-			unitBtn:setActiveImage( units[i]:getIcon() )
-			unitBtn:setHoverImage( units[i]:getIcon() )
-			unitBtn.onClick = util.makeDelegate( self, "onSelectUnit", units[i] )
-			unitName:setText( units[i]:getName() )
-			selectImg:setVisible( self.selectedUnit == units[i] )
-		end
-
-		panel = self.screen:findWidget("home"..i)
-		i = i + 1
-	end
-end
-
-function stategame:updateAwayPanel()
-	
-	local panel = self.screen:findWidget("away0")
-	local i, j = 1, 1
-	local units = self.game:getAllUnits()
-	local homeNode = self.game:findHomeNode()
-	
-	while panel do
-		local unitBtn = panel:findWidget("awayUnitBtn")
-		local unitName = panel:findWidget("awayUnitName")
-		local selectImg = panel:findWidget("awaySelectImg")
-
-		while j <= #units and (units[j]:getNode() == homeNode) do
-			j = j + 1
-		end
+	local scouts = self.game:getResource("scouts")
+	local creds = self.game:getResource("creds")
 		
-		if units[j] == nil then
-			panel:setVisible(false)
-		else
-			panel:setVisible(true)
-			unitBtn:setInactiveImage( units[j]:getIcon() )
-			unitBtn:setActiveImage( units[j]:getIcon() )
-			unitBtn:setHoverImage( units[j]:getIcon() )
-			--unitBtn.onClick = util.makeDelegate( self, "onSelectUnit", units[i] )
-			unitName:setText( units[j]:getName() )
-			selectImg:setVisible( self.selectedUnit == units[j] )
-			j = j + 1
-		end
-
-		panel = self.screen:findWidget("away"..i)
-		i = i + 1
-	end
+	self.screen.binder.resourcesLabel:setText( string.format( "Credits: %d", creds ))
 end
+
 
 function stategame:onSimEvent( evType, evData )
 	if evType == gamedefs.EV_UNIT_ARRIVED or evType == gamedefs.EV_UNIT_LEFT then
 		self:updateUnitPanel()
+	elseif evType == gamedefs.EV_UPDATE_RESOURCES then
+		self:updateUnitPanel()
 	elseif evType == gamedefs.EV_PHASEIN then
+		self.phaseTick = self.game:getTick()
+		self:updateInfoLabel()
 	end
 end
 
 function stategame:onClickBuyScout()
-	self.game:buyUnit( gamedefs.UNIT_SCOUT )
+	self:transition( MODE_SCOUT )
+end
+
+function stategame:onClickBuyTower()
+	self.game:buyUnit( gamedefs.UNIT_TOWER )
 end
 
 function stategame:onClickBuyFighter()
 	self.game:buyUnit( gamedefs.UNIT_FIGHTER )
 end
 
-function stategame:onClickBuyCaptain()
-end
-
-function stategame:onClickBuyGeneral()
+function stategame:transition( mode )
+	self.mode = mode
+	
+	self:updateInfoLabel()
 end
 
 ----------------------------------------------------------------
 stategame.onLoad = function ( self, game )
 
 	self.game = game
-	self.isPaused = false
+	self.mode = MODE_NULL
 	
 	self.selection = nselect( game )
 
 	self.screen = mui.createScreen( "state-game.lua" )
 	mui.activateScreen( self.screen )
-	self.screen.binder.fighterBtn.onClick = util.makeDelegate( stategame, "onClickBuyFighter" )
-	self.screen.binder.scoutBtn.onClick = util.makeDelegate( stategame, "onClickBuyScout" )
-	self.screen.binder.captainBtn.onClick = util.makeDelegate( stategame, "onClickBuyCaptain" )
-	self.screen.binder.generalBtn.onClick = util.makeDelegate( stategame, "onClickBuyGeneral" )
+	
+	self.screen.binder.buy0Btn:setVisible(true)
+	self.screen.binder.buy0Btn.onClick = util.makeDelegate( stategame, "onClickBuyScout" )
+	self.screen.binder.buy0Btn:setText( string.format( "<hotkey>S</>couts (20)" ))
+	self.screen.binder.buy0Btn:setHotkey( string.byte('s') )
+	self.screen.binder.buy1Btn:setVisible(true)
+	self.screen.binder.buy1Btn.onClick = util.makeDelegate( stategame, "onClickBuyTower" )
+	self.screen.binder.buy1Btn:setText( string.format( "<hotkey>T</>ower (500)" ))
+	self.screen.binder.buy1Btn:setHotkey( string.byte('t') )
+	self.screen.binder.buy2Btn:setVisible(true)
+	self.screen.binder.buy2Btn.onClick = util.makeDelegate( stategame, "onClickBuyFighter" )
+	self.screen.binder.buy2Btn:setText( string.format( "<hotkey>F</>ighter (500)" ))
+	self.screen.binder.buy2Btn:setHotkey( string.byte('f') )
 
+	self:setPaused( self.game:isPaused() )
 	self:updateUnitPanel()
 
 	self.game:addListener( self )
@@ -181,7 +177,6 @@ end
 ----------------------------------------------------------------
 stategame.onInputEvent = function ( self, event )
 
-
 	if self.game:getCamera():onInputEvent( event ) then
 		return true
 	end
@@ -193,20 +188,36 @@ stategame.onInputEvent = function ( self, event )
 			statemgr.activate( stateEdit, self.game )
 			return true
 		elseif event.key == mui_defs.K_SPACE then
-			self:setPaused( not self.isPaused )		
+			self:setPaused( not self.game:isPaused() )
+		elseif event.key == mui_defs.K_ENTER then
+			local playerUnit = self.game:findPlayer()
+			if playerUnit then
+				self.game:getCamera():panTo( playerUnit:getPosition() )
+			end
+		elseif event.key == mui_defs.K_O then
+			self.game:getIntel():setOmniscient( not self.game:getIntel():isOmniscient() )
 		end
 		
 	elseif event.eventType == mui_defs.EVENT_MouseUp then
-		if event.button == mui_defs.MB_Right then
-			local x, y = self.game:wndToWorld( event.wx, event.wy )
-			local node = self.game:findNode( x, y )
+		local x, y = self.game:wndToWorld( event.wx, event.wy )
+		local node = self.game:findNode( x, y )
 
-			if node and self.selectedUnit then
-				-- There and back
-				self.selectedUnit:issueDefaultOrder( node )
-				self.tmp = indicator( self.game, "fx_move.png", x, y )
+		if self.mode == MODE_SCOUT and not self.isPaused then
+			if node then
+				self.game:buyUnit( gamedefs.UNIT_SCOUT, node )
+				self:transition( MODE_NULL )
 			end
 			return true
+		elseif self.mode == MODE_NULL and not self.isPaused then
+			if event.button == mui_defs.MB_Right then
+				local playerUnit = self.game:findPlayer()
+
+				if playerUnit and node then
+					-- There and back
+					playerUnit:issueDefaultOrder( node )
+				end
+				return true
+			end
 		end
 
 	elseif event.eventType == mui_defs.EVENT_MouseMove then
@@ -222,20 +233,19 @@ end
 
 ----------------------------------------------------------------
 stategame.onUpdate = function ( self )
-	if not self.isPaused then
-		self.game:doTick(1)
-	end
+	self.game:doTick(1)
 	
 	local secs = self.game:getTick() * MOAISim.getStep()
 	local txt = "Time: <bigred>" ..util.ftime( secs ) .."</>"
-	local integrity = self.game:getIntegrity()
-	if integrity <= 0 then
+	if self.game:isGameOver() then
 		txt = txt .. " <bigred>GAMEOVER</>"
-	else
-		txt = txt .. " System integrity: <bigred>\%" .. math.ceil(integrity*100).. "</>"
 	end
 	
 	self.screen.binder.timeLabel:setText( txt )
+	
+	if inputmgr:getMouseXY() then
+		self:updateTooltip( inputmgr:getMouseXY() )
+	end
 end
 
 return stategame

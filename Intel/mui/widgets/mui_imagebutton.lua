@@ -41,7 +41,7 @@ function mui_imagebutton:init( mui, def )
 	self._name = def.name
 	self._image = mui_image( mui, { x = 0, y = 0, w = def.w, h = def.h, images = def.images })
 	
-	self._label = mui_label( { x = 0, y = 0, w = def.w, h = def.h, text_style = def.text_style, halign = def.halign, valign = def.valign, str = def.str } )
+	self._label = mui_label( { x = 0, y = 0, w = def.w, h = def.h, text_style = def.text_style, all_styles = def.all_styles, halign = def.halign, valign = def.valign, str = def.str } )
 	
 	self._button = mui_button( { x = 0, y = 0, w = def.w, h = def.h, hotkey = def.hotkey })
 	self._button:addEventHandler( mui_defs.EVENT_ALL, self )
@@ -52,6 +52,10 @@ function mui_imagebutton:init( mui, def )
 	self._button:attach( self._cont )
 
 	updateImageState( self )
+end
+
+function mui_imagebutton:setHotkey( hotkey )
+	self._button:setHotkey( hotkey )
 end
 
 function mui_imagebutton:setPosition( x, y )

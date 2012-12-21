@@ -27,6 +27,10 @@ function mui_button:init( def )
 	self._hotkey = def.hotkey
 end
 
+function mui_button:setHotkey( hotkey )
+	self._hotkey = hotkey
+end
+
 function mui_button:getState()
 	return self._buttonState
 end

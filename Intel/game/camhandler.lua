@@ -20,13 +20,13 @@ local function panTo( self, x, y )
 		self._easeDriver:stop()
 	end
 
-	self._easeDriver = self._camera:seekLoc( x, y, 0, 0.5 )
+	self._easeDriver = self._camera:seekLoc( x, y, 0.5 )
 end
 
 local function onInputEvent( self, event )
 
 	if event.eventType == mui_defs.EVENT_KeyUp then
-		if event.key == mui_defs.K_A or event.key == mui_defs.K_MINUS then
+		if event.key == mui_defs.K_MINUS then
 			local xs, ys = self._camera:getScl()
 			if xs < ZOOM_MAX and ys < ZOOM_MAX then
 				local xs, ys, zs = self._camera:getScl()
@@ -34,7 +34,7 @@ local function onInputEvent( self, event )
 			end
 			return true
 
-		elseif event.key == mui_defs.K_S or event.key == mui_defs.K_PLUS then
+		elseif event.key == mui_defs.K_PLUS then
 			local xs, ys = self._camera:getScl()
 			if xs > ZOOM_MIN and ys > ZOOM_MIN then
 				local xs, ys, zs = self._camera:getScl()
@@ -42,8 +42,6 @@ local function onInputEvent( self, event )
 			end
 			return true
 
-		elseif event.key == mui_defs.K_D then
-			self._camera:setLoc( 0, 0, 0 )
 		end
 
 	elseif self._state == STATE_NULL and event.controlDown then
