@@ -20,7 +20,7 @@ text_styles =
         font = [[arialbd.ttf]],
         size = 14,
         dpi = 72,
-        chars = [[ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ><{}[].,:;!@#$%^?()&*\/-"|]],
+        chars = [[ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ><{}[].,:;!@#$%^?()&*\/-+"|]],
     },
     bigred =
     {
@@ -71,6 +71,20 @@ text_styles =
             1,
             0,
             0,
+            1,
+        },
+        font = [[arialbd.ttf]],
+        size = 14,
+        dpi = 72,
+        chars = [[ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ><{}[].,:;!@#$%^?()&*\/-"|]],
+    },
+    blue =
+    {
+        color =
+        {
+            0,
+            0,
+            1,
             1,
         },
         font = [[arialbd.ttf]],

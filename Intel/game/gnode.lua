@@ -74,7 +74,7 @@ function gnode:onSpawn( game )
 	if self.traits.isHome then
 		self.prop = texprop( "planet.png", 32, game.layer )
 	else
-		self.prop = texprop( "node.png", 16, game.layer )
+		self.prop = texprop( "node.png", nil, game.layer )
 	end
     self.prop:setLoc( self.x, self.y )
 	
@@ -104,10 +104,20 @@ function gnode:intersects( x, y )
 end
 
 function gnode:doPhaseIn()
-	log:write("PHASE IN: %s", self:getName())
 	self.traits.enemyRate = (self.traits.enemyRate or 0) + 5
 	
-	self.game:spawnUnit( gunit( gamedefs.UNIT_MERC ), self )
+	local m = math.random( self.game:getTick() + 1 )
+	local unit
+	if m < 60 * 180 then
+		unit = gunit( gamedefs.UNIT_MERC )
+	elseif m < 60 * 180 * 2 then
+		unit = gunit( gamedefs.UNIT_MERC2 )
+	else
+		unit = gunit( gamedefs.UNIT_MERC3 )
+	end
+
+	self.game:spawnUnit( unit, self )
+	log:write("\tPhase %s", unit:getName())
 end
 
 function gnode:tallyActivity()
@@ -139,8 +149,9 @@ function gnode:performUpdate()
 		end
 	end
 	
-	if math.random() < 0.2 then
-		self:getTraits().creds = (self:getTraits().creds or 0) + math.random(5, 20)
+	if math.random() < 0.05 then
+		local creds = self:getTraits().creds or 0
+		self:getTraits().creds = 5 + creds + math.random( math.max( 5, creds ) )
 	end
 	
 	if self.traits.activity then
@@ -169,9 +180,13 @@ function gnode:createIntelData()
 	
 	if #self.units > 0 then
 		for _,unit in pairs(self.units) do
-			if not unit:getTraits().notooltip then
+			if unit:getTraits().ttname then
 				if data.units == nil then data.units = {} end
-				table.insert(data.units, unit:getName())
+				local name = unit:getTraits().ttname
+				if unit:getTraits().health then
+					name = string.format("(%d)", unit:getTraits().health)
+				end
+				table.insert(data.units, name)
 			end
 		end
 	end

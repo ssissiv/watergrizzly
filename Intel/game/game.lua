@@ -247,8 +247,8 @@ function game:spawnNode( node )
 	if #self.nodes == 0 then
 		node:getTraits().isHome = true
 		self.intel:add( node, node )
-	elseif math.random() < 0.2 then
-		node:getTraits().creds = math.random(10, 100)
+	elseif math.random() < 0.1 then
+		node:getTraits().creds = math.random(20, 500)
 	end
 	
 	table.insert( self.nodes, node )
@@ -308,7 +308,7 @@ end
 
 function game:addResource( name, amt )
 	self.resources[name] = math.max( 0, self.resources[name] + amt )
-	self:dispatchEvent( gamedefs.EV_UPDATE_RESOURCES )
+	self:dispatchEvent( gamedefs.EV_UPDATE_RESOURCES, amt )
 end
 
 function game:addResources( resources )
@@ -340,6 +340,8 @@ function game:buyUnit( unittype, ... )
 
 	log:write("BUY : %s at %s", unit:getName(), homeNode:getName() )
 	self:spawnUnit( unit, homeNode, ... )
+	
+	return unit
 end
 
 function game:doPhaseIn()

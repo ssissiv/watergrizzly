@@ -27,7 +27,7 @@ function gunit:init( unittype )
 			{
 				name = "Player",
 				icon = "unit_player.png", mapIcon = "map_player.png",
-				truesight = true, notooltip = true,
+				truesight = true,
 				velocity = 100,
 				defaultFn = orders.moveTo
 			}
@@ -36,18 +36,17 @@ function gunit:init( unittype )
 			{
 				name = "Scout " ..UNITNAMES[ math.random( #UNITNAMES ) ],
 				icon = "unit_scout.png", mapIcon = "map_scout.png",
-				allied = true, notooltip = true,
+				allied = true,
 				velocity = 250,
 				cost = { creds = 20 },
 				defaultFn = orders.scoutTo,
-				spawnFn = orders.scoutTo,
 			}
 	elseif unittype == gamedefs.UNIT_TOWER_SCOUT then
 		self.traits =
 			{
 				name = "Tower Scout",
 				icon = "unit_scout.png", mapIcon = "map_tower_scout.png",
-				allied = true, notooltip = true,
+				allied = true,
 				velocity = 250,
 				spawnFn = orders.findPlayer,
 			}
@@ -56,21 +55,34 @@ function gunit:init( unittype )
 		self.traits =
 			{
 				name = "Cptn." ..UNITNAMES[ math.random( #UNITNAMES ) ],
-				icon = "unit_fighter.png", mapIcon = "map_fighter.png",
-				velocity = 1,
+				ttname = "<blue>Fighter</>",
+				mapIcon = "map_fighter.png",
+				velocity = 100,
 				allied = true,
 				cost = { creds = 500 },
-				attack = 20,
+				attack = 10,
 				health = 100,
 			}
-
-	elseif unittype == gamedefs.UNIT_TOWER then
+	elseif unittype == gamedefs.UNIT_GUARDTOWER then
 		self.traits =
 			{
-				name = "Tower",
+				name = "Guard Tower",
+				ttname = "<blue>GuardT.</>",
+				mapIcon = "map_guard.png",
+				velocity = 1,
+				allied = true,
+				cost = { creds = 400 },
+				attack = 10,
+				health = 200,
+			}
+	elseif unittype == gamedefs.UNIT_WATCHTOWER then
+		self.traits =
+			{
+				name = "Watch Tower",
+				ttname = "<blue>WatchT.</>",
 				mapIcon = "map_tower.png",
 				velocity = 1,
-				cost = { creds = 500 },
+				cost = { creds = 600 },
 				allied = true,
 				health = 100,
 				spawnFn = orders.watch,
@@ -80,12 +92,42 @@ function gunit:init( unittype )
 		self.traits =
 			{
 				name = "Merc "..UNITNAMES[ math.random( #UNITNAMES ) ],
+				ttname = "<red>Merc</>",
 				icon = "", mapIcon = "map_merc.png",
 				catchRadius = 20,
-				velocity = 30,
+				hunt = 60 * 8,
+				velocity = 150,
 				activity = 10,
 				attack = 20,
 				health = 40,
+				spawnFn = orders.hunt
+			}
+	elseif unittype == gamedefs.UNIT_MERC2 then
+		self.traits =
+			{
+				name = "MercII "..UNITNAMES[ math.random( #UNITNAMES ) ],
+				ttname = "<red>MercII</>",
+				icon = "", mapIcon = "map_merc2.png",
+				catchRadius = 20,
+				hunt = 60 * 4,
+				velocity = 200,
+				activity = 10,
+				attack = 30,
+				health = 100,
+				spawnFn = orders.hunt
+			}
+	elseif unittype == gamedefs.UNIT_MERC3 then
+		self.traits =
+			{
+				name = "MercIII "..UNITNAMES[ math.random( #UNITNAMES ) ],
+				ttname = "<red>MercIII</>",
+				icon = "", mapIcon = "map_merc3.png",
+				catchRadius = 20,
+				hunt = 60 * 2,
+				velocity = 300,
+				activity = 15,
+				attack = 100,
+				health = 400,
 				spawnFn = orders.hunt
 			}
 	end
@@ -175,10 +217,12 @@ function gunit:issueDefaultOrder( ... )
 	end
 end
 
-function gunit:issueOrder( order )
+function gunit:issueOrder( order, queue )
 
-	while #self.orders > 1 do
-		table.remove( self.orders, 2 )
+	if not queue then
+		while #self.orders > 1 do
+			table.remove( self.orders, 2 )
+		end
 	end
 	
 	table.insert( self.orders, order )

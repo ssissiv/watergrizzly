@@ -10,11 +10,13 @@ local mui_defs = require("mui/mui_defs")
 local nselect = require( "game/nselect" )
 local indicator = require("game/indicator")
 local gamedefs = require("game/gamedefs")
+local orders = require("game/orders")
 
 ----------------------------------------------------------------
 
 local MODE_NULL = 0
 local MODE_SCOUT = 1
+local MODE_FIGHTER = 2
 
 ----------------------------------------------------------------
 
@@ -36,6 +38,8 @@ function stategame:updateInfoLabel()
 		txt = "PAUSED"
 	elseif self.mode == MODE_SCOUT then
 		txt = "Click to deploy scout"
+	elseif self.mode == MODE_FIGHTER then
+		txt = "Click to deploy fighter"
 	end
 	
 	self.screen.binder.infoLabel:setText( txt )
@@ -118,12 +122,16 @@ function stategame:onClickBuyScout()
 	self:transition( MODE_SCOUT )
 end
 
-function stategame:onClickBuyTower()
-	self.game:buyUnit( gamedefs.UNIT_TOWER )
+function stategame:onClickBuyWatchTower()
+	self.game:buyUnit( gamedefs.UNIT_WATCHTOWER )
+end
+
+function stategame:onClickBuyGuardTower()
+	self.game:buyUnit( gamedefs.UNIT_GUARDTOWER )
 end
 
 function stategame:onClickBuyFighter()
-	self.game:buyUnit( gamedefs.UNIT_FIGHTER )
+	self:transition( MODE_FIGHTER )
 end
 
 function stategame:transition( mode )
@@ -137,6 +145,7 @@ stategame.onLoad = function ( self, game )
 
 	self.game = game
 	self.mode = MODE_NULL
+	self.qnodes = {}
 	
 	self.selection = nselect( game )
 
@@ -148,13 +157,17 @@ stategame.onLoad = function ( self, game )
 	self.screen.binder.buy0Btn:setText( string.format( "<hotkey>S</>couts (20)" ))
 	self.screen.binder.buy0Btn:setHotkey( string.byte('s') )
 	self.screen.binder.buy1Btn:setVisible(true)
-	self.screen.binder.buy1Btn.onClick = util.makeDelegate( stategame, "onClickBuyTower" )
-	self.screen.binder.buy1Btn:setText( string.format( "<hotkey>T</>ower (500)" ))
-	self.screen.binder.buy1Btn:setHotkey( string.byte('t') )
+	self.screen.binder.buy1Btn.onClick = util.makeDelegate( stategame, "onClickBuyGuardTower" )
+	self.screen.binder.buy1Btn:setText( string.format( "<hotkey>G</>uard Tower (400)" ))
+	self.screen.binder.buy1Btn:setHotkey( string.byte('g') )
 	self.screen.binder.buy2Btn:setVisible(true)
-	self.screen.binder.buy2Btn.onClick = util.makeDelegate( stategame, "onClickBuyFighter" )
-	self.screen.binder.buy2Btn:setText( string.format( "<hotkey>F</>ighter (500)" ))
-	self.screen.binder.buy2Btn:setHotkey( string.byte('f') )
+	self.screen.binder.buy2Btn.onClick = util.makeDelegate( stategame, "onClickBuyWatchTower" )
+	self.screen.binder.buy2Btn:setText( string.format( "<hotkey>W</>atch Tower (600)" ))
+	self.screen.binder.buy2Btn:setHotkey( string.byte('w') )
+	self.screen.binder.buy3Btn:setVisible(true)
+	self.screen.binder.buy3Btn.onClick = util.makeDelegate( stategame, "onClickBuyFighter" )
+	self.screen.binder.buy3Btn:setText( string.format( "<hotkey>F</>ighter (500)" ))
+	self.screen.binder.buy3Btn:setHotkey( string.byte('f') )
 
 	self:setPaused( self.game:isPaused() )
 	self:updateUnitPanel()
@@ -204,16 +217,43 @@ stategame.onInputEvent = function ( self, event )
 
 		if self.mode == MODE_SCOUT and not self.isPaused then
 			if node then
-				self.game:buyUnit( gamedefs.UNIT_SCOUT, node )
-				self:transition( MODE_NULL )
+				if event.shiftDown then
+					table.insert( self.qnodes, orders.moveTo( self.game, nil, node ))
+				else
+					local scout = self.game:buyUnit( gamedefs.UNIT_SCOUT )
+					while #self.qnodes > 0 do
+						local order = table.remove(self.qnodes, 1)
+						order.unit = scout -- HACK
+						scout:issueOrder( order, true )
+					end
+					scout:issueOrder( orders.scoutTo( self.game, scout, node ), true )
+					self:transition( MODE_NULL )
+				end
 			end
 			return true
+
+		elseif self.mode == MODE_FIGHTER and not self.isPaused then
+			if node then
+				if event.shiftDown then
+					table.insert( self.qnodes, orders.moveTo( self.game, nil, node ))
+				else
+					local fighter = self.game:buyUnit( gamedefs.UNIT_FIGHTER )
+					while #self.qnodes > 0 do
+						local order = table.remove(self.qnodes, 1)
+						order.unit = fighter -- HACK
+						fighter:issueOrder( order, true )
+					end
+					fighter:issueOrder( orders.moveTo( self.game, fighter, node ))
+					fighter:issueOrder( orders.hunt( self.game, fighter, 60 * 2 ), true )
+					self:transition( MODE_NULL )
+				end
+			end
+			return true
+			
 		elseif self.mode == MODE_NULL and not self.isPaused then
 			if event.button == mui_defs.MB_Right then
 				local playerUnit = self.game:findPlayer()
-
 				if playerUnit and node then
-					-- There and back
 					playerUnit:issueDefaultOrder( node )
 				end
 				return true

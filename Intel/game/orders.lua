@@ -91,9 +91,10 @@ end
 
 local hunt = class()
 
-function hunt:init( game, unit )
+function hunt:init( game, unit, delay )
 	self.game = game
 	self.unit = unit
+	self.delay = delay or (60 * 8)
 end
 
 function hunt:process()
@@ -104,7 +105,7 @@ function hunt:process()
 
 	if self.targetNode == self.unit:getNode() then
 		-- arrived! wait some time
-		self.tick = self.game:getTick() + 60 * 3
+		self.tick = self.game:getTick() + self.delay
 		self.targetNode = nil
 		return
 	end

@@ -24,7 +24,6 @@ local function panTo( self, x, y )
 end
 
 local function onInputEvent( self, event )
-
 	if event.eventType == mui_defs.EVENT_KeyUp then
 		if event.key == mui_defs.K_MINUS then
 			local xs, ys = self._camera:getScl()
