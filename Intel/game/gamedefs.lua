@@ -14,6 +14,13 @@ return
 	EV_UNIT_ARRIVED = 1,
 	EV_UNIT_LEFT = 2,
 
+	EV_INTEL_UPDATE = 90,
 	EV_PHASEIN = 99,
 	EV_UPDATE_RESOURCES = 100,
+	EV_GAMEOVER = 101,
+
+	SCOUT_COST = { creds = 10 },
+	GUARDTOWER_COST = { creds = 250 },
+	WATCHTOWER_COST = { creds = 350 },
+	FIGHTER_COST = { creds = 150, fuel = 3 },
 }

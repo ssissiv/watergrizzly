@@ -36,6 +36,9 @@ APP.viewport = MOAIViewport.new ()
 APP.viewport:setSize( config.WIN_WIDTH, config.WIN_HEIGHT )
 APP.viewport:setScale( config.WIN_WIDTH, config.WIN_HEIGHT )
 
+MOAIFmodDesigner.loadFEV("space.fev")
+MOAIFmodDesigner.playSound("moo", "space/music/slow")
+
 ----------------------------------------------------------------
 -- Create the GUI subsystem
 
@@ -62,7 +65,6 @@ MOAIEnvironment.setListener( MOAIEnvironment.EVENT_VALUE_CHANGED,
 ----------------------------------------------------------------
 -- Start the game!
 
-require("game/game")
-local stateGame = require("state-game")
-statemgr.activate( stateGame, game(APP.viewport) )
+local stateSplash = require("state-splash")
+statemgr.activate( stateSplash )
 statemgr.begin ()

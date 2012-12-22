@@ -2,10 +2,19 @@ require("modules/class")
 
 local texprop = class()
 
-function texprop:init( filename, size, layer )
+local images = {}
 
-	local image = MOAIImage.new()
-	image:load( "data/" ..filename, MOAIImage.PREMULTIPLY_ALPHA )
+function texprop:init( filename, size, layer )
+	assert( layer )
+	
+	local image
+	if images[filename] == nil then
+		image = MOAIImage.new()
+		image:load( "data/" ..filename, MOAIImage.PREMULTIPLY_ALPHA )
+		images[filename] = image
+	else
+		image = images[filename]
+	end
 	
 	local gfxQuad = MOAIGfxQuad2D.new ()
 	gfxQuad:setTexture ( image )
@@ -25,7 +34,6 @@ function texprop:init( filename, size, layer )
 	self.layer = layer
 	
 	layer:insertProp( prop )
-	
 	return prop
 end
 
@@ -49,12 +57,18 @@ function texprop:setScl( sx, sy )
 	self.prop:setScl( sx, sy )
 end
 
+function texprop:setRot( a )
+	self.prop:setRot( a )
+end
+
 function texprop:setColor( r, g, b, a )
 	self.prop:setColor( r, g, b, a )
 end
 
 function texprop:destroy()
-	self.layer:removeProp( self.prop )
+	if self.layer then
+		self.layer:removeProp( self.prop )
+	end
 	self.prop = nil
 	self.layer = nil
 end

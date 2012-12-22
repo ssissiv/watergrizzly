@@ -5,7 +5,9 @@ local texprop = require( "modules/texprop" )
 
 local indicator = class()
 
-function indicator:init( game, filename, x, y, throbs )
+function indicator:init( game, filename, x, y, throbs, duration )
+	assert( game.layer )
+	
 	throbs = throbs or 3
 	
 	self.game = game
@@ -15,7 +17,7 @@ function indicator:init( game, filename, x, y, throbs )
 	local curve = MOAIAnimCurve.new ()
 	curve:reserveKeys ( throbs * 2 )
 	for i = 1,throbs * 2 do
-		curve:setKey ( i, (i-1)/2, i % 2 )
+		curve:setKey ( i, (duration or 1) * (i-1)/2, i % 2 )
 	end
 
 	self.texprop.prop:setAttrLink ( MOAIColor.ATTR_A_COL, curve, MOAIAnimCurve.ATTR_VALUE )

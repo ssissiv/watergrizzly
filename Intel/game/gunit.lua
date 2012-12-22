@@ -27,9 +27,8 @@ function gunit:init( unittype )
 			{
 				name = "Player",
 				icon = "unit_player.png", mapIcon = "map_player.png",
-				truesight = true,
+				truesight = true, nonlinear = true, orient = true,
 				velocity = 100,
-				defaultFn = orders.moveTo
 			}
 	elseif unittype == gamedefs.UNIT_SCOUT then
 		self.traits =
@@ -38,7 +37,7 @@ function gunit:init( unittype )
 				icon = "unit_scout.png", mapIcon = "map_scout.png",
 				allied = true,
 				velocity = 250,
-				cost = { creds = 20 },
+				cost = gamedefs.SCOUT_COST,
 				defaultFn = orders.scoutTo,
 			}
 	elseif unittype == gamedefs.UNIT_TOWER_SCOUT then
@@ -58,10 +57,10 @@ function gunit:init( unittype )
 				ttname = "<blue>Fighter</>",
 				mapIcon = "map_fighter.png",
 				velocity = 100,
-				allied = true,
-				cost = { creds = 500 },
+				allied = true, orient = true,
+				cost = gamedefs.FIGHTER_COST,
 				attack = 10,
-				health = 100,
+				health = 80,
 			}
 	elseif unittype == gamedefs.UNIT_GUARDTOWER then
 		self.traits =
@@ -71,9 +70,9 @@ function gunit:init( unittype )
 				mapIcon = "map_guard.png",
 				velocity = 1,
 				allied = true,
-				cost = { creds = 400 },
+				cost = gamedefs.GUARDTOWER_COST,
 				attack = 10,
-				health = 200,
+				health = 150,
 			}
 	elseif unittype == gamedefs.UNIT_WATCHTOWER then
 		self.traits =
@@ -82,7 +81,7 @@ function gunit:init( unittype )
 				ttname = "<blue>WatchT.</>",
 				mapIcon = "map_tower.png",
 				velocity = 1,
-				cost = { creds = 600 },
+				cost = gamedefs.WATCHTOWER_COST,
 				allied = true,
 				health = 100,
 				spawnFn = orders.watch,
@@ -94,12 +93,13 @@ function gunit:init( unittype )
 				name = "Merc "..UNITNAMES[ math.random( #UNITNAMES ) ],
 				ttname = "<red>Merc</>",
 				icon = "", mapIcon = "map_merc.png",
+				orient = true,
 				catchRadius = 20,
 				hunt = 60 * 8,
-				velocity = 150,
+				velocity = 100,
 				activity = 10,
 				attack = 20,
-				health = 40,
+				health = 50,
 				spawnFn = orders.hunt
 			}
 	elseif unittype == gamedefs.UNIT_MERC2 then
@@ -110,25 +110,25 @@ function gunit:init( unittype )
 				icon = "", mapIcon = "map_merc2.png",
 				catchRadius = 20,
 				hunt = 60 * 4,
-				velocity = 200,
+				velocity = 150,
 				activity = 10,
 				attack = 30,
-				health = 100,
+				health = 120,
 				spawnFn = orders.hunt
 			}
 	elseif unittype == gamedefs.UNIT_MERC3 then
 		self.traits =
 			{
-				name = "MercIII "..UNITNAMES[ math.random( #UNITNAMES ) ],
-				ttname = "<red>MercIII</>",
+				name = "Hunter "..UNITNAMES[ math.random( #UNITNAMES ) ],
+				ttname = "<red>Hunter</>",
 				icon = "", mapIcon = "map_merc3.png",
 				catchRadius = 20,
-				hunt = 60 * 2,
-				velocity = 300,
+				hunt = 60 * 6,
+				velocity = 100,
 				activity = 15,
-				attack = 100,
-				health = 400,
-				spawnFn = orders.hunt
+				attack = 20,
+				health = 80,
+				spawnFn = orders.findPlayer
 			}
 	end
 	
@@ -139,6 +139,10 @@ function gunit:destroy()
 	if self.timer then
 		self.timer:stop()
 		self.timer = nil
+	end
+	if self.easer then
+		self.easer:stop()
+		self.easer = nil
 	end
 	
 	self.prop:destroy()
@@ -247,6 +251,9 @@ end
 
 function gunit:arriveAt( targetNode )
 	assert( self.node == nil )
+	if self.prop == nil or self.game:isGameOver() then
+		return
+	end
 
 	self.node = targetNode
 	self.node:addUnit( self )
@@ -264,6 +271,7 @@ function gunit:arriveAt( targetNode )
 	local playerNode = self.game:findHomeNode()
 	if targetNode == playerNode and self.traits.allied then
 		self.game:getIntel():merge( self.intel )
+		self.game:dispatchEvent( gamedefs.EV_INTEL_UPDATE )
 	end
 
 	-- weird combat shit
@@ -319,7 +327,17 @@ function gunit:travelTo( targetNode )
 	local x1, y1 = targetNode:getPosition()
 	local dist = mathutil.dist2d( x0, y0, x1, y1 )
 	
-	self.easer = self.prop:seekLoc( x1, y1, dist / self.traits.velocity, MOAIEaseType.LINEAR )
+	if self.traits.orient then
+		local a = math.atan2( y1 - y0, x1 - x0 )
+		self.prop:setRot( math.deg(a) + 90 )
+	end
+	
+	local easeType = MOAIEaseType.LINEAR
+	if self.traits.nonlinear then
+		easeType = nil  -- default ease
+	end
+	
+	self.easer = self.prop:seekLoc( x1, y1, dist / self.traits.velocity, easeType )
 	self.easer:setListener ( MOAIAction.EVENT_STOP,
 		function()
 			self.easer = nil
@@ -337,7 +355,7 @@ function gunit:refreshViz()
 		local x0, y0 = playerUnit.prop:getLoc()
 		local dist = mathutil.dist2d( x0, y0, self.prop:getLoc() )
 		
-		local a = 1.0 - math.min(1.0, dist / 200)
+		local a = 1.0 - math.min(1.0, dist / 300)
 		self.prop:setColor( 1, 1, 1, a )
 	else
 		self.prop:setColor( 1, 1, 1, 1 )

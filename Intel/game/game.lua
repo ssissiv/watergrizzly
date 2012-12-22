@@ -15,6 +15,9 @@ local gamedefs = require("game/gamedefs")
 local PHASE_IN = 60 * 30
 local PHASE_IN_DIST = 400
 local START_CREDS = 100
+local START_FUEL = 20
+local CREDS_MIN = 20
+local CREDS_MAX = 200
 
 ----------------------------------------------------------------
 
@@ -108,8 +111,8 @@ local function createLinkViz( layer, game )
 	scriptDeck:setDrawCallback ( 
 		function( index, xOff, yOff, xFlip, yFlip )
 		
-			MOAIGfxDevice.setPenColor ( 0.5, 0.5, 0.5, 1 )
-			MOAIGfxDevice.setPenWidth ( 3 )
+			MOAIGfxDevice.setPenColor ( 0.4, 0.4, 0.4, 0.5 )
+			MOAIGfxDevice.setPenWidth ( 2 )
 			
 			for _,link in pairs(game.links) do
 				MOAIDraw.drawLine( link:getPosition() )
@@ -118,6 +121,7 @@ local function createLinkViz( layer, game )
 	
 	local prop = MOAIProp2D.new ()
 	prop:setDeck ( scriptDeck )
+	prop:setBlendMode( MOAIProp.GL_SRC_ALPHA, MOAIProp.GL_ONE_MINUS_SRC_ALPHA )    
 	
 	layer:insertProp( prop )
 	
@@ -153,7 +157,7 @@ function game:init( viewport )
 	self.nodes = {}
 	self.units = {}
 	self.links = {}
-	self.resources = { creds = START_CREDS }
+	self.resources = { creds = START_CREDS, fuel = START_FUEL }
 	self.intel = gintel( self )
 	
 	self:loadTopography( "defaultmap.lua" )
@@ -247,8 +251,13 @@ function game:spawnNode( node )
 	if #self.nodes == 0 then
 		node:getTraits().isHome = true
 		self.intel:add( node, node )
-	elseif math.random() < 0.1 then
-		node:getTraits().creds = math.random(20, 500)
+	else
+		if math.random() < 0.1 then
+			node:getTraits().creds = math.random(CREDS_MIN, CREDS_MAX)
+		end
+		if math.random() < 0.1 then
+			node:getTraits().fuel = math.random(1, 5)
+		end
 	end
 	
 	table.insert( self.nodes, node )
@@ -295,11 +304,15 @@ function game:findHomeNode()
 end
 
 function game:findPlayer()
-	for _,unit in pairs(self.units) do
-		if unit:getTraits().unittype == gamedefs.UNIT_PLAYER then
-			return unit
+	if self.playerUnit == nil then
+		for _,unit in pairs(self.units) do
+			if unit:getTraits().unittype == gamedefs.UNIT_PLAYER then
+				self.playerUnit = unit
+			end
 		end
 	end
+	
+	return self.playerUnit
 end
 
 function game:getResource( name )
@@ -308,13 +321,28 @@ end
 
 function game:addResource( name, amt )
 	self.resources[name] = math.max( 0, self.resources[name] + amt )
-	self:dispatchEvent( gamedefs.EV_UPDATE_RESOURCES, amt )
 end
 
 function game:addResources( resources )
 	for resource,cost in pairs(resources) do
 		self:addResource( resource, cost )
 	end
+end
+
+function game:useResources( resources )
+	for resource,cost in pairs(resources) do
+		self:addResource( resource, -cost )
+	end
+end
+
+function game:hasResources( cost )
+	for resource,cost in pairs(cost) do
+		if self.resources[resource] and self.resources[resource] < cost then
+			return false
+		end
+	end
+	
+	return true
 end
 
 function game:buyUnit( unittype, ... )
@@ -327,16 +355,13 @@ function game:buyUnit( unittype, ... )
 	if homeNode == nil then
 		return
 	end
-	
+
 	local unit = gunit( unittype )
-	for resource,cost in pairs(unit:getTraits().cost) do
-		if self.resources[resource] and self.resources[resource] < cost then
-			return
-		end
+	if not self:hasResources( unit:getTraits().cost ) then
+		return
 	end
-	for resource,cost in pairs(unit:getTraits().cost) do
-		self:addResource( resource, -cost )
-	end
+	
+	self:useResources( unit:getTraits().cost )
 
 	log:write("BUY : %s at %s", unit:getName(), homeNode:getName() )
 	self:spawnUnit( unit, homeNode, ... )
@@ -378,10 +403,13 @@ function game:isGameOver()
 end
 
 function game:setGameOver()
-	log:write("GAME OVER at tick %d!", self.tick )
-	self.intel:setOmniscient( true )
-	self:pause( true )
-	self.gameOver = true
+	if not self.gameOver then
+		log:write("GAME OVER at tick %d!", self.tick )
+		self.intel:setOmniscient( true )
+		self:pause( true )
+		self.gameOver = true
+		self:dispatchEvent( gamedefs.EV_GAMEOVER )
+	end
 end
 
 function game:pause( paused )

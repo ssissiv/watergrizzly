@@ -74,6 +74,7 @@ function _M.createHandler( layer )
 
 	local camera = MOAICamera2D.new ()
 	layer:setCamera( camera )
+	camera:setScl( 1.5 )
 	
 	return
 	{

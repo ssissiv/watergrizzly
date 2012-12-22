@@ -11,10 +11,11 @@ local indicator = require("game/indicator")
 
 local moveTo = class()
 
-function moveTo:init( game, unit, targetNode )
+function moveTo:init( game, unit, targetNode, maxMove )
 	self.game = game
 	self.unit = unit
 	self.targetNode = targetNode
+	self.maxMove = maxMove
 
 	self.fx = indicator( self.game, "fx_move.png", targetNode:getPosition() )
 end
@@ -25,7 +26,16 @@ function moveTo:process()
 		return
 	end
 	
-	if self.targetNode ~= self.unit:getNode() then
+	if self.unit == self.game:findPlayer() then
+		if not self.game:hasResources( { fuel = 1 } ) then
+			self.unit:removeOrder( self )
+			return
+		else
+			self.game:useResources( { fuel = 1 } )
+		end
+	end
+			
+	if (self.maxMove == nil or self.maxMove > 0) and self.targetNode ~= self.unit:getNode() then
 		local astar = AStar(AStarHandler( self.game ))
 		local path = astar:findPath( self.unit:getNode(), self.targetNode )
 		if path then	
@@ -33,8 +43,10 @@ function moveTo:process()
 
 			--log:write("--- PATHFIND %s -> %s : Cost: %.2f (%d jumps, next: %s) --------",
 			--	self.node:getName(), order.targetNode:getName(), path:getTotalMoveCost(), #path:getNodes(), nextTarget:getName() )
-
 			self.unit:travelTo( nextTarget )
+			if self.maxMove then
+				self.maxMove = self.maxMove - 1
+			end
 		end
 	else
 		-- Completed order
@@ -80,9 +92,6 @@ function scoutTo:process()
 	elseif targetNode == playerUnit:getNode() then
 		-- Completed order
 		self.unit:removeOrder( self )
-		if self.unit:getTraits().cost then
-			self.game:addResources( self.unit:getTraits().cost )
-		end
 		self.game:despawnUnit( self.unit )
 	end
 end
@@ -116,6 +125,15 @@ function hunt:process()
 	end
 	
 	local linkNodes = self.unit:getNode():getLinkNodes()
+	local lastNode = self.unit:getLastNode()
+	local nextIdx = math.random( #linkNodes )
+	while linkNodes[nextIdx] == lastNode do
+		if math.random( #linkNodes ) == 1 then
+			break
+		else
+			nextIdx = math.random( #linkNodes )
+		end
+	end
 	local targetNode = linkNodes[ math.random( #linkNodes ) ]
 	
 	if targetNode and targetNode ~= self.unit:getNode() then
@@ -139,6 +157,7 @@ local findPlayer = class()
 function findPlayer:init( game, unit )
 	self.game = game
 	self.unit = unit
+	self.delay = unit:getTraits().delay or 0
 end
 
 function findPlayer:process()
@@ -146,7 +165,19 @@ function findPlayer:process()
 	if self.unit:getNode() == nil then
 		return
 	end
-
+	
+	if self.travelling then
+		-- arrived! wait some time
+		self.tick = self.game:getTick() + self.delay
+		self.travelling = false
+		return
+	end
+		
+	if self.tick and self.tick > self.game:getTick() then
+		-- still waiting
+		return
+	end
+	
 	local playerUnit = self.game:findPlayer() 
 	local targetNode = playerUnit:getNode() or playerUnit:getLastNode()
 	
@@ -160,6 +191,7 @@ function findPlayer:process()
 			--	self.node:getName(), order.targetNode:getName(), path:getTotalMoveCost(), #path:getNodes(), nextTarget:getName() )
 
 			self.unit:travelTo( nextTarget )
+			self.travelling = true
 		end
 	elseif targetNode == playerUnit:getNode() then
 		-- Completed order

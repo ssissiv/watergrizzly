@@ -31,6 +31,21 @@ function gnode:init( x, y, traits )
 end
 
 function gnode:destroy()
+	if self.timer then
+		self.timer:stop()
+		self.timer = nil
+	end
+	
+	if self.fuelProp then
+		self.fuelProp:destroy()
+		self.fuelProp = nil
+	end
+	
+	if self.credsProp then
+		self.credsProp:destroy()
+		self.credsProp = nil
+	end
+	
 	self.prop:destroy()
 	self.prop = nil
 end
@@ -71,8 +86,13 @@ end
 function gnode:onSpawn( game )
 	self.game = game
 
+	local i = math.random(25)
 	if self.traits.isHome then
 		self.prop = texprop( "planet.png", 32, game.layer )
+	elseif MOAIFileSystem.checkFileExists( "data/node"..i..".png" ) then
+		self.prop = texprop( "node"..i..".png", nil, game.layer )
+		local sx = math.random() / 5 + 0.5
+		self.prop:setScl(sx)
 	else
 		self.prop = texprop( "node.png", nil, game.layer )
 	end
@@ -108,9 +128,9 @@ function gnode:doPhaseIn()
 	
 	local m = math.random( self.game:getTick() + 1 )
 	local unit
-	if m < 60 * 180 then
+	if m < 60 * 100 then
 		unit = gunit( gamedefs.UNIT_MERC )
-	elseif m < 60 * 180 * 2 then
+	elseif m < 60 * 200 then
 		unit = gunit( gamedefs.UNIT_MERC2 )
 	else
 		unit = gunit( gamedefs.UNIT_MERC3 )
@@ -141,17 +161,25 @@ function gnode:scheduleUpdate()
 end
 
 function gnode:performUpdate()
-	if self.traits.creds then
+	if (self.traits.creds and self.traits.creds > 0) or (self.traits.fuel and self.traits.fuel > 0) then
 		local playerUnit = self.game:findPlayer()
 		if playerUnit:getNode() == self then
-			self.game:addResource( "creds", self.traits.creds )
-			self.traits.creds = 0
+			self.game:addResource( "creds", self.traits.creds or 0 )
+			self.game:addResource( "fuel", self.traits.fuel or 0 )
+			self.game:dispatchEvent( gamedefs.EV_UPDATE_RESOURCES, { self.traits.creds, self.traits.fuel } )
+			self.traits.creds, self.traits.fuel = 0, 0
 		end
 	end
 	
 	if math.random() < 0.05 then
 		local creds = self:getTraits().creds or 0
-		self:getTraits().creds = 5 + creds + math.random( math.max( 5, creds ) )
+		self:getTraits().creds = 10 + creds + math.random( 40 )
+	end
+	if math.random() < 0.02 then
+		local fuel = self:getTraits().fuel or 0
+		if fuel < 8 then
+			self:getTraits().fuel = fuel + math.random( 1, 8 )
+		end
 	end
 	
 	if self.traits.activity then
@@ -175,6 +203,7 @@ function gnode:createIntelData()
 		name = self.name,
 		activity = self:tallyActivity(),
 		creds = self.traits.creds,
+		fuel = self.traits.fuel,
 		tick = self.game:getTick(),
 	}
 	
@@ -213,7 +242,7 @@ function gnode:refreshViz( intel )
 	if age == nil then
 		c = 0.1 -- No intel
 	else
-		c = (1.0 - math.min(1.0, age / 120)) * 0.9 + 0.1
+		c = (1.0 - math.min(1.0, age / 60)) * 0.9 + 0.1
 	end
 	if data and data.activity > 0 then
 		self.prop:setColor( 1, 0, 0, c )
@@ -221,6 +250,29 @@ function gnode:refreshViz( intel )
 		self.prop:setScl( sx )
 	else
 		self.prop:setColor( 1, 1, 1, c )
+	end
+	
+	if data and (data.creds or 0) > 0 then
+		if self.credsProp == nil then
+			self.credsProp = texprop( "map_creds.png", nil, self.game.layer )
+		end
+		local x, y = self:getPosition()
+		self.credsProp:setLoc( x - 20, y + 30 )
+		self.credsProp:setColor( 1, 1, 1, c )
+		self.credsProp:setVisible(true)
+	elseif self.credsProp then
+		self.credsProp:setVisible(false)
+	end
+	if data and (data.fuel or 0) > 0 then
+		if self.fuelProp == nil then
+			self.fuelProp = texprop( "map_fuel.png", nil, self.game.layer )
+		end
+		local x, y = self:getPosition()
+		self.fuelProp:setLoc( x + 10, y + 30 )
+		self.fuelProp:setColor( 1, 1, 1, c )
+		self.fuelProp:setVisible(true)
+	elseif self.fuelProp then
+		self.fuelProp:setVisible(false)
 	end
 end
 
