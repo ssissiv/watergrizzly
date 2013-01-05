@@ -12,8 +12,8 @@ local ACTIVITY_FADE = 2
 local function generateName()
 	
 	return string.format("%s-%s%d",
-		string.char( math.random( 0, 26 ) + string.byte('A')),
-		string.char( math.random( 0, 26 ) + string.byte('A')),
+		string.char( math.random( 0, 25 ) + string.byte('A')),
+		string.char( math.random( 0, 25 ) + string.byte('A')),
 		math.random( 0, 256 ) )
 end
 
@@ -160,14 +160,20 @@ function gnode:scheduleUpdate()
 	
 end
 
+function gnode:takeResources( )
+	if (self.traits.creds and self.traits.creds > 0) or (self.traits.fuel and self.traits.fuel > 0) then
+		self.game:addResource( "creds", self.traits.creds or 0 )
+		self.game:addResource( "fuel", self.traits.fuel or 0 )
+		self.game:dispatchEvent( gamedefs.EV_UPDATE_RESOURCES, { self.traits.creds, self.traits.fuel } )
+		self.traits.creds, self.traits.fuel = 0, 0
+	end
+end
+
 function gnode:performUpdate()
 	if (self.traits.creds and self.traits.creds > 0) or (self.traits.fuel and self.traits.fuel > 0) then
 		local playerUnit = self.game:findPlayer()
 		if playerUnit:getNode() == self then
-			self.game:addResource( "creds", self.traits.creds or 0 )
-			self.game:addResource( "fuel", self.traits.fuel or 0 )
-			self.game:dispatchEvent( gamedefs.EV_UPDATE_RESOURCES, { self.traits.creds, self.traits.fuel } )
-			self.traits.creds, self.traits.fuel = 0, 0
+			self:takeResources()
 		end
 	end
 	
@@ -213,7 +219,7 @@ function gnode:createIntelData()
 				if data.units == nil then data.units = {} end
 				local name = unit:getTraits().ttname
 				if unit:getTraits().health then
-					name = string.format("(%d)", unit:getTraits().health)
+					name = string.format("%s (%d)", name, unit:getTraits().health)
 				end
 				table.insert(data.units, name)
 			end

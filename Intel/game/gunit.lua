@@ -257,6 +257,9 @@ function gunit:arriveAt( targetNode )
 
 	self.node = targetNode
 	self.node:addUnit( self )
+	if self == self.game:findPlayer() then
+		self.node:takeResources()
+	end
 	
 	if self.traits.truesight then
 		self.game:getIntel():add( self.node, self.node )
@@ -355,7 +358,7 @@ function gunit:refreshViz()
 		local x0, y0 = playerUnit.prop:getLoc()
 		local dist = mathutil.dist2d( x0, y0, self.prop:getLoc() )
 		
-		local a = 1.0 - math.min(1.0, dist / 300)
+		local a = 1.0 - math.min(1.0, dist / 400)
 		self.prop:setColor( 1, 1, 1, a )
 	else
 		self.prop:setColor( 1, 1, 1, 1 )

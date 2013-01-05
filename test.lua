@@ -1,0 +1,8 @@
+print(math.random(0,1))
+print(math.random(0,1))
+print(math.random(0,1))
+print(math.random(0,1))
+print(math.random(0,1))
+print(math.random(0,1))
+print(math.random(0,1))
+print(math.random(0,1))

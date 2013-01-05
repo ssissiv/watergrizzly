@@ -353,7 +353,7 @@ stategame.onUpdate = function ( self )
 	local secs = self.game:getTick() * MOAISim.getStep()
 	local txt = "Time: <bigred>" ..util.ftime( secs ) .."</>"
 	if self.game:isGameOver() then
-		txt = txt .. "   <bigred>GAMEOVER</>"
+		txt = txt .. string.format("   <bigred>GAMEOVER: %d</>", self.game:getTick() )
 	end
 	
 	self.screen.binder.timeLabel:setText( txt )

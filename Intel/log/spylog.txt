@@ -1,74 +1,20 @@
-21:31:31> ### SPY SOCIETY 0.1.0 ###
-21:31:31> DATE: 12/20/12 21:31:31
-21:31:31> game:init()
-21:31:31> Loading topography from 'defaultmap.lua'
-21:31:31> 	Success!
-21:31:31> PAUSE: false
+21:03:37> ### SPY SOCIETY 0.1.0 ###
+21:03:37> DATE: 12/22/12 21:03:37
 
-21:32:01> PHASE IN - dist 1376.07
-21:32:01> 	Phase Merc Alex
+21:03:44> game:init()
+21:03:44> Loading topography from 'defaultmap.lua'
+21:03:44> 	Success!
+21:03:44> PAUSE: false
+21:03:44> PAUSE: true
 
-21:32:21> BUY : Watch Tower at F-O49
+21:04:04> PAUSE: false
 
-21:32:27> BUY : Scout Hal at O-K44
-21:32:27>  DESPAWN Tower Scout
+21:04:11> BUY : Scout Jorge at P-Z11
 
-21:32:31> PHASE IN - dist 725.40
-21:32:31> 	Phase Merc Jorge
-21:32:32>  DESPAWN Tower Scout
+21:04:17> BUY : Scout Jase at P-Z11
 
-21:32:34>  DESPAWN Scout Hal
+21:04:19>  DESPAWN Scout Jorge
+21:04:19>  DESPAWN Scout Jase
 
-21:32:41> BUY : Scout Brook at A-V47
-
-21:32:43> BUY : Scout Feryl at A-V47
-21:32:43>  DESPAWN Tower Scout
-21:32:44>  DESPAWN Tower Scout
-21:32:45>  DESPAWN Scout Brook
-
-21:32:54>  DESPAWN Scout Feryl
-
-21:33:01> PHASE IN - dist 1164.49
-21:33:01> 	Phase Merc Feryl
-
-21:33:03>  DESPAWN Tower Scout
-21:33:03>  DESPAWN Tower Scout
-21:33:03>  DESPAWN Tower Scout
-
-21:33:08> BUY : Scout Jorge at N-E21
-21:33:08>  DESPAWN Tower Scout
-
-21:33:10> BUY : Scout Nabob at N-E21
-21:33:11>  DESPAWN Tower Scout
-
-21:33:13>  DESPAWN Scout Jorge
-
-21:33:22>  DESPAWN Scout Nabob
-21:33:22>  DESPAWN Tower Scout
-21:33:23>  DESPAWN Tower Scout
-
-21:33:30>  DESPAWN Tower Scout
-21:33:31> PHASE IN - dist 497.18
-21:33:31> 	Phase Merc Nabob
-21:33:32>  DESPAWN Tower Scout
-21:33:33> BUY : Guard Tower at N-R147
-
-21:33:38> BUY : Scout Nabob at K-U127
-21:33:39>  DESPAWN Tower Scout
-
-21:33:41>  DESPAWN Scout Nabob
-21:33:42>  DESPAWN Tower Scout
-
-21:33:44> BUY : Scout Brock at K-U127
-21:33:44>  DESPAWN Tower Scout
-
-21:33:49>  DESPAWN Tower Scout
-
-21:33:53>  DESPAWN Tower Scout
-21:33:54> BUY : Cptn.Brock at Z-J113
-21:33:55>  DESPAWN Scout Brock
-21:33:56> DMG Cptn.Brock (20)
-21:33:56> DMG Merc Feryl (10)
-21:33:57> BUY : Cptn.Brook at Z-J113
-21:33:57> GAME OVER at tick 8762!
-21:33:57> PAUSE: true
+21:04:34> PHASE IN - dist 602.97
+21:04:34> 	Phase Merc Jim
