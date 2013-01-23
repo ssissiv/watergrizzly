@@ -1,0 +1,51 @@
+TEXTURE: '(texture from MOAIImage)' is not a power of two (w:1280, h:720)
+TEXTURE: '+'    2764800 =   2.64MB < (texture from MOAIImage)
+TEXTURE: 'C:/GIT/watergrizzly/SpaceMetal/data/space.png' is not a power of two (w:1280, h:720)
+TEXTURE: '+'    2764800 =   5.27MB < C:/GIT/watergrizzly/SpaceMetal/data/space.png
+TEXTURE: '+'    1048576 =   6.27MB < C:/GIT/watergrizzly/SpaceMetal/data/nebula1.png
+TEXTURE: '+'    1048576 =   7.27MB < C:/GIT/watergrizzly/SpaceMetal/data/nebula1.png
+TEXTURE: '+'    1048576 =   8.27MB < C:/GIT/watergrizzly/SpaceMetal/data/nebula1.png
+TEXTURE: '+'    1048576 =   9.27MB < C:/GIT/watergrizzly/SpaceMetal/data/nebula1.png
+TEXTURE: '+'    1048576 =  10.27MB < C:/GIT/watergrizzly/SpaceMetal/data/nebula1.png
+TEXTURE: '+'    1048576 =  11.27MB < C:/GIT/watergrizzly/SpaceMetal/data/nebula1.png
+TEXTURE: '+'    1048576 =  12.27MB < C:/GIT/watergrizzly/SpaceMetal/data/nebula1.png
+TEXTURE: '+'    1048576 =  13.27MB < C:/GIT/watergrizzly/SpaceMetal/data/nebula1.png
+TEXTURE: '+'    1048576 =  14.27MB < C:/GIT/watergrizzly/SpaceMetal/data/nebula2.png
+TEXTURE: '+'    1048576 =  15.27MB < C:/GIT/watergrizzly/SpaceMetal/data/nebula2.png
+TEXTURE: '+'    1048576 =  16.27MB < C:/GIT/watergrizzly/SpaceMetal/data/nebula2.png
+TEXTURE: '+'    1048576 =  17.27MB < C:/GIT/watergrizzly/SpaceMetal/data/nebula2.png
+TEXTURE: '+'    1048576 =  18.27MB < C:/GIT/watergrizzly/SpaceMetal/data/nebula2.png
+TEXTURE: '+'    1048576 =  19.27MB < C:/GIT/watergrizzly/SpaceMetal/data/nebula2.png
+TEXTURE: '+'    1048576 =  20.27MB < C:/GIT/watergrizzly/SpaceMetal/data/nebula2.png
+TEXTURE: '+'    1048576 =  21.27MB < C:/GIT/watergrizzly/SpaceMetal/data/nebula2.png
+TEXTURE: '+'    1048576 =  22.27MB < C:/GIT/watergrizzly/SpaceMetal/data/nebula3.png
+TEXTURE: '+'    1048576 =  23.27MB < C:/GIT/watergrizzly/SpaceMetal/data/nebula3.png
+TEXTURE: '+'    1048576 =  24.27MB < C:/GIT/watergrizzly/SpaceMetal/data/nebula3.png
+TEXTURE: '+'    1048576 =  25.27MB < C:/GIT/watergrizzly/SpaceMetal/data/nebula3.png
+TEXTURE: '+'    1048576 =  26.27MB < C:/GIT/watergrizzly/SpaceMetal/data/nebula3.png
+TEXTURE: '+'    1048576 =  27.27MB < C:/GIT/watergrizzly/SpaceMetal/data/nebula3.png
+TEXTURE: '+'    1048576 =  28.27MB < C:/GIT/watergrizzly/SpaceMetal/data/nebula3.png
+TEXTURE: '(texture from MOAIImage)' is not a power of two (w:96, h:96)
+TEXTURE: '+'      36864 =  28.31MB < (texture from MOAIImage)
+TEXTURE: '+'      32768 =  28.34MB < C:/GIT/watergrizzly/SpaceMetal/data/arialbd.ttf
+TEXTURE: '+'     131072 =  28.46MB < C:/GIT/watergrizzly/SpaceMetal/data/arialbd.ttf
+TEXTURE: '+'      32768 =  28.50MB < C:/GIT/watergrizzly/SpaceMetal/data/arialbd.ttf
+TEXTURE: '+'      32768 =  28.53MB < C:/GIT/watergrizzly/SpaceMetal/data/arialbd.ttf
+TEXTURE: '+'      32768 =  28.56MB < C:/GIT/watergrizzly/SpaceMetal/data/arialbd.ttf
+TEXTURE: '+'      32768 =  28.59MB < C:/GIT/watergrizzly/SpaceMetal/data/arialbd.ttf
+----------------------------------------------------------------
+Param type mismatch at position 3: expected a 'userdata' but got a 'table'
+stack traceback:
+	[C] in function 'setAttrLink'
+	.\game/csship.lua:66 in function 'showEditGrid'
+	.\state-edit.lua:40 in function 'onLoad'
+	.\modules/state-manager.lua:95 in function 'activateAtIndex'
+	.\modules/state-manager.lua:110 in function 'activate'
+	.\state-game.lua:85 in function 'onInputEvent'
+	.\modules/input-manager.lua:41 in function 'notifyListeners'
+	.\modules/input-manager.lua:74 in function <.\modules/input-manager.lua:63>
+
+TEXTURE: '+'    4194304 =  32.59MB < C:/GIT/watergrizzly/SpaceMetal/data/hex-tiles.png
+TEXTURE: '+'      32768 =  32.62MB < C:/GIT/watergrizzly/SpaceMetal/data/arialbd.ttf
+TEXTURE: '+'      32768 =  32.65MB < C:/GIT/watergrizzly/SpaceMetal/data/arialbd.ttf
+TEXTURE: '+'    1048576 =  33.65MB < C:/GIT/watergrizzly/SpaceMetal/data/nebula3.png
