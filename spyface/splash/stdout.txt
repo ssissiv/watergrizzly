@@ -1,0 +1,9 @@
+Initializing Chipmunk v5.3.4 (Debug Enabled)
+Compile with -DNDEBUG defined to disable debug mode and runtime assertion checks
+TEXTURE: '+'      65536 =   0.06MB < F:/klei/SpySociety/tools/spyface/uitool/Bastarda-K.ttf
+TEXTURE: '+'        768 =   0.06MB < (texture from MOAIImage)
+TEXTURE: '+'       4096 =   0.07MB < (texture from MOAIImage)
+TEXTURE: '+'       4096 =   0.07MB < (texture from MOAIImage)
+TEXTURE: '+'       4096 =   0.07MB < (texture from MOAIImage)
+TEXTURE: '+'         48 =   0.07MB < (texture from MOAIImage)
+TEXTURE: '+'        768 =   0.08MB < (texture from MOAIImage)
