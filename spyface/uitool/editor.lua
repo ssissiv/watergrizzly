@@ -4,7 +4,7 @@
 -- http://getmoai.com
 ----------------------------------------------------------------
 
-MOAIFileSystem.setWorkingDirectory( "./../../game/win32" )
+MOAIFileSystem.setWorkingDirectory( ENGINE_PATH ) -- ENGINE_PATH is defined in DllHost.
 package.path = [[.\\client\\?.lua;]] .. package.path
 
 function include( filename )
