@@ -217,13 +217,6 @@ function game:pause( paused )
 	if paused ~= self.paused then
 		log:write("PAUSE: " ..tostring(paused))
 		self.paused = paused
-
-		for _,node in pairs(self.nodes) do
-			node:pause( paused )
-		end
-		for _,unit in pairs(self.units) do
-			unit:pause( paused )
-		end
 	end
 end
 
@@ -234,6 +227,8 @@ end
 function game:doTick( ticks )
 	if not self.paused and not self:isGameOver() then
 		self.tick = self.tick + ticks
+		
+		self:getPlayer():shipUpdate( self.tick)
 	end
 end
 

@@ -36,7 +36,13 @@ function stategame:updateTooltip( wx, wy )
 
 	local tooltipLabel = self.screen.binder.tooltipTxt
 	local x, y = self.game:wndToWorld( wx, wy )
-	local txt = string.format("%d, %d", x, y)
+	local gridx, gridy = self.game:getPlayer():worldToGrid( x, y )
+	local txt
+	if gridx and gridy then
+		txt = string.format("<%d, %d -> %d, %d> ", x, y, gridx, gridy )
+	else
+		txt = string.format("<%d, %d> ", x, y )
+	end
 	local tw, th = tooltipLabel:getSize()
 	local tx, ty = self.screen:wndToUI(wx + 14, wy + 14)
 
@@ -83,6 +89,8 @@ stategame.onInputEvent = function ( self, event )
 		if event.key == mui_defs.K_E then
 			local stateEdit = require("state-edit")
 			statemgr.activate( stateEdit, self.game )
+		elseif event.key == mui_defs.K_P then
+			self.game:getPlayer():togglePowerGrid()
 		elseif event.key == mui_defs.K_ESCAPE then
 			self:quitGame()
 		elseif event.key == mui_defs.K_SPACE then

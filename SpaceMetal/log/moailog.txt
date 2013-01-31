@@ -33,19 +33,147 @@ TEXTURE: '+'      32768 =  28.50MB < C:/GIT/watergrizzly/SpaceMetal/data/arialbd
 TEXTURE: '+'      32768 =  28.53MB < C:/GIT/watergrizzly/SpaceMetal/data/arialbd.ttf
 TEXTURE: '+'      32768 =  28.56MB < C:/GIT/watergrizzly/SpaceMetal/data/arialbd.ttf
 TEXTURE: '+'      32768 =  28.59MB < C:/GIT/watergrizzly/SpaceMetal/data/arialbd.ttf
+TEXTURE: '+'    4194304 =  32.59MB < C:/GIT/watergrizzly/SpaceMetal/data/hex-tiles.png
+TEXTURE: '(texture from MOAIImage)' is not a power of two (w:128, h:110)
+TEXTURE: '+'      56320 =  32.64MB < (texture from MOAIImage)
+TEXTURE: '+'      32768 =  32.67MB < C:/GIT/watergrizzly/SpaceMetal/data/arialbd.ttf
 ----------------------------------------------------------------
 Param type mismatch at position 3: expected a 'userdata' but got a 'table'
 stack traceback:
 	[C] in function 'setAttrLink'
-	.\game/csship.lua:66 in function 'showEditGrid'
-	.\state-edit.lua:40 in function 'onLoad'
-	.\modules/state-manager.lua:95 in function 'activateAtIndex'
-	.\modules/state-manager.lua:110 in function 'activate'
-	.\state-game.lua:85 in function 'onInputEvent'
+	.\modules/texprop.lua:41 in function 'setParent'
+	.\game/components.lua:66 in function 'onSpawn'
+	.\game/csship.lua:87 in function 'setComponent'
+	.\state-edit.lua:94 in function 'onInputEvent'
 	.\modules/input-manager.lua:41 in function 'notifyListeners'
-	.\modules/input-manager.lua:74 in function <.\modules/input-manager.lua:63>
+	.\modules/input-manager.lua:97 in function <.\modules/input-manager.lua:88>
 
-TEXTURE: '+'    4194304 =  32.59MB < C:/GIT/watergrizzly/SpaceMetal/data/hex-tiles.png
-TEXTURE: '+'      32768 =  32.62MB < C:/GIT/watergrizzly/SpaceMetal/data/arialbd.ttf
-TEXTURE: '+'      32768 =  32.65MB < C:/GIT/watergrizzly/SpaceMetal/data/arialbd.ttf
-TEXTURE: '+'    1048576 =  33.65MB < C:/GIT/watergrizzly/SpaceMetal/data/nebula3.png
+TEXTURE: '(texture from MOAIImage)' is not a power of two (w:128, h:110)
+TEXTURE: '+'      56320 =  32.73MB < (texture from MOAIImage)
+----------------------------------------------------------------
+Param type mismatch at position 3: expected a 'userdata' but got a 'table'
+stack traceback:
+	[C] in function 'setAttrLink'
+	.\modules/texprop.lua:41 in function 'setParent'
+	.\game/components.lua:66 in function 'onSpawn'
+	.\game/csship.lua:87 in function 'setComponent'
+	.\state-edit.lua:94 in function 'onInputEvent'
+	.\modules/input-manager.lua:41 in function 'notifyListeners'
+	.\modules/input-manager.lua:97 in function <.\modules/input-manager.lua:88>
+
+TEXTURE: '(texture from MOAIImage)' is not a power of two (w:128, h:110)
+TEXTURE: '+'      56320 =  32.78MB < (texture from MOAIImage)
+TEXTURE: '(texture from MOAIImage)' is not a power of two (w:128, h:110)
+TEXTURE: '+'      56320 =  32.84MB < (texture from MOAIImage)
+TEXTURE: '(texture from MOAIImage)' is not a power of two (w:384, h:330)
+TEXTURE: '+'     506880 =  33.32MB < (texture from MOAIImage)
+----------------------------------------------------------------
+Param type mismatch at position 3: expected a 'userdata' but got a 'table'
+stack traceback:
+	[C] in function 'setAttrLink'
+	.\modules/texprop.lua:41 in function 'setParent'
+	.\game/components.lua:66 in function <.\game/components.lua:61>
+	(tail call) ?
+	.\game/csship.lua:87 in function 'setComponent'
+	.\state-edit.lua:94 in function 'onInputEvent'
+	.\modules/input-manager.lua:41 in function 'notifyListeners'
+	.\modules/input-manager.lua:97 in function <.\modules/input-manager.lua:88>
+
+TEXTURE: '(texture from MOAIImage)' is not a power of two (w:384, h:330)
+TEXTURE: '+'     506880 =  33.80MB < (texture from MOAIImage)
+TEXTURE: '(texture from MOAIImage)' is not a power of two (w:128, h:110)
+TEXTURE: '+'      56320 =  33.86MB < (texture from MOAIImage)
+TEXTURE: '(texture from MOAIImage)' is not a power of two (w:128, h:110)
+TEXTURE: '+'      56320 =  33.91MB < (texture from MOAIImage)
+----------------------------------------------------------------
+Param type mismatch at position 3: expected a 'userdata' but got a 'table'
+stack traceback:
+	[C] in function 'setAttrLink'
+	.\modules/texprop.lua:41 in function 'setParent'
+	.\game/components.lua:66 in function <.\game/components.lua:61>
+	(tail call) ?
+	.\game/csship.lua:87 in function 'setComponent'
+	.\state-edit.lua:94 in function 'onInputEvent'
+	.\modules/input-manager.lua:41 in function 'notifyListeners'
+	.\modules/input-manager.lua:97 in function <.\modules/input-manager.lua:88>
+
+TEXTURE: '(texture from MOAIImage)' is not a power of two (w:128, h:110)
+TEXTURE: '+'      56320 =  33.96MB < (texture from MOAIImage)
+----------------------------------------------------------------
+Param type mismatch at position 3: expected a 'userdata' but got a 'table'
+stack traceback:
+	[C] in function 'setAttrLink'
+	.\modules/texprop.lua:41 in function 'setParent'
+	.\game/components.lua:66 in function <.\game/components.lua:61>
+	(tail call) ?
+	.\game/csship.lua:87 in function 'setComponent'
+	.\state-edit.lua:94 in function 'onInputEvent'
+	.\modules/input-manager.lua:41 in function 'notifyListeners'
+	.\modules/input-manager.lua:97 in function <.\modules/input-manager.lua:88>
+
+TEXTURE: '(texture from MOAIImage)' is not a power of two (w:128, h:110)
+TEXTURE: '+'      56320 =  34.02MB < (texture from MOAIImage)
+----------------------------------------------------------------
+Param type mismatch at position 3: expected a 'userdata' but got a 'table'
+stack traceback:
+	[C] in function 'setAttrLink'
+	.\modules/texprop.lua:41 in function 'setParent'
+	.\game/components.lua:66 in function <.\game/components.lua:61>
+	(tail call) ?
+	.\game/csship.lua:87 in function 'setComponent'
+	.\state-edit.lua:94 in function 'onInputEvent'
+	.\modules/input-manager.lua:41 in function 'notifyListeners'
+	.\modules/input-manager.lua:97 in function <.\modules/input-manager.lua:88>
+
+TEXTURE: '(texture from MOAIImage)' is not a power of two (w:128, h:110)
+TEXTURE: '+'      56320 =  34.07MB < (texture from MOAIImage)
+----------------------------------------------------------------
+Param type mismatch at position 3: expected a 'userdata' but got a 'table'
+stack traceback:
+	[C] in function 'setAttrLink'
+	.\modules/texprop.lua:41 in function 'setParent'
+	.\game/components.lua:66 in function <.\game/components.lua:61>
+	(tail call) ?
+	.\game/csship.lua:87 in function 'setComponent'
+	.\state-edit.lua:94 in function 'onInputEvent'
+	.\modules/input-manager.lua:41 in function 'notifyListeners'
+	.\modules/input-manager.lua:97 in function <.\modules/input-manager.lua:88>
+
+TEXTURE: '(texture from MOAIImage)' is not a power of two (w:128, h:110)
+TEXTURE: '+'      56320 =  34.13MB < (texture from MOAIImage)
+----------------------------------------------------------------
+Param type mismatch at position 3: expected a 'userdata' but got a 'table'
+stack traceback:
+	[C] in function 'setAttrLink'
+	.\modules/texprop.lua:41 in function 'setParent'
+	.\game/components.lua:66 in function <.\game/components.lua:61>
+	(tail call) ?
+	.\game/csship.lua:87 in function 'setComponent'
+	.\state-edit.lua:94 in function 'onInputEvent'
+	.\modules/input-manager.lua:41 in function 'notifyListeners'
+	.\modules/input-manager.lua:97 in function <.\modules/input-manager.lua:88>
+
+TEXTURE: '(texture from MOAIImage)' is not a power of two (w:128, h:110)
+TEXTURE: '+'      56320 =  34.18MB < (texture from MOAIImage)
+TEXTURE: '(texture from MOAIImage)' is not a power of two (w:128, h:110)
+TEXTURE: '+'      56320 =  34.23MB < (texture from MOAIImage)
+TEXTURE: '(texture from MOAIImage)' is not a power of two (w:128, h:110)
+TEXTURE: '+'      56320 =  34.29MB < (texture from MOAIImage)
+TEXTURE: '(texture from MOAIImage)' is not a power of two (w:384, h:330)
+TEXTURE: '+'     506880 =  34.77MB < (texture from MOAIImage)
+TEXTURE: '(texture from MOAIImage)' is not a power of two (w:128, h:330)
+TEXTURE: '+'     168960 =  34.93MB < (texture from MOAIImage)
+----------------------------------------------------------------
+Param type mismatch at position 3: expected a 'userdata' but got a 'table'
+stack traceback:
+	[C] in function 'setAttrLink'
+	.\modules/texprop.lua:41 in function 'setParent'
+	.\game/components.lua:66 in function <.\game/components.lua:61>
+	(tail call) ?
+	.\game/csship.lua:87 in function 'setComponent'
+	.\state-edit.lua:94 in function 'onInputEvent'
+	.\modules/input-manager.lua:41 in function 'notifyListeners'
+	.\modules/input-manager.lua:97 in function <.\modules/input-manager.lua:88>
+
+TEXTURE: '(texture from MOAIImage)' is not a power of two (w:128, h:330)
+TEXTURE: '+'     168960 =  35.09MB < (texture from MOAIImage)

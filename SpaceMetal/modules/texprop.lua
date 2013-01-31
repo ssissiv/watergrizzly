@@ -37,6 +37,10 @@ function texprop:init( filename, size, layer )
 	return prop
 end
 
+function texprop:setParent( prop )
+	self.prop:setAttrLink(MOAIProp.INHERIT_TRANSFORM, prop, MOAIProp.TRANSFORM_TRAIT)
+end
+
 function texprop:setVisible( vis )
 	self.prop:setVisible( vis )
 end

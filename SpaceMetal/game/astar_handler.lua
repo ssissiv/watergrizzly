@@ -9,11 +9,14 @@
 
 require("modules/class")
 local mathutil = require("modules/mathutil")
+local cstiles = require("game/cstiles")
+
+------------------------------------------------------
 
 AStarHandler = class('AStarHandler')
 
-function AStarHandler:init( game )
-	self.game = game
+function AStarHandler:init( ship )
+	self.ship = ship
 end
 
 function AStarHandler:getNode( cell )
@@ -31,10 +34,13 @@ function AStarHandler:getAdjacentNodes( cur_node, goal_cell )
   
 	local n = nil
 
-	for _,adjnode in pairs(cell:getLinkNodes()) do
-		n = self:_handleNode( adjnode, cur_node, goal_cell )
-		if n then
-			table.insert(result, n)
+	for i = 1, cstiles.TILE_COUNT do
+		local gridx, gridy = cstiles.getTile( cell.gridx, cell.gridy, i )
+		if self.ship:getComponent( gridx, gridy ) then
+			n = self:_handleNode( { gridx = gridx, gridy = gridy }, cur_node, goal_cell )
+			if n then
+				table.insert(result, n)
+			end
 		end
 	end
 		
@@ -42,7 +48,7 @@ function AStarHandler:getAdjacentNodes( cur_node, goal_cell )
 end
 
 function AStarHandler:locationsAreEqual(a, b)
-	return a == b
+	return a.gridx == b.gridx and a.gridy == b.gridy
 end
 
 function AStarHandler:_handleNode(to_cell, from_node, goal_cell)
@@ -51,8 +57,8 @@ function AStarHandler:_handleNode(to_cell, from_node, goal_cell)
   
 	if n ~= nil then
 		local x0, y0 = from_node.location:getPosition()
-		local x1, y1 = to_cell:getPosition()
-		local xf, yf = goal_cell:getPosition()
+		local x1, y1 = to_cell.gridx, to_cell.gridy
+		local xf, yf = goal_cell.gridx, goal_cell.gridy
 		local emCost = mathutil.dist2d( x1, y1, xf, yf )
 		local dc = mathutil.dist2d( x0, y0, x1, y1 )
 
