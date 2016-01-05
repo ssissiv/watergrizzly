@@ -1,0 +1,85 @@
+------------------------------
+-- Terminology
+
+Kingdom Card -> Adventure Card
+Victory Card -> Prestige ?
+Gold -> Exp.
+Buying (Spending Gold To Buy Kingdom Cards) -> Leveling Up (Spending Exp to Acquire Adventure Cards)
+Hand -> Adventure Options
+Start Hand (7 Copper, 3 Estates) -> 7 Exp, 3 Prestige
+
+------------------------------
+-- Cards
+
+Cellar -> Search (Discard/Redraw)
+Chapel -> Focus (Trash cards)
+Moat -> Evasion (Dodge attack)
+Chancellor -> Style Shift (Discard entire Deck)
+Village -> Wariness (1 card, 2 actions)
+Woodcutter -> Maneuver (1 buy, 2 Tactic)
+Militia -> Suppress (Attack: discard 3 cards, 2 Tactic)
+Smithy -> Strategist (3 Cards)
+Spy -> Attack (1 card, 1 Action, Attack: reveal top deck card)
+Market -> Use Terrain( 1 card, 1 action, 1 Tactic, +1 Temp Tactic)
+Mine -> Tactic's Edge (Trash Tactic, Gain Tactic worth 3 points more)
+
+Heal -> Fix Wound
+Rest -> Restore Energy
+Hunt -> Gain Food
+Fix -> Fix vehicle
+
+Wound -> Curse card
+
+--------------------------------
+-- THeorems
+
+[Theorem A]
+Doens't quite work; cards are quite a hodge-podge, don't provide a good "deck theme"
+Rather than symmetric community piles , you buy from your own "meta-deck", which is dependent
+on the character.
+
+Combat is combat. Need more attack cards, and reaction cards.
+Dagger Thrust (1 action, 2 Damage)
+Hammer Smash (3 Damage)
+Feinted Slash (1 card, 1 action, 1 damage)
+Dodge (Avoid attack card that deals damage)
+Riposte (Avoid attack card that deals damage, Deal back X damage in hand and redraw cards)
+Counter (Avoid attack, Deal back the damage dealt)
+Defensive Ward (Avoid attack, 2 card)
+
+Victoy Points kind of works, but ... what if they become Damage and are used by Attack cards?
+This plays a similar role (might fill up your hand and reduces flexibility) but with an eye
+towards victory.
+Mighty Slash (2 cards, X damage) -- where X is the total of Damage cards in hand.
+Critical Strike (X damage) -- where X is the multiplier of all Damage cards in hand (whoa!)
+
+What if we want multi-characters?
+1) Multi deck, multi-hand, multi-turn.  Complex.
+2) Multi deck, multi-hand (or single hand but only special cards can be shared), action per character in a single turn.
+
+[Theorem B]
+With non-symmetric deck we lose deck matching!
+Kind of.  It is limited... you don't share community deck, therefore can't 'starve' out a card, and also you don't know the opponent deck off hand (its now different than yours) so it's harder to know what the other player is doing and plan for it.
+
+------------------
+
+Card props: 
+- Exp Cost (how much exp it costs to acquire the card)
+- Name & Desc
+- Card Type (Action, Reaction, Attack?)
+- Traits (X Actions, X Exp, X Buy, X Card Pickup)
+- Use constraints (in combat, in travel, diplomacy, during camp, ... )
+
+To replace multiplayers, we roughly replace players with a game world with appropriate isomorphisms.
+
+To replace deck matching / dynamic play, the world changes.
+
+To replace the unpredictable time limit, the changing world determines the game-over case.
+
+To recreate kingdom card sinks, the world state may act as a drain for particular cards (eg. if training can be acquired in teh city, overrun cities may deplete these availabilities)
+
+Spy used to peer into the enemy hand; analagous to peering into hidden game world state.
+
+Attack and defense are roughly analagous to gaining advantage on the world state and resisting penalties the world inflicts upon you, respectively.
+
+

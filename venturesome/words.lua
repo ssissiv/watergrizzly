@@ -1,0 +1,12 @@
+return
+{
+	"hockey",
+	"baby",
+	"red",
+	"green",
+	"blue",
+	"mathematics",
+	"fire",
+	"mommy",
+	"daddy"
+}
