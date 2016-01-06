@@ -119,12 +119,7 @@ function love.draw()
     local mx, my = love.mouse.getX(), love.mouse.getY()
     local ttstr = ttsys.inst:findTooltip( mx, my )
     if ttstr then
-        local font = love.graphics.getFont()
-        local w, wraps = font:getWrap( ttstr, 200 )
-        love.graphics.setColor( 70, 50, 30, 255 )
-        love.graphics.rectangle( "fill", mx, my, w + 20, wraps * font:getHeight() + 20 )
-        love.graphics.setColor( 255, 255, 255, 255 )
-        love.graphics.textf( ttstr, mx + 10, my + 10, 200, "left" )
+        ttsys.inst:draw( ttstr, mx, my )
     end
 end
 

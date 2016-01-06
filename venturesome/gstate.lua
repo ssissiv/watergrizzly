@@ -190,8 +190,10 @@ function gstate:drawOverlay()
 	x = self:drawResource( x, constants.RESOURCE.EXP )
 
 	love.graphics.setColor( 255, 255, 255, 255 )
-	local txt = string.format( "%s\nCards: %d (%d/%d/%d)", self.modal.name, self.deck:getSizes() )
-	love.graphics.text( txt, love.graphics.getWidth() - font:getWidth( txt ) - 10, 10 )
+	local txt = string.format( "%s\nCards: %d", self.modal.name, self.deck:getSizes() )
+	x = love.graphics.getWidth() - font:getWidth( txt ) - 10
+	love.graphics.text( txt, x, 10 )
+	ttsys.inst:addTooltip( x, 10, x + font:getWidth( txt ), 32, string.format( "%d Total Cards\n%d In Hand\n%d In Draw\n%d Discards", self.deck:getSizes() ))
 end
 
 function gstate:refreshOptions()

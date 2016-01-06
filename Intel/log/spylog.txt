@@ -1,20 +1,51 @@
-21:03:37> ### SPY SOCIETY 0.1.0 ###
-21:03:37> DATE: 12/22/12 21:03:37
+11:27:48> ### SPY SOCIETY 0.1.0 ###
+11:27:48> DATE: 12/08/14 11:27:48
 
-21:03:44> game:init()
-21:03:44> Loading topography from 'defaultmap.lua'
-21:03:44> 	Success!
-21:03:44> PAUSE: false
-21:03:44> PAUSE: true
+11:27:51> game:init()
+11:27:51> Loading topography from 'defaultmap.lua'
+11:27:51> 	Success!
+11:27:51> PAUSE: false
 
-21:04:04> PAUSE: false
+11:28:05> PAUSE: true
 
-21:04:11> BUY : Scout Jorge at P-Z11
+11:28:07> PAUSE: false
 
-21:04:17> BUY : Scout Jase at P-Z11
+11:28:24> PHASE IN - dist 1057.48
+11:28:24> 	Phase Merc Hal
 
-21:04:19>  DESPAWN Scout Jorge
-21:04:19>  DESPAWN Scout Jase
+11:28:33> PAUSE: true
 
-21:04:34> PHASE IN - dist 602.97
-21:04:34> 	Phase Merc Jim
+11:28:36> PAUSE: false
+
+11:28:59> PHASE IN - dist 650.77
+11:28:59> 	Phase Merc Jorge
+11:28:59> GAME OVER at tick 3607!
+11:28:59> PAUSE: true
+
+11:29:23> game:init()
+11:29:23> Loading topography from 'defaultmap.lua'
+11:29:23> 	Success!
+11:29:23> PAUSE: false
+
+11:29:37> BUY : Scout Jim at O-J60
+
+11:29:42>  DESPAWN Scout Jim
+
+11:29:50> BUY : Scout Feryl at I-M68
+
+11:29:53> PHASE IN - dist 1553.82
+11:29:53> 	Phase Merc Hal
+
+11:30:02>  DESPAWN Scout Feryl
+
+11:30:13> BUY : Scout Brook at L-H77
+
+11:30:22>  DESPAWN Scout Brook
+11:30:23> PHASE IN - dist 829.49
+11:30:23> 	Phase Merc Brock
+
+11:30:52> BUY : Scout Hal at C-L18
+11:30:53> PHASE IN - dist 773.57
+11:30:53> 	Phase Merc Hal
+
+11:30:55>  DESPAWN Scout Hal

@@ -1,179 +1,35 @@
 TEXTURE: '(texture from MOAIImage)' is not a power of two (w:1280, h:720)
 TEXTURE: '+'    2764800 =   2.64MB < (texture from MOAIImage)
-TEXTURE: 'C:/GIT/watergrizzly/SpaceMetal/data/space.png' is not a power of two (w:1280, h:720)
-TEXTURE: '+'    2764800 =   5.27MB < C:/GIT/watergrizzly/SpaceMetal/data/space.png
-TEXTURE: '+'    1048576 =   6.27MB < C:/GIT/watergrizzly/SpaceMetal/data/nebula1.png
-TEXTURE: '+'    1048576 =   7.27MB < C:/GIT/watergrizzly/SpaceMetal/data/nebula1.png
-TEXTURE: '+'    1048576 =   8.27MB < C:/GIT/watergrizzly/SpaceMetal/data/nebula1.png
-TEXTURE: '+'    1048576 =   9.27MB < C:/GIT/watergrizzly/SpaceMetal/data/nebula1.png
-TEXTURE: '+'    1048576 =  10.27MB < C:/GIT/watergrizzly/SpaceMetal/data/nebula1.png
-TEXTURE: '+'    1048576 =  11.27MB < C:/GIT/watergrizzly/SpaceMetal/data/nebula1.png
-TEXTURE: '+'    1048576 =  12.27MB < C:/GIT/watergrizzly/SpaceMetal/data/nebula1.png
-TEXTURE: '+'    1048576 =  13.27MB < C:/GIT/watergrizzly/SpaceMetal/data/nebula1.png
-TEXTURE: '+'    1048576 =  14.27MB < C:/GIT/watergrizzly/SpaceMetal/data/nebula2.png
-TEXTURE: '+'    1048576 =  15.27MB < C:/GIT/watergrizzly/SpaceMetal/data/nebula2.png
-TEXTURE: '+'    1048576 =  16.27MB < C:/GIT/watergrizzly/SpaceMetal/data/nebula2.png
-TEXTURE: '+'    1048576 =  17.27MB < C:/GIT/watergrizzly/SpaceMetal/data/nebula2.png
-TEXTURE: '+'    1048576 =  18.27MB < C:/GIT/watergrizzly/SpaceMetal/data/nebula2.png
-TEXTURE: '+'    1048576 =  19.27MB < C:/GIT/watergrizzly/SpaceMetal/data/nebula2.png
-TEXTURE: '+'    1048576 =  20.27MB < C:/GIT/watergrizzly/SpaceMetal/data/nebula2.png
-TEXTURE: '+'    1048576 =  21.27MB < C:/GIT/watergrizzly/SpaceMetal/data/nebula2.png
-TEXTURE: '+'    1048576 =  22.27MB < C:/GIT/watergrizzly/SpaceMetal/data/nebula3.png
-TEXTURE: '+'    1048576 =  23.27MB < C:/GIT/watergrizzly/SpaceMetal/data/nebula3.png
-TEXTURE: '+'    1048576 =  24.27MB < C:/GIT/watergrizzly/SpaceMetal/data/nebula3.png
-TEXTURE: '+'    1048576 =  25.27MB < C:/GIT/watergrizzly/SpaceMetal/data/nebula3.png
-TEXTURE: '+'    1048576 =  26.27MB < C:/GIT/watergrizzly/SpaceMetal/data/nebula3.png
-TEXTURE: '+'    1048576 =  27.27MB < C:/GIT/watergrizzly/SpaceMetal/data/nebula3.png
-TEXTURE: '+'    1048576 =  28.27MB < C:/GIT/watergrizzly/SpaceMetal/data/nebula3.png
+TEXTURE: 'C:/Users/Rooks/Documents/GitHub/watergrizzly/SpaceMetal/data/space.png' is not a power of two (w:1280, h:720)
+TEXTURE: '+'    2764800 =   5.27MB < C:/Users/Rooks/Documents/GitHub/watergrizzly/SpaceMetal/data/space.png
+TEXTURE: '+'    1048576 =   6.27MB < C:/Users/Rooks/Documents/GitHub/watergrizzly/SpaceMetal/data/nebula1.png
+TEXTURE: '+'    1048576 =   7.27MB < C:/Users/Rooks/Documents/GitHub/watergrizzly/SpaceMetal/data/nebula1.png
+TEXTURE: '+'    1048576 =   8.27MB < C:/Users/Rooks/Documents/GitHub/watergrizzly/SpaceMetal/data/nebula1.png
+TEXTURE: '+'    1048576 =   9.27MB < C:/Users/Rooks/Documents/GitHub/watergrizzly/SpaceMetal/data/nebula1.png
+TEXTURE: '+'    1048576 =  10.27MB < C:/Users/Rooks/Documents/GitHub/watergrizzly/SpaceMetal/data/nebula1.png
+TEXTURE: '+'    1048576 =  11.27MB < C:/Users/Rooks/Documents/GitHub/watergrizzly/SpaceMetal/data/nebula1.png
+TEXTURE: '+'    1048576 =  12.27MB < C:/Users/Rooks/Documents/GitHub/watergrizzly/SpaceMetal/data/nebula1.png
+TEXTURE: '+'    1048576 =  13.27MB < C:/Users/Rooks/Documents/GitHub/watergrizzly/SpaceMetal/data/nebula1.png
+TEXTURE: '+'    1048576 =  14.27MB < C:/Users/Rooks/Documents/GitHub/watergrizzly/SpaceMetal/data/nebula2.png
+TEXTURE: '+'    1048576 =  15.27MB < C:/Users/Rooks/Documents/GitHub/watergrizzly/SpaceMetal/data/nebula2.png
+TEXTURE: '+'    1048576 =  16.27MB < C:/Users/Rooks/Documents/GitHub/watergrizzly/SpaceMetal/data/nebula2.png
+TEXTURE: '+'    1048576 =  17.27MB < C:/Users/Rooks/Documents/GitHub/watergrizzly/SpaceMetal/data/nebula2.png
+TEXTURE: '+'    1048576 =  18.27MB < C:/Users/Rooks/Documents/GitHub/watergrizzly/SpaceMetal/data/nebula2.png
+TEXTURE: '+'    1048576 =  19.27MB < C:/Users/Rooks/Documents/GitHub/watergrizzly/SpaceMetal/data/nebula2.png
+TEXTURE: '+'    1048576 =  20.27MB < C:/Users/Rooks/Documents/GitHub/watergrizzly/SpaceMetal/data/nebula2.png
+TEXTURE: '+'    1048576 =  21.27MB < C:/Users/Rooks/Documents/GitHub/watergrizzly/SpaceMetal/data/nebula2.png
+TEXTURE: '+'    1048576 =  22.27MB < C:/Users/Rooks/Documents/GitHub/watergrizzly/SpaceMetal/data/nebula3.png
+TEXTURE: '+'    1048576 =  23.27MB < C:/Users/Rooks/Documents/GitHub/watergrizzly/SpaceMetal/data/nebula3.png
+TEXTURE: '+'    1048576 =  24.27MB < C:/Users/Rooks/Documents/GitHub/watergrizzly/SpaceMetal/data/nebula3.png
+TEXTURE: '+'    1048576 =  25.27MB < C:/Users/Rooks/Documents/GitHub/watergrizzly/SpaceMetal/data/nebula3.png
+TEXTURE: '+'    1048576 =  26.27MB < C:/Users/Rooks/Documents/GitHub/watergrizzly/SpaceMetal/data/nebula3.png
+TEXTURE: '+'    1048576 =  27.27MB < C:/Users/Rooks/Documents/GitHub/watergrizzly/SpaceMetal/data/nebula3.png
+TEXTURE: '+'    1048576 =  28.27MB < C:/Users/Rooks/Documents/GitHub/watergrizzly/SpaceMetal/data/nebula3.png
+TEXTURE: '+'    1048576 =  29.27MB < C:/Users/Rooks/Documents/GitHub/watergrizzly/SpaceMetal/data/nebula3.png
 TEXTURE: '(texture from MOAIImage)' is not a power of two (w:96, h:96)
-TEXTURE: '+'      36864 =  28.31MB < (texture from MOAIImage)
-TEXTURE: '+'      32768 =  28.34MB < C:/GIT/watergrizzly/SpaceMetal/data/arialbd.ttf
-TEXTURE: '+'     131072 =  28.46MB < C:/GIT/watergrizzly/SpaceMetal/data/arialbd.ttf
-TEXTURE: '+'      32768 =  28.50MB < C:/GIT/watergrizzly/SpaceMetal/data/arialbd.ttf
-TEXTURE: '+'      32768 =  28.53MB < C:/GIT/watergrizzly/SpaceMetal/data/arialbd.ttf
-TEXTURE: '+'      32768 =  28.56MB < C:/GIT/watergrizzly/SpaceMetal/data/arialbd.ttf
-TEXTURE: '+'      32768 =  28.59MB < C:/GIT/watergrizzly/SpaceMetal/data/arialbd.ttf
-TEXTURE: '+'    4194304 =  32.59MB < C:/GIT/watergrizzly/SpaceMetal/data/hex-tiles.png
-TEXTURE: '(texture from MOAIImage)' is not a power of two (w:128, h:110)
-TEXTURE: '+'      56320 =  32.64MB < (texture from MOAIImage)
-TEXTURE: '+'      32768 =  32.67MB < C:/GIT/watergrizzly/SpaceMetal/data/arialbd.ttf
-----------------------------------------------------------------
-Param type mismatch at position 3: expected a 'userdata' but got a 'table'
-stack traceback:
-	[C] in function 'setAttrLink'
-	.\modules/texprop.lua:41 in function 'setParent'
-	.\game/components.lua:66 in function 'onSpawn'
-	.\game/csship.lua:87 in function 'setComponent'
-	.\state-edit.lua:94 in function 'onInputEvent'
-	.\modules/input-manager.lua:41 in function 'notifyListeners'
-	.\modules/input-manager.lua:97 in function <.\modules/input-manager.lua:88>
-
-TEXTURE: '(texture from MOAIImage)' is not a power of two (w:128, h:110)
-TEXTURE: '+'      56320 =  32.73MB < (texture from MOAIImage)
-----------------------------------------------------------------
-Param type mismatch at position 3: expected a 'userdata' but got a 'table'
-stack traceback:
-	[C] in function 'setAttrLink'
-	.\modules/texprop.lua:41 in function 'setParent'
-	.\game/components.lua:66 in function 'onSpawn'
-	.\game/csship.lua:87 in function 'setComponent'
-	.\state-edit.lua:94 in function 'onInputEvent'
-	.\modules/input-manager.lua:41 in function 'notifyListeners'
-	.\modules/input-manager.lua:97 in function <.\modules/input-manager.lua:88>
-
-TEXTURE: '(texture from MOAIImage)' is not a power of two (w:128, h:110)
-TEXTURE: '+'      56320 =  32.78MB < (texture from MOAIImage)
-TEXTURE: '(texture from MOAIImage)' is not a power of two (w:128, h:110)
-TEXTURE: '+'      56320 =  32.84MB < (texture from MOAIImage)
-TEXTURE: '(texture from MOAIImage)' is not a power of two (w:384, h:330)
-TEXTURE: '+'     506880 =  33.32MB < (texture from MOAIImage)
-----------------------------------------------------------------
-Param type mismatch at position 3: expected a 'userdata' but got a 'table'
-stack traceback:
-	[C] in function 'setAttrLink'
-	.\modules/texprop.lua:41 in function 'setParent'
-	.\game/components.lua:66 in function <.\game/components.lua:61>
-	(tail call) ?
-	.\game/csship.lua:87 in function 'setComponent'
-	.\state-edit.lua:94 in function 'onInputEvent'
-	.\modules/input-manager.lua:41 in function 'notifyListeners'
-	.\modules/input-manager.lua:97 in function <.\modules/input-manager.lua:88>
-
-TEXTURE: '(texture from MOAIImage)' is not a power of two (w:384, h:330)
-TEXTURE: '+'     506880 =  33.80MB < (texture from MOAIImage)
-TEXTURE: '(texture from MOAIImage)' is not a power of two (w:128, h:110)
-TEXTURE: '+'      56320 =  33.86MB < (texture from MOAIImage)
-TEXTURE: '(texture from MOAIImage)' is not a power of two (w:128, h:110)
-TEXTURE: '+'      56320 =  33.91MB < (texture from MOAIImage)
-----------------------------------------------------------------
-Param type mismatch at position 3: expected a 'userdata' but got a 'table'
-stack traceback:
-	[C] in function 'setAttrLink'
-	.\modules/texprop.lua:41 in function 'setParent'
-	.\game/components.lua:66 in function <.\game/components.lua:61>
-	(tail call) ?
-	.\game/csship.lua:87 in function 'setComponent'
-	.\state-edit.lua:94 in function 'onInputEvent'
-	.\modules/input-manager.lua:41 in function 'notifyListeners'
-	.\modules/input-manager.lua:97 in function <.\modules/input-manager.lua:88>
-
-TEXTURE: '(texture from MOAIImage)' is not a power of two (w:128, h:110)
-TEXTURE: '+'      56320 =  33.96MB < (texture from MOAIImage)
-----------------------------------------------------------------
-Param type mismatch at position 3: expected a 'userdata' but got a 'table'
-stack traceback:
-	[C] in function 'setAttrLink'
-	.\modules/texprop.lua:41 in function 'setParent'
-	.\game/components.lua:66 in function <.\game/components.lua:61>
-	(tail call) ?
-	.\game/csship.lua:87 in function 'setComponent'
-	.\state-edit.lua:94 in function 'onInputEvent'
-	.\modules/input-manager.lua:41 in function 'notifyListeners'
-	.\modules/input-manager.lua:97 in function <.\modules/input-manager.lua:88>
-
-TEXTURE: '(texture from MOAIImage)' is not a power of two (w:128, h:110)
-TEXTURE: '+'      56320 =  34.02MB < (texture from MOAIImage)
-----------------------------------------------------------------
-Param type mismatch at position 3: expected a 'userdata' but got a 'table'
-stack traceback:
-	[C] in function 'setAttrLink'
-	.\modules/texprop.lua:41 in function 'setParent'
-	.\game/components.lua:66 in function <.\game/components.lua:61>
-	(tail call) ?
-	.\game/csship.lua:87 in function 'setComponent'
-	.\state-edit.lua:94 in function 'onInputEvent'
-	.\modules/input-manager.lua:41 in function 'notifyListeners'
-	.\modules/input-manager.lua:97 in function <.\modules/input-manager.lua:88>
-
-TEXTURE: '(texture from MOAIImage)' is not a power of two (w:128, h:110)
-TEXTURE: '+'      56320 =  34.07MB < (texture from MOAIImage)
-----------------------------------------------------------------
-Param type mismatch at position 3: expected a 'userdata' but got a 'table'
-stack traceback:
-	[C] in function 'setAttrLink'
-	.\modules/texprop.lua:41 in function 'setParent'
-	.\game/components.lua:66 in function <.\game/components.lua:61>
-	(tail call) ?
-	.\game/csship.lua:87 in function 'setComponent'
-	.\state-edit.lua:94 in function 'onInputEvent'
-	.\modules/input-manager.lua:41 in function 'notifyListeners'
-	.\modules/input-manager.lua:97 in function <.\modules/input-manager.lua:88>
-
-TEXTURE: '(texture from MOAIImage)' is not a power of two (w:128, h:110)
-TEXTURE: '+'      56320 =  34.13MB < (texture from MOAIImage)
-----------------------------------------------------------------
-Param type mismatch at position 3: expected a 'userdata' but got a 'table'
-stack traceback:
-	[C] in function 'setAttrLink'
-	.\modules/texprop.lua:41 in function 'setParent'
-	.\game/components.lua:66 in function <.\game/components.lua:61>
-	(tail call) ?
-	.\game/csship.lua:87 in function 'setComponent'
-	.\state-edit.lua:94 in function 'onInputEvent'
-	.\modules/input-manager.lua:41 in function 'notifyListeners'
-	.\modules/input-manager.lua:97 in function <.\modules/input-manager.lua:88>
-
-TEXTURE: '(texture from MOAIImage)' is not a power of two (w:128, h:110)
-TEXTURE: '+'      56320 =  34.18MB < (texture from MOAIImage)
-TEXTURE: '(texture from MOAIImage)' is not a power of two (w:128, h:110)
-TEXTURE: '+'      56320 =  34.23MB < (texture from MOAIImage)
-TEXTURE: '(texture from MOAIImage)' is not a power of two (w:128, h:110)
-TEXTURE: '+'      56320 =  34.29MB < (texture from MOAIImage)
-TEXTURE: '(texture from MOAIImage)' is not a power of two (w:384, h:330)
-TEXTURE: '+'     506880 =  34.77MB < (texture from MOAIImage)
-TEXTURE: '(texture from MOAIImage)' is not a power of two (w:128, h:330)
-TEXTURE: '+'     168960 =  34.93MB < (texture from MOAIImage)
-----------------------------------------------------------------
-Param type mismatch at position 3: expected a 'userdata' but got a 'table'
-stack traceback:
-	[C] in function 'setAttrLink'
-	.\modules/texprop.lua:41 in function 'setParent'
-	.\game/components.lua:66 in function <.\game/components.lua:61>
-	(tail call) ?
-	.\game/csship.lua:87 in function 'setComponent'
-	.\state-edit.lua:94 in function 'onInputEvent'
-	.\modules/input-manager.lua:41 in function 'notifyListeners'
-	.\modules/input-manager.lua:97 in function <.\modules/input-manager.lua:88>
-
-TEXTURE: '(texture from MOAIImage)' is not a power of two (w:128, h:330)
-TEXTURE: '+'     168960 =  35.09MB < (texture from MOAIImage)
+TEXTURE: '+'      36864 =  29.31MB < (texture from MOAIImage)
+TEXTURE: '+'      32768 =  29.34MB < C:/Users/Rooks/Documents/GitHub/watergrizzly/SpaceMetal/data/arialbd.ttf
+TEXTURE: '+'     131072 =  29.46MB < C:/Users/Rooks/Documents/GitHub/watergrizzly/SpaceMetal/data/arialbd.ttf
+TEXTURE: '+'      32768 =  29.50MB < C:/Users/Rooks/Documents/GitHub/watergrizzly/SpaceMetal/data/arialbd.ttf
+TEXTURE: '+'      32768 =  29.53MB < C:/Users/Rooks/Documents/GitHub/watergrizzly/SpaceMetal/data/arialbd.ttf
+TEXTURE: '+'      32768 =  29.56MB < C:/Users/Rooks/Documents/GitHub/watergrizzly/SpaceMetal/data/arialbd.ttf

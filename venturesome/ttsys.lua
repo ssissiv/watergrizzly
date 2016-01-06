@@ -27,6 +27,30 @@ function ttsys:findTooltip( x, y )
 	end
 end
 
+function ttsys:draw( ttstr, mx, my )
+	local BORDER = 10
+	local font = love.graphics.getFont()
+    local w, wraps = font:getWrap( ttstr, 200 )
+	local ttwidth, ttheight = w + 2 * BORDER, #wraps * font:getHeight() + 2 * BORDER 
+    if mx + ttwidth >= love.graphics.getWidth() then
+    	mx = love.graphics.getWidth() - ttwidth
+    elseif mx < 0 then
+    	mx = 0
+    end
+    if my + ttheight >= love.graphics.getHeight() then
+    	my = love.graphics.getHeight() - ttheight
+    elseif my < 0 then
+    	my = 0
+    end
+
+    -- BG
+    love.graphics.setColor( 70, 50, 30, 255 )
+    love.graphics.rectangle( "fill", mx, my, ttwidth, ttheight )
+    love.graphics.setColor( 255, 255, 255, 255 )
+    -- Tooltip text
+    love.graphics.textf( ttstr, mx + BORDER, my + BORDER, 200, "left" )
+end
+
 ttsys.inst = ttsys.new()
 
 return ttsys
