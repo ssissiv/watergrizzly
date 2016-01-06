@@ -1,3 +1,7 @@
+-----------------------------------------------------------
+package.path = "script/?.lua;"..package.path
+-----------------------------------------------------------
+
 local strict = require "strict"
 util = require "util"
 local constants = require "constants"
