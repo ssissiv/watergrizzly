@@ -7,6 +7,13 @@
 			"name": "Game (Windows)",
 			"shell": true,
 			"working_dir": "${project_path}\\windows"
+		},
+		{
+			"cmd": "love",
+			"file_regex": "^(.*\\.lua)\\(([0-9]*)",
+			"name": "Game (OSX)",
+			"shell": true,
+			"working_dir": "${project_path}"
 		}
 	],
 	"folders":
