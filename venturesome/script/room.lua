@@ -11,8 +11,24 @@ function room.new( t )
 	self.name = t.name or "Untitled"
 	self.desc = t.desc or ""
 	self.options = util.deepcopy( t.options )
+	self.things = {}
+	for i, thing in ipairs( t.things ) do
+		self:addThing( util.deepcopy( thing ))
+	end
 	self.mapx, self.mapy = t.mapx, t.mapy
 	return self
+end
+
+function room:addThing( thing )
+	assert( thing.room == nil )
+	thing.room = self
+	table.insert( self.things, thing )
+end
+
+function room:removeThing( thing )
+	assert( thing.room == self )
+	table.arrayremove( self.things, thing )
+	thing.room = nil
 end
 
 function room:draw()
@@ -23,7 +39,6 @@ function room:draw()
 		love.graphics.setColor( 255, 255, 255, 255 )
 	end
 	love.graphics.text( "<!BOLD>" ..self.name .. "</>", 10, 10 )
-	love.graphics.textf( self.desc, 10, 36, 400 )
 	love.graphics.setColor( 255, 255, 255, 255 )
 end
 
@@ -35,6 +50,9 @@ function room:getOption( i )
 	return self.options[ i ]
 end
 
+function room:ithings()
+	return ipairs( self.things )
+end
 
 
 return room

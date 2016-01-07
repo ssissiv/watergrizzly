@@ -45,6 +45,7 @@ function gstate.new()
 
 	self.ui =
 	{
+		lines = {},
 		options = {},
 	}
 	self:initTurn()
@@ -78,6 +79,14 @@ function gstate:onTrashCard( card )
 	if card.on_trash then
 		card.on_trash( self )
 	end
+end
+
+function gstate:addOption( opt )
+	table.insert( self.ui.options, opt )
+end
+
+function gstate:addLine( line )
+	table.insert( self.ui.lines, line )
 end
 
 function gstate:push( modal )
@@ -198,6 +207,8 @@ end
 
 function gstate:refreshOptions()
 	table.clear( self.ui.options )
+	table.clear( self.ui.lines )
+
 	if self.modal.refreshOptions then
 		self.modal:refreshOptions( self.ui.options )
 	end
@@ -208,20 +219,24 @@ function gstate:draw()
 	love.graphics.push()
 	love.graphics.translate( 0, 64 )
 	self.room:draw()
-	love.graphics.pop()
-
-	self:drawOverlay()
+	local y = 36
+	local desc = table.concat( self.ui.lines, "\n" )
+	love.graphics.textf( desc, 10, y, 400 )
+	y = y + 10 + love.graphics.getFont():getHeight() * #self.ui.lines
 
 	-- Options
 	for i, opt in ipairs( self.ui.options ) do
 		local enabled, reason = self:canDoOption( opt )
 		if enabled then
 			love.graphics.setColor( unpack( constants.COLOURS.WHITE ))
-			love.graphics.text( string.format( "%d) %s", i, opt.desc ), 10, 200 + (i-1) * 20 )
+			love.graphics.text( string.format( "%d) %s", i, opt.desc ), 10, y + (i-1) * 20 )
 		else
-			love.graphics.text( string.format( "<#777777>%d) %s <#ff0000>(%s)</>", i, opt.desc, reason or "" ), 10, 200 + (i-1) * 20 )
+			love.graphics.text( string.format( "<#777777>%d) %s <#ff0000>(%s)</>", i, opt.desc, reason or "" ), 10, y + (i-1) * 20 )
 		end
 	end
+	love.graphics.pop()
+
+	self:drawOverlay()
 
 	if self.modal.draw then
 		self.modal:draw()
@@ -250,6 +265,14 @@ end
 
 function gstate:useAction()
 	self:addResource( constants.RESOURCE.ACTION, -1 )
+
+	for i, room in ipairs( self.rooms ) do
+		for j, thing in ipairs( room.things ) do
+			if thing.tick then
+				thing:tick( self )
+			end
+		end
+	end
 end
 
 function gstate:getActions()
@@ -281,7 +304,7 @@ function gstate:doOption( i )
 		self.modal.option = opt
 
 		if opt.fn then
-			self:push( { option = opt, update = function( self, gstate ) opt.fn( gstate ) end } )
+			self:push( { option = opt, update = function( self, gstate ) opt.fn( opt, gstate ) end } )
 		end
 
 		if opt.to then
@@ -321,7 +344,7 @@ end
 
 function gstate:keypressed( key, isrepeat, modifiers )
 	if self.modal.keypressed then
-		return self.modal:keypressed( key, isrepeat )
+		return self.modal:keypressed( key, isrepeat, modifiers )
 	end
 
 	if key == "a" and modifiers.ctrl then

@@ -8,15 +8,14 @@ function modal_win.new( gstate )
 end
 
 function modal_win:update()
-	self.gstate:travelTo( "WIN" )
-
 	while true do
 		coroutine.yield()
 	end
 end
 
 function modal_win:refreshOptions( options )
-	table.insert( options, option_def.restart )
+	self.gstate:addLine( "You have become the greatest hero the world has ever known. You save the land!" )
+	self.gstate:addOption( option_def.restart )
 end
 
 return modal_win

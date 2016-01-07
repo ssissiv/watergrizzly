@@ -27,8 +27,14 @@ end
 
 function modal_travel:refreshOptions( options )
 	assert( options )
+
+	self.gstate:addLine( self.gstate.room.desc )
+	for i, thing in self.gstate.room:ithings() do
+		self.gstate:addLine( thing.desc )
+	end
+
 	table.insert( options, option_def.camp )
-	table.insert( options, option_def.map )
+	--table.insert( options, option_def.map )
 	
 	for i, opt in self.gstate.room:ioptions() do
 		table.insert( options, opt )
@@ -39,6 +45,13 @@ function modal_travel:refreshOptions( options )
 			table.insert( options, option_def.actionCard( card_def, i ) )
 		end
 	end
+end
+
+function modal_travel:keypressed( key, isrepeat, modifiers )
+	if key == "m" and modifiers.ctrl then
+		table.insert( self.gstate.room.things, option_def.monster( "Monster", 3, 3, 3 ))
+	end
+	self.gstate:refreshOptions()
 end
 
 return modal_travel

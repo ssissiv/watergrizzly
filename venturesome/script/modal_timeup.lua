@@ -10,15 +10,14 @@ function modal_timeup.new( gstate )
 end
 
 function modal_timeup:update()
-	self.gstate:travelTo( "TIMEUP" )
-
 	while true do
 		coroutine.yield()
 	end
 end
 
-function modal_timeup:refreshOptions( options )
-	table.insert( options, option_def.game_over )
+function modal_timeup:refreshOptions()
+	self.gstate:addLine( "Your eyes glaze over as the curse inflicts everlasting catatonia upon you." )
+	self.gstate:addOption( option_def.game_over )
 end
 
 return modal_timeup

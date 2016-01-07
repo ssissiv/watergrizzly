@@ -41,7 +41,7 @@ function modal_discard:refreshOptions( options )
 		if card:isSelected() then
 			local card_def = card:getDef()
 			local desc = string.format( "Discard %s", card_def.name )
-			local fn = function( gstate )
+			local fn = function( self, gstate )
 				table.insert( self.discarded_cards, card_def )
 				gstate.deck:discard( i )
 				self.count = self.count - 1

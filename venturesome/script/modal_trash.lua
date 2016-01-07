@@ -41,7 +41,7 @@ function modal_trash:refreshOptions( options )
 		if card:isSelected() and (self.fn == nil or self.fn( card:getDef() )) then
 			local card_def = card:getDef()
 			local desc = string.format( "Trash %s", card_def.name )
-			local fn = function( gstate )
+			local fn = function( self, gstate )
 				table.insert( self.trashed_cards, card_def )
 				gstate.deck:trash( i )
 				self.count = self.count - 1

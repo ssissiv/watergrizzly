@@ -1,8 +1,34 @@
 {
+	"build_systems":
+	[
+		{
+			"cmd": "love.exe",
+			"file_regex": "^(.*\\.lua)\\(([0-9]*)",
+			"name": "Game (Windows)",
+			"shell": true,
+			"working_dir": "${project_path}\\windows"
+		}
+	],
 	"folders":
 	[
 		{
-			"path": "/Users/ccosta/Documents/love2d/venturesome"
+			"file_include_patterns":
+			[
+				"*.lua"
+			],
+			"name": "Script",
+			"path": "script"
+		},
+		{
+			"name": "Data",
+			"path": "data"
+		},
+		{
+			"file_include_patterns":
+			[
+				"*.lua"
+			],
+			"path": "."
 		}
 	]
 }

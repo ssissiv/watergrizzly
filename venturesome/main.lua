@@ -11,54 +11,6 @@ local ttsys = require "ttsys"
 
 -----------------------------------------------------------
 
-function DrawText( str, ... )
-    local j, k, sel, attr
-    local spans = {}
-    repeat
-        -- find colourization.
-        j, k, sel, attr = str:find( "<([#!/])([^>]*)>" )
-        if j then
-            if sel == '/' then
-                -- Close the last span
-                local attr = table.remove( spans )
-                local sel = table.remove( spans )
-                local start_idx = table.remove( spans )
-                local end_idx = j-1
-                if textnode then
-                    if sel == '#' then
-                        while #attr < 8 do attr = attr .. "f" end
-                        if tonumber( attr, 16 ) then
-
-                            textnode:AddMarkup( start_idx, end_idx, engine.rendering.TextNode.MARKUP_COLOUR, tonumber( attr, 16 ))
-                        end
-                    elseif sel == '!' and attr then
-                        local jj, kk, subattr, clr = attr:find( "^(.*)#(%x%x%x%x%x%x%x?%x?)$" )
-                        if clr then
-                            textnode:AddMarkup( start_idx, end_idx, engine.rendering.TextNode.MARKUP_LINK, subattr, tonumber( clr, 16 ))
-                        else
-                            textnode:AddMarkup( start_idx, end_idx, engine.rendering.TextNode.MARKUP_LINK, attr )
-                        end
-                    else
-                        print( "Closing unknown text markup code" )
-                    end
-                end
-            else
-                table.insert( spans, j - 1 )
-                table.insert( spans, sel )
-                table.insert( spans, attr )
-            end
-            str = str:sub( 1, j - 1 ) .. str:sub( k + 1 )
-        end
-    until not j
-
-    if textnode then
-        textnode:SetText( str )
-    end
-
-    --assert( #spans == 0, string.format( "Badly formatted text:", rawstr ) )
-    return str
-end
-
 local function drawtext( str, x, y, ... )
 	local font = love.graphics.getFont()
 	local spans = {} 

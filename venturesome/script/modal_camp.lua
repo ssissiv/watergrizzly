@@ -38,7 +38,7 @@ function modal_camp:refreshOptions( options )
 			local card_def = card:getDef()
 			local desc = string.format( "Acquire %s", card_def.name )
 			local resources = { [ constants.RESOURCE.EXP ] = card_def.cost, [ constants.RESOURCE.BUYS ] = 1 }
-			local fn = function( gstate )
+			local fn = function( self, gstate )
 				gstate.deck:addCard( card_def )
 				gstate:addResource( constants.RESOURCE.BUYS, -1 )
 				gstate:addResource( constants.RESOURCE.EXP, -card_def.cost )

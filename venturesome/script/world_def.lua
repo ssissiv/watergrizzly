@@ -1,59 +1,5 @@
 local constants = require "constants"
-
-local function Travel( desc, to )
-	return { desc = desc, to = to, resources = { [ constants.RESOURCE.ACTION ] = 1 }}
-end
-
-local function Convert( amt )
-	return
-	{
-		desc = "Convert this city to your control",
-		resources = { [ constants.RESOURCE.PRESTIGE ] = amt },
-		fn = function( gstate )
-			gstate.room.converted = true
-		end
-	}
-end
-
-local function Monster( name, str, wis, agi )
-	return
-	{
-		desc = string.format( "<#cc0000>A %s is here wandering around, wreaking havoc.</>", name ),
-		fn = function( gstate )
-			print( tostr(gstate.room.options), tostr(gstate.modal ))
-			table.arrayremove( gstate.room.options, gstate.modal.option )
-		end
-	}
-end
-
-
-local specrooms =
-{
-	DEAD =
-	{
-		name = "Game Over",
-		desc = "You find your final resting place in the boughs of the world tree...",
-		options =
-		{
-		}
-	},
-	TIMEUP =
-	{
-		name = "Game Over",
-		desc = "Your eyes glaze over as the curse inflicts everlasting catatonia upon you.",
-		options =
-		{
-		}
-	},
-	WIN =
-	{
-		name = "Victory",
-		desc = "You have become the greatest hero the world has ever known. You save the land!",
-		options =
-		{
-		}
-	},
-}
+local option_def = require "option_def"
 
 local ADJS = { "Light", "Dark", "Forbidden", "Mystical", "Dreary", "Far", "Cold",
 	"Ominous", "Mysterious", "Great", "Hidden", "Well-Traveled", "Gray", "Red", "Overgrown",
@@ -66,7 +12,7 @@ local SYB1 = { "we", "qui", "axa", "tu", "meed", "va", "ba", "del", "shar", "che
 
 local function procroom()
 	return { name = string.format( "The %s %s", table.arraypick(ADJS), table.arraypick(NOUNS)),
-			desc = "Description", options = {} }
+			desc = "Description", options = {}, things = {} }
 end
 
 local function proccity( room )
@@ -75,11 +21,10 @@ local function proccity( room )
 		cityname = cityname .. table.arraypick( SYB1 )
 	end
 	cityname = cityname:sub(1,1):upper() .. cityname:sub( 2 )
-	print(cityname)
 
 	room.name = string.format( "The %s City of %s", table.arraypick(ADJS), cityname )
 	room.desc = "A bustling city!"
-	room.options = { Convert( math.random(2,5) * 5) }
+	room.options = { option_def.convert( math.random(2,5) * 5) }
 end
 
 local function worldgen()
@@ -95,9 +40,9 @@ local function worldgen()
 	end
 	local function link( i, j )
 		table.insert( proc_rooms[i].options,
-			Travel( string.format( "Travel to %s", proc_rooms[ j ].name ), j ))
+			option_def.travel( string.format( "Travel to %s", proc_rooms[ j ].name ), j ))
 		table.insert( proc_rooms[j].options,
-			Travel( string.format( "Travel to %s", proc_rooms[ i ].name ), i ))
+			option_def.travel( string.format( "Travel to %s", proc_rooms[ i ].name ), i ))
 	end
 
 	-- Make a graph
@@ -117,8 +62,8 @@ local function worldgen()
 	end
 	-- Pick 20 monsters
 	for i = 1, 20 do
-		local room = proc_rooms[ math.random( #proc_rooms ) ]
-		table.insert( room.options, Monster( "Ogre", 3, 3, 3 ))
+		local room = proc_rooms[ math.random( #proc_rooms ) ]		
+		table.insert( room.things, option_def.monster( "Ogre", 3, 3, 3 ))
 	end		
 
 	-- cull
@@ -142,7 +87,6 @@ local function worldgen()
 end
 
 rooms = worldgen()
-table.add( rooms, specrooms )
 
 local function validate( rooms )
 	for k, room in pairs(rooms) do

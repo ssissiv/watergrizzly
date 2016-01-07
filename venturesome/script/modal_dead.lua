@@ -15,8 +15,9 @@ function modal_dead:update()
 	end
 end
 
-function modal_dead:refreshOptions( options )
-	table.insert( options, option_def.game_over )
+function modal_dead:refreshOptions()
+	self.gstate:addOption( option_def.game_over )
+	self.gstate:addLine( "You find your final resting place in the boughs of the world tree..." )
 end
 
 return modal_dead

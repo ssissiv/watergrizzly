@@ -35,7 +35,7 @@ function modal_pickup:refreshOptions( options )
 		if card:isSelected() and (self.fn == nil or self.fn( card:getDef() )) then
 			local card_def = card:getDef()
 			local desc = string.format( "Acquire %s", card_def.name )
-			local fn = function( gstate )
+			local fn = function( self, gstate )
 				gstate.deck:addCard( card_def )
 				self.count = self.count - 1
 				gstate:refreshOptions()
