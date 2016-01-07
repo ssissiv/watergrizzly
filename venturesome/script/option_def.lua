@@ -54,8 +54,17 @@ local options =
 				gstate:push( modal_combat.new( self, gstate )	)
 			end,
 			tick = function( self, gstate )
-				
-				print( self.name, " ticked at ", self.room.name )
+				if gstate.room == self.room then
+					gstate:addLine( string.format( "OUCH! %s attacks you!", self.name ))
+					print( "ATTAX", self.room.name )
+				else
+					local n = math.random( #self.room.options )
+					local opt = self.room:getOption( n )
+					if opt.to then
+						self.room:removeThing( self )
+						gstate.rooms[ opt.to ]:addThing( self )
+					end
+				end
 			end,
 		}
 	end

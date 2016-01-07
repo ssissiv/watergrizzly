@@ -49,7 +49,7 @@ end
 
 function modal_travel:keypressed( key, isrepeat, modifiers )
 	if key == "m" and modifiers.ctrl then
-		table.insert( self.gstate.room.things, option_def.monster( "Monster", 3, 3, 3 ))
+		self.gstate.room:addThing( option_def.monster( "Monster", 3, 3, 3 ))
 	end
 	self.gstate:refreshOptions()
 end

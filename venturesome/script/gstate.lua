@@ -83,6 +83,7 @@ end
 
 function gstate:addOption( opt )
 	table.insert( self.ui.options, opt )
+	self:addLine( opt.desc )
 end
 
 function gstate:addLine( line )
@@ -257,6 +258,7 @@ end
 
 function gstate:passTime( dt )
 	self:addResource( constants.RESOURCE.TIME, -dt )
+	self:tickThings()
 end
 
 function gstate:getTime()
@@ -265,7 +267,10 @@ end
 
 function gstate:useAction()
 	self:addResource( constants.RESOURCE.ACTION, -1 )
+	self:tickThings()
+end
 
+function gstate:tickThings()
 	for i, room in ipairs( self.rooms ) do
 		for j, thing in ipairs( room.things ) do
 			if thing.tick then
@@ -280,7 +285,7 @@ function gstate:getActions()
 end
 
 function gstate:travelTo( to )
-	self.room = room.new( world_def.rooms[ to ] )
+	self.room = self.rooms[ to ]
 	self:refreshOptions()
 end
 
