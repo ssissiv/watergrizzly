@@ -6,7 +6,11 @@
 			"name": "Game",
 			"osx":
 			{
-				"cmd": ["love.app/Contents/MacOS/love", "./"],
+				"cmd":
+				[
+					"love.app/Contents/MacOS/love",
+					"./"
+				],
 				"working_dir": "${project_path}"
 			},
 			"windows":
@@ -36,7 +40,7 @@
 			[
 				"*"
 			],
-			"path": "."
+			"path": "/Users/ccosta/Documents/GitHub/watergrizzly/venturesome"
 		}
 	]
 }

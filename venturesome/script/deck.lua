@@ -27,7 +27,7 @@ function deck:discard( i )
 	i = i or math.random( #self.hand_cards )
 	local card = table.remove( self.hand_cards, i )
 	table.insert( self.dis_cards, card )
-	print( string.format( "Discard: %s (%d left in hand)", card.name, #self.hand_cards ))
+	--print( string.format( "Discard: %s (%d left in hand)", card.name, #self.hand_cards ))
 end
 
 function deck:trash( i )
@@ -47,7 +47,7 @@ end
 function deck:addCard( card_def )
 	table.insert( self.all, card_def )
 	table.insert( self.hand_cards, card_def )
-	print( string.format( "Pick up: %s (%d left in hand)", card_def.name, #self.hand_cards ))
+	--print( string.format( "Pick up: %s (%d left in hand)", card_def.name, #self.hand_cards ))
 	self:notifyListeners( "onAcquireCard", card_def )
 end
 
@@ -59,7 +59,7 @@ function deck:draw( num )
 		end
 		local card = table.remove( self.draw_cards )
 		table.insert( self.hand_cards, card )
-		print( string.format( "Draw: %s (%d in hand)", card.name, #self.hand_cards ))
+		--print( string.format( "Draw: %s (%d in hand)", card.name, #self.hand_cards ))
 		self:notifyListeners( "onDrawCard", card )
 	end
 end
