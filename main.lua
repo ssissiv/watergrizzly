@@ -18,7 +18,9 @@ require "input"
 require "eventsystem"
 require "gui/ui"
 
-require "game/game_constants"
+require "engine/engine_constants"
+require "engine/world"
+
 require "game/world"
 
 require "imgui"
