@@ -1,5 +1,5 @@
 
-class( "GameScreen" )
+class( "GameScreen", Engine.Entity )
 
 function GameScreen:init()
 	self:Reset()

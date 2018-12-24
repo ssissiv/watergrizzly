@@ -3,7 +3,7 @@ local BaseWorld = class( "Engine.World" )
 function BaseWorld:init()
 	self.elapsed_time = 0
 	self.depart_time = 0
-	self.BaseWorld_speed = DEFAULT_WORLD_SPEED
+	self.world_speed = DEFAULT_WORLD_SPEED
 	self.next_id = 1
 	self.pause = {}
 
@@ -11,6 +11,7 @@ function BaseWorld:init()
 	self.events:ListenForAny( self, self.OnBaseWorldEvent )
 
 	self.scheduled_events = {}
+	self.entities = {}
 end
 
 function BaseWorld:ListenForAny( listener, fn, priority )
@@ -92,11 +93,11 @@ function BaseWorld:IsPaused()
 end
 
 function BaseWorld:GetBaseWorldSpeed()
- 	return self.BaseWorld_speed
+ 	return self.world_speed
 end
 
-function BaseWorld:SetBaseWorldSpeed( BaseWorld_speed )
- 	self.BaseWorld_speed = clamp( BaseWorld_speed, 0, MAX_BaseWorld_SPEED )
+function BaseWorld:SetBaseWorldSpeed( world_speed )
+ 	self.world_speed = clamp( world_speed, 0, MAX_world_speed )
 end
 
 function BaseWorld:UpdateBaseWorld( dt )
@@ -104,7 +105,7 @@ function BaseWorld:UpdateBaseWorld( dt )
 		return
 	end
 
-	self.elapsed_time = self.elapsed_time + (dt * self.BaseWorld_speed)
+	self.elapsed_time = self.elapsed_time + (dt * self.world_speed)
 end
 
 function BaseWorld:CheckScheduledEvents()
@@ -132,6 +133,15 @@ end
 function BaseWorld:RenderBaseWorld( dt, camera )
 end
 
+function BaseWorld:SpawnEntity( entity )
+	table.insert( self.entities, entity )
+	entity:OnSpawn( self )
+end
+
+function BaseWorld:DespawnEntity( entity )
+	entity:OnDespawn( self )
+	table.arrayremove( self.entities, entity )
+end
 
 
 

@@ -1,9 +1,10 @@
-local ui = class( "UI" )
+local ui = class( "UIWorld", Engine.World )
 
 function ui:init()
+	UIWorld._base.init( self )
 	self.log = {}
-	self.input = { keys_pressed = {}, btns = {} }
 	self.screens = {}
+	self.input = { keys_pressed = {}, btns = {} }
 	
 	self.styles = {}
 	self.styles.default = love.graphics.getFont()
@@ -111,11 +112,11 @@ end
 ----------------------------------------------
 
 function ui:AddScreen( screen )
-	table.insert( self.screens, screen )
+	self:SpawnEntity( screen )
 end
 
 function ui:RemoveScreen( screen )
-	table.arrayremove( self.screens, screen )
+	self:DespawnEntity( screen )
 end
 
 ----------------------------------------------

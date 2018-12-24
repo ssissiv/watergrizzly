@@ -12,18 +12,19 @@ debug_menus = require "debug/debug_menus"
 loc = require "localization/locstring"
 Shaders = require "render/shader_defs"
 
-require "frontend/game_screen"
 require "camera"
 require "input"
 require "eventsystem"
-require "gui/ui"
 
 require "engine/engine_constants"
 require "engine/baseworld"
 require "engine/entity"
 
+require "gui/ui"
+
 require "game/game_constants"
 require "game/world"
+require "game/frontend/game_screen"
 
 require "imgui"
 
@@ -73,7 +74,7 @@ function love.load(arg)
     local game = GameScreen.new()
     debug_mgr.game = game
 
-    gui = UI:new()
+    gui = UIWorld:new()
     gui:AddScreen( game )
 
     love.window.setTitle( APP_TILE )
