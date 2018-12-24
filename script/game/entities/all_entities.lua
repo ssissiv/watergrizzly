@@ -1,7 +1,4 @@
-require "game/entities/entity"
-require "game/entities/entity_ext"
-require "game/entities/creature"
-require "game/entities/fieldling"
+require "game/entities/Entity"
 
 ---------------------------------------------------------------------------
 

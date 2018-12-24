@@ -6,7 +6,11 @@ local assets =
 
 	IMGS =
 	{
-	}
+	},
+
+	SOUNDS =
+	{
+	},
 }
 
 

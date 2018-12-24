@@ -1,6 +1,4 @@
 
-local TICKER_DURATION = 2.0
-
 class( "GameScreen" )
 
 function GameScreen:init()
@@ -10,7 +8,6 @@ end
 function GameScreen:Reset()
 	self.world = World.new()
 
-	self.ticker = {}
 	self.zoom_level = 0
 	self.camera = Camera.new()
 	self.camera:ZoomToLevel( self.zoom_level )
@@ -31,25 +28,6 @@ function GameScreen:UpdateScreen( dt )
 	self.camera:UpdateCamera( dt )
 
 	self.world:UpdateWorld( dt )
-
-	self:UpdateTicker( dt )
-end
-
-function GameScreen:UpdateTicker( dt )
-	if #self.ticker > 0 then
-		self.ticker_delta = (self.ticker_delta or 0) + dt
-		if self.ticker_delta > TICKER_DURATION then
-			table.remove( self.ticker, 1 )
-			self.ticker_delta = 0
-
-		end
-	else
-		self.ticker_delta = 0
-	end
-end
-
-function GameScreen:AppendTicker( txt, clr )
-	table.insert( self.ticker, { txt = txt, clr = clr })
 end
 
 function GameScreen:RenderDebug()
@@ -69,8 +47,6 @@ function GameScreen:RenderScreen()
 	ui.SetNextWindowPos( 0, 0 )
 
     ui.Begin( "BUILD_MENU", true, flags )
-
-    ui.Text( self.world.location:GetName() )
 
     if ui.BeginMenuBar() then
     	if ui.BeginMenu( "Game" ) then
@@ -111,55 +87,16 @@ function GameScreen:CenterCamera( wx, wy )
 end
 
 function GameScreen:MouseMoved( mx, my )
-	if self.drag_card then
-		local wx, wy = self.camera:ScreenToWorld( mx, my )
-		local dx, dy = wx - self.drag_x, wy - self.drag_y
-		self.drag_x, self.drag_y = wx, wy
-		self.drag_card:OffsetCard( dx, dy )
-		return true
-
-	elseif self.is_panning then
-		local x1, y1 = self.camera:ScreenToWorld( mx, my )
-		local x0, y0 = self.camera:ScreenToWorld( self.pan_start_mx, self.pan_start_my )
-		self.camera:MoveTo( self.pan_start_x - (x1 - x0), self.pan_start_y - (y1 -y0) )
-		return true
-
-	else
-		local wx, wy = self.camera:ScreenToWorld( mx, my )
-		for i, card in self.world:Cards() do
-			local hit = card:HitTest( wx, wy )
-			if card:IsHovered() and not hit then
-				card:SetHover( false )
-				self.hover_card = nil
-			elseif not card:IsHovered() and hit then
-				card:SetHover( true )
-				self.hover_card = card
-			end
-		end
-	end
+	return false
 end
 
 function GameScreen:MousePressed( mx, my, btn )
 	if btn == constants.buttons.MOUSE_LEFT then
-		if self.hover_card then
-			self.drag_card = self.hover_card
-			self.drag_x, self.drag_y = self.camera:ScreenToWorld( mx, my )
-
-		else
-			self.is_panning = true
-			self.pan_start_x, self.pan_start_y = self.camera:GetPosition()
-			self.pan_start_mx, self.pan_start_my = mx, my
-		end
 	end
 end
 
 function GameScreen:MouseReleased( mx, my, btn )
 	if btn == constants.buttons.MOUSE_LEFT then
-		if self.drag_card then
-			self.drag_card = nil
-		elseif self.is_panning then
-			self.is_panning = false
-		end
 	end
 end
 

@@ -1,4 +1,5 @@
 require "util/class"
+require "util/Colour"
 require "util/iterators"
 require "util/table"
 require "util/random"
@@ -6,7 +7,7 @@ require "util/saveload"
 easing = require "util/easing"
 Serpent = require "util/serpent"
 
-local util = {}
+local util = class( "Util" )
 
 function generic_error( err )
     return debug.traceback( err, 2 )
@@ -306,4 +307,3 @@ function Lerp(x1,x2,t)
     return x1 + x2 * t - x1 * t
 end
 
-return util

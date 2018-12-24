@@ -2,17 +2,15 @@
 package.path = "script/?.lua;foreign/?/init.lua;foreign/?.lua;"..package.path
 -----------------------------------------------------------
 
-local strict = require "util/strict"
+require "util/strict"
 strictify( _G )
 
-bit32 = require "bit"
-util = require "util/util"
+require "util/util"
 constants = require "constants"
 require "debug/debug_mgr"
 debug_menus = require "debug/debug_menus"
 loc = require "locstring"
 Shaders = require "render/shader_defs"
-require "render/StarField"
 
 require "frontend/game_screen"
 require "camera"
@@ -23,21 +21,13 @@ require "gui/ui"
 require "game/game_constants"
 require "game/world"
 
-require "game/locations/location"
-require "game/locations/DeepSpace"
-require "game/locations/Planet"
-
-require "game/cards/card"
-require "game/cards/TravelTo"
+require "imgui"
 
 -----------------------------------------------------------
-
-require "imgui"
 
 local test_window = false
 local gui = nil
 local debug_mgr = nil
-local myShader
 local global_lcg = lcg()
 
 function DBG( v )
