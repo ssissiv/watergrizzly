@@ -21,9 +21,13 @@ require "engine/baseworld"
 require "engine/entity"
 
 require "gui/ui"
+require "gui/Screen"
 
-require "game/game_constants"
+require "game/GameConstants"
 require "game/world"
+require "game/Ship"
+require "game/SolarSystem"
+require "game/Star"
 require "game/frontend/game_screen"
 
 require "imgui"
@@ -82,19 +86,19 @@ end
  
 function love.update(dt)
     imgui.NewFrame()
-    gui:Update( dt )
+    gui:UpdateWorld( dt )
 end
  
 function love.draw()
-    love.graphics.clear(0, 0, 25, 255)
+    love.graphics.clear(0, 0, 0, 255)
 
     -- Render game UI
-    gui:RenderUI()
+    gui:RenderWorld()
 
     -- Debug render
     debug_mgr:DoRender()
 
-    love.graphics.setColor( 255, 255, 255 )
+    love.graphics.setColor( 1, 1, 1 )
     imgui.Render()
 end
  
