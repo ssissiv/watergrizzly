@@ -9,7 +9,7 @@ require "util/util"
 constants = require "constants"
 require "debug/debug_mgr"
 debug_menus = require "debug/debug_menus"
-loc = require "locstring"
+loc = require "localization/locstring"
 Shaders = require "render/shader_defs"
 
 require "frontend/game_screen"

@@ -1,11 +1,25 @@
 ----------------------------------------------------------------
 -- Localization functions.
 
-local loc = require "locmacros"
+local loc = require "localization/locmacros"
+
+local LOCALE_ENV =
+{
+	max_plurality = 2,
+}
+
+function loc.getEnv()
+	return LOCALE_ENV
+end
+
+function loc.setMaxPlurality( n )
+	assert( type(n) == "number" )
+	LOCALE_ENV.max_plurality = n
+end
 
 -- Converts a plurality (integer) to an index.
--- TODO: this is parameterized by the locale, through the .pot file.
-local function convertPlurality( n )
+-- TODO: this can be re-assigned by the locale, through the .pot file.
+function loc.convertPlurality( n )
     return (n ~= 1 and n ~= -1) and 2 or 1
 end
 
@@ -47,13 +61,22 @@ function loc.format( format, ... )
     end
 	for i = 1, select("#", ...) do
 		local v = select(i, ... )
-		local j, k, fn, options
+		local j, k, rest, fn, options
 		repeat
-			j, k, fn, options = format:find( "{"..i.."([:*.%%#]?)([^}]-)}", (k or 0) + 1 )
+			j, k, rest = format:find( "{"..i.."([^}]-)}", (k or 0) + 1 )
+			if rest and #rest > 0 then
+				fn, options = rest:match("^([:*.%%#])(.+)$")
+				if fn == nil then
+					j = nil -- Invalid formatter.
+				end
+			else
+				fn, options = nil, nil
+			end
+
 			local substr
 			if fn == "*" then
                 -- v is a plurality, which converts to an index into options
-                local pluralForm = convertPlurality( v )
+                local pluralForm = loc.convertPlurality( v )
 				local option
 				for n = 1, pluralForm do
 					option, options = consume_token( options )
@@ -85,6 +108,24 @@ function loc.format( format, ... )
 		until not j
 	end
 	return format
+end
+
+-- Localization formatter which defers the replacement to the function 'f' which receives
+-- 3 parameters: word, fn, field which correspond to the loc formatter fields {word.fn.field}
+function loc.custom_format( format, f )
+    assert( type(f) == "function" )
+
+    local function repl( formatter )
+        local word, fn, field = formatter:match( "^{([^:*.%%#]+)([:*.%%#])(.+)}$" )
+        if word then
+        	return f( word, fn, field )
+        else
+        	word = formatter:match( "^{(.*)}$")
+        	return f( word, nil, nil )
+        end
+    end
+
+    return format:gsub( "%b{}", repl )
 end
 
 function loc.cap( str )
