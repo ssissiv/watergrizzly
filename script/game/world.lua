@@ -1,4 +1,4 @@
-local World = class( "GameWorld" )
+local World = class( "World", Engine.World )
 
 function World:init()
 	World._base.init( self )

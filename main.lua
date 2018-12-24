@@ -19,8 +19,10 @@ require "eventsystem"
 require "gui/ui"
 
 require "engine/engine_constants"
-require "engine/world"
+require "engine/baseworld"
+require "engine/entity"
 
+require "game/game_constants"
 require "game/world"
 
 require "imgui"
@@ -73,6 +75,8 @@ function love.load(arg)
 
     gui = UI:new()
     gui:AddScreen( game )
+
+    love.window.setTitle( APP_TILE )
 end
  
 function love.update(dt)

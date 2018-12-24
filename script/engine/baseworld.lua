@@ -1,41 +1,41 @@
-local World = class( "World" )
+local BaseWorld = class( "Engine.World" )
 
-function World:init()
+function BaseWorld:init()
 	self.elapsed_time = 0
 	self.depart_time = 0
-	self.world_speed = DEFAULT_WORLD_SPEED
+	self.BaseWorld_speed = DEFAULT_WORLD_SPEED
 	self.next_id = 1
 	self.pause = {}
 
 	self.events = EventSystem()
-	self.events:ListenForAny( self, self.OnWorldEvent )
+	self.events:ListenForAny( self, self.OnBaseWorldEvent )
 
 	self.scheduled_events = {}
 end
 
-function World:ListenForAny( listener, fn, priority )
+function BaseWorld:ListenForAny( listener, fn, priority )
 	self.events:ListenForAny( listener, fn, priority )
 end
 
-function World:ListenForEvent( event, listener, fn, priority )
+function BaseWorld:ListenForEvent( event, listener, fn, priority )
 	self.events:ListenForEvent( event, listener, fn, priority )
 end
 
-function World:ListenForEvent( event, listener, fn, priority )
+function BaseWorld:ListenForEvent( event, listener, fn, priority )
 	self.events:ListenForEvent( event, listener, fn, priority )
 end
 
-function World:RemoveListener( listener )
+function BaseWorld:RemoveListener( listener )
 	self.events:RemoveListener( listener )
 end
 
-function World:BroadcastEvent( event_name, ... )
+function BaseWorld:BroadcastEvent( event_name, ... )
 	self.events:BroadcastEvent( event_name, ... )
 end
 
-function World:OnWorldEvent( event_name, ... )
-	if event_name == WORLD_EVENT.LOG then
-		print( "WORLD_EVENT.LOG:", ... )
+function BaseWorld:OnBaseWorldEvent( event_name, ... )
+	if event_name == BaseWorld_EVENT.LOG then
+		print( "BaseWorld_EVENT.LOG:", ... )
 	end
 end
 
@@ -43,41 +43,41 @@ local function CompareScheduledEvents( ev1, ev2 )
 	return ev1.when < ev2.when
 end
 
-function World:GenerateID()
+function BaseWorld:GenerateID()
 	self.next_id = self.next_id + 1
 	return self.next_id
 end
 
-function World:IsGameOver()
+function BaseWorld:IsGameOver()
 	return self.is_gameover == true
 end
 
-function World:SetGameOver()
+function BaseWorld:SetGameOver()
 	self.is_gameover = true
 end
 
-function World:ScheduleEvent( delta, event_name, ... )
+function BaseWorld:ScheduleEvent( delta, event_name, ... )
 	assert( delta > 0 or error( string.format( "Scheduling in the past: %s with delta %d", event_name, delta )))
 	local ev = { when = self.turn + delta, event_name, ... }
 	table.binsert( self.scheduled_events, ev, CompareScheduledEvents )
 	return ev
 end
 
-function World:SchedulePeriodicEvent( delta, event_name, ... )
+function BaseWorld:SchedulePeriodicEvent( delta, event_name, ... )
 	local ev = self:ScheduleEvent( delta, event_name, ... )
 	ev.period = delta
 	return ev
 end
 
-function World:UnscheduleEvent( ev )
+function BaseWorld:UnscheduleEvent( ev )
 	ev.cancel = true
 end
 
-function World:GetElapsedTime()
+function BaseWorld:GetElapsedTime()
 	return self.elapsed_time
 end
 
-function World:TogglePause( pause_type )
+function BaseWorld:TogglePause( pause_type )
 	assert( IsEnum( pause_type, PAUSE_TYPE ))
 	local idx = table.arrayfind( self.pause, pause_type )
 	if idx then
@@ -87,27 +87,27 @@ function World:TogglePause( pause_type )
 	end
 end
 
-function World:IsPaused()
+function BaseWorld:IsPaused()
 	return #self.pause > 0 or self:IsGameOver() 
 end
 
-function World:GetWorldSpeed()
- 	return self.world_speed
+function BaseWorld:GetBaseWorldSpeed()
+ 	return self.BaseWorld_speed
 end
 
-function World:SetWorldSpeed( world_speed )
- 	self.world_speed = clamp( world_speed, 0, MAX_WORLD_SPEED )
+function BaseWorld:SetBaseWorldSpeed( BaseWorld_speed )
+ 	self.BaseWorld_speed = clamp( BaseWorld_speed, 0, MAX_BaseWorld_SPEED )
 end
 
-function World:UpdateWorld( dt )
+function BaseWorld:UpdateBaseWorld( dt )
 	if self:IsPaused() then
 		return
 	end
 
-	self.elapsed_time = self.elapsed_time + (dt * self.world_speed)
+	self.elapsed_time = self.elapsed_time + (dt * self.BaseWorld_speed)
 end
 
-function World:CheckScheduledEvents()
+function BaseWorld:CheckScheduledEvents()
 	-- Broadcast any scheduled events.
 	local ev = self.scheduled_events[ 1 ]
 
@@ -129,7 +129,7 @@ function World:CheckScheduledEvents()
 	end
 end
 
-function World:RenderWorld( dt, camera )
+function BaseWorld:RenderBaseWorld( dt, camera )
 end
 
 
