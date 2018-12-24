@@ -12,31 +12,18 @@ function ui:init()
 	return self
 end
 
-function ui:Update( dt )
-	for i = #self.screens, 1, -1 do
-		local screen = self.screens[i]
-		if screen.UpdateScreen then
-			screen:UpdateScreen( dt )
-		end
-	end
-end
-
-function ui:RenderUI()
-	love.graphics.setColor( 255, 255, 255 )
-
-	for i, screen in ipairs( self.screens ) do
-		screen:RenderScreen( self )
-	end
-
-	table.clear( self.input.keys_pressed )
-end
-
 function ui:RegisterFont( style, font, sz )
 	self.styles[ style ] = love.graphics.newFont( font, sz )
 end
 
 function ui:GetFont( style )
 	return self.styles[ style ] or self.styles.default
+end
+
+function ui:OnUpdateWorld( dt )
+end
+
+function ui:OnRenderWorld()
 end
 
 ---------------------------------------------

@@ -1,5 +1,5 @@
 
-class( "GameScreen", Engine.Entity )
+class( "GameScreen", Screen )
 
 function GameScreen:init()
 	self:Reset()
@@ -59,7 +59,7 @@ function GameScreen:RenderScreen()
     	ui.EndMenuBar()
     end
 
-    self.world:RenderWorld( ui, self.camera )
+    self.world:RenderWorld( self.camera )
 
 	ui.End()
 end

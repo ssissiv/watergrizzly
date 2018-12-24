@@ -100,14 +100,6 @@ function BaseWorld:SetBaseWorldSpeed( world_speed )
  	self.world_speed = clamp( world_speed, 0, MAX_world_speed )
 end
 
-function BaseWorld:UpdateBaseWorld( dt )
-	if self:IsPaused() then
-		return
-	end
-
-	self.elapsed_time = self.elapsed_time + (dt * self.world_speed)
-end
-
 function BaseWorld:CheckScheduledEvents()
 	-- Broadcast any scheduled events.
 	local ev = self.scheduled_events[ 1 ]
@@ -130,16 +122,41 @@ function BaseWorld:CheckScheduledEvents()
 	end
 end
 
-function BaseWorld:RenderBaseWorld( dt, camera )
+function BaseWorld:UpdateWorld( dt )
+	if self:IsPaused() then
+		return
+	end
+
+	self.elapsed_time = self.elapsed_time + (dt * self.world_speed)
+
+	for i = #self.entities, 1, -1 do
+		local ent = self.entities[i]
+		if ent.UpdateEntity then
+			ent:UpdateEntity( dt )
+		end
+	end
+
+	self:OnUpdateWorld( dt )
+end
+
+function BaseWorld:RenderWorld( camera )
+	for i = #self.entities, 1, -1 do
+		local ent = self.entities[i]
+		assert( ent.RenderEntity, tostring(ent))
+		ent:RenderEntity( camera )
+	end
+
+	self:OnRenderWorld( camera )
 end
 
 function BaseWorld:SpawnEntity( entity )
+	assert( is_instance( entity, Engine.Entity ))
 	table.insert( self.entities, entity )
-	entity:OnSpawn( self )
+	entity:SpawnEntity( self )
 end
 
 function BaseWorld:DespawnEntity( entity )
-	entity:OnDespawn( self )
+	entity:DespawnEntity( self )
 	table.arrayremove( self.entities, entity )
 end
 
