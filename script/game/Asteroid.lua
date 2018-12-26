@@ -20,7 +20,7 @@ end
 function Asteroid:OnSpawnEntity( world, parent )
 	Asteroid._base.OnSpawnEntity( self, world, parent )
 
-	self.body = love.physics.newBody( world.physics, 0, 0, "dynamic")
+	self.body = love.physics.newBody( world.physics, 0, 0, "kinematic")
 	self.shape = love.physics.newPolygonShape( table.unpack( self.verts ) )
 	self.fixture = love.physics.newFixture( self.body, self.shape, 1.0) -- Attach fixture to body and give it a density of 1.
 	self.fixture:setUserData( self )
@@ -50,7 +50,4 @@ end
 function Asteroid:OnRenderEntity()
 	love.graphics.setColor( 0.6, 0.6, 0.6 )
 	love.graphics.polygon("fill", self.body:getWorldPoints( table.unpack( self.verts )))
-	-- love.graphics.translate( x, y )
-	-- love.graphics.polygon( "fill", self.verts )
-	-- love.graphics.translate( -x, -y )
 end

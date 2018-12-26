@@ -44,10 +44,12 @@ end
 
 
 function GameScreen:RenderScreen()
+    self.camera:PushCamera()
+    self.game_world:RenderWorld()
+    self.camera:PopCamera()
 
 	local ui = imgui
     local flags = { "NoTitleBar", "AlwaysAutoResize", "NoMove", "MenuBar", "NoScrollBar", "NoBringToFrontOnFocus" }
-	ui.SetNextWindowSize( love.graphics.getWidth(), 40 )
 	ui.SetNextWindowPos( 0, 0 )
 
     ui.Begin( "BUILD_MENU", true, flags )
@@ -63,9 +65,26 @@ function GameScreen:RenderScreen()
     	ui.EndMenuBar()
     end
 
-    self.camera:PushCamera()
-    self.game_world:RenderWorld()
-    self.camera:PopCamera()
+
+    ui.TextColored( 0, 0.9, 0, 1, "Energy:" )
+    ui.SameLine( 100 )
+    ui.PushStyleColor( "ImGuiCol_PlotHistogram", 0, 0.9, 0, 1 )
+    ui.ProgressBar( 0.2, 200, 14 )
+    ui.PopStyleColor()
+
+    ui.TextColored( 0, 0.8, 0.9, 1, "Shields:" )
+    ui.SameLine( 100 )
+    ui.PushStyleColor( "ImGuiCol_PlotHistogram", 0, 0.8, 0.9, 1 )
+    ui.ProgressBar( 0.2, 200, 14 )
+    ui.PopStyleColor()
+
+    ui.TextColored( 0.8, 0.5, 0, 1, "Hull:" )
+    ui.SameLine( 100 )
+    ui.PushStyleColor( "ImGuiCol_PlotHistogram", 0.8, 0.5, 0, 1 )
+    ui.ProgressBar( 0.2, 200, 14 )
+    ui.PopStyleColor()
+
+	ui.Dummy( love.graphics.getWidth(), 0 )
 
 	ui.End()
 end

@@ -2,9 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"world.location.speed = -20",
-			"world.location.speed = 0",
-			"world.location.speed = -200",
 			"world.location.speed = -1000",
 			"world.location.speed = -100",
 			"world.location.speed = 0",
@@ -33,7 +30,10 @@ return {
 			"print(t.particles:isActive())",
 			"print( t )",
 			"print( t.body )",
-			"print( t.body:getLinearVelocity() )"
+			"print( t.body:getLinearVelocity() )",
+			"print( imgui.Style_PlotHistogram )",
+			"print( imgui.Style_Button )",
+			"print( imgui.ImGuiCol_PlotHistogram )"
 		}
 	},
 	ROOT = {
