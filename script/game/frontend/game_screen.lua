@@ -6,6 +6,9 @@ function GameScreen:init()
 end
 
 function GameScreen:Reset()
+	if self.game_world then
+		self.game_world:ResetWorld()
+	end
 	self.game_world = World.new()
 
 	self.zoom_level = 0

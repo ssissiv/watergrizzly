@@ -73,6 +73,7 @@ function DebugManager:GetDebugEnv()
     dbg_env.game = self.game
     if self.game then
 	    dbg_env.world = self.game and self.game.game_world
+	    dbg_env.player = dbg_env.world.player
 	    dbg_env.wx, dbg_env.wy = self.game.camera:ScreenToWorld( dbg_env.mx, dbg_env.my )
     end
     return dbg_env

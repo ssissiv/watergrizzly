@@ -1,5 +1,6 @@
 require "util/class"
 require "util/Colour"
+require "util/Math"
 require "util/iterators"
 require "util/table"
 require "util/random"
@@ -179,7 +180,6 @@ function normalizeVec2(x,y)
     return 0,0
 end
 
-
 function distsq(x1, y1, x2, y2)
     local dx = x2-x1
     local dy = y2-y1
@@ -190,6 +190,10 @@ function distance(x1, y1, x2, y2)
     local dx = x2-x1
     local dy = y2-y1
     return math.sqrt( dx*dx + dy*dy )
+end
+
+function dot( x1, y1, x2, y2 )
+    return x1 * x2 + y1 * y2
 end
 
 function weightedpick(options)

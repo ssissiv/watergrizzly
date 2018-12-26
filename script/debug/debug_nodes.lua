@@ -64,8 +64,9 @@ function DebugRoot:RenderPanel( ui, panel, dbg )
     if self.game then
         panel:AppendTable( ui, self.game, "Game" )
         panel:AppendTable( ui, self.game.game_world, "World" )
+        panel:AppendTable( ui, self.game.game_world.player )
+        ui.Spacing()
     end
-
 
     if ui.TreeNodeEx( "Render", { "DefaultOpen" } ) then
         ui.Indent( 20 )

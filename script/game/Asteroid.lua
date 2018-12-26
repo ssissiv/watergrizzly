@@ -6,10 +6,10 @@ function Asteroid:init( orbital_radius )
 	self.orbital_angle = math.random() * 2 * math.pi
 	self.orbital_velocity = 100 / self.orbital_radius
 
-	local radius = math.random( 10, 25 )
+	self.radius = math.random( 10, 25 )
 	self.verts = {}
 	for i = 1, 8 do
-		local x, y = radius * math.cos( i * 2 * math.pi / 8 ), radius * math.sin( i * 2 * math.pi / 8 )
+		local x, y = self.radius * math.cos( i * 2 * math.pi / 8 ), self.radius * math.sin( i * 2 * math.pi / 8 )
 		x = x + x * math.random() * 0.6 + 0.7
 		y = y + y * math.random() * 0.6 + 0.7
 		table.insert( self.verts, x )
@@ -17,14 +17,40 @@ function Asteroid:init( orbital_radius )
 	end
 end
 
+function Asteroid:OnSpawnEntity( world, parent )
+	Asteroid._base.OnSpawnEntity( self, world, parent )
+
+	self.body = love.physics.newBody( world.physics, 0, 0, "dynamic")
+	self.shape = love.physics.newPolygonShape( table.unpack( self.verts ) )
+	self.fixture = love.physics.newFixture( self.body, self.shape, 1.0) -- Attach fixture to body and give it a density of 1.
+	self.fixture:setUserData( self )
+	self.fixture:setCategory( PHYS_GROUP_OBJECT )
+	self.fixture:setMask( PHYS_GROUP_OBJECT )
+end
+
+function Asteroid:OnCollide( other, contact )
+	local vx, vy = other.body:getLinearVelocity()
+	local nx, ny = contact:getNormal()
+	vx, vy = nx * vx, ny * vy
+	if Math.Length( vx, vy ) > 100 then
+		self.world:DespawnEntity( other )
+		local x1, y1 = contact:getPositions()
+		self.world:AddExplosion( x1, y1 )
+	end
+end
+
 function Asteroid:OnUpdateEntity( dt )
 	self.orbital_angle = self.orbital_angle + dt * self.orbital_velocity
+
+	local x, y = math.cos( self.orbital_angle ) * self.orbital_radius, math.sin( self.orbital_angle ) * self.orbital_radius
+	self.body:setPosition( x, y )
+    self.body:setLinearVelocity(0, 0)
 end
 
 function Asteroid:OnRenderEntity()
 	love.graphics.setColor( 0.6, 0.6, 0.6 )
-	local x, y = math.cos( self.orbital_angle ) * self.orbital_radius, math.sin( self.orbital_angle ) * self.orbital_radius
-	love.graphics.translate( x, y )
-	love.graphics.polygon( "fill", self.verts )
-	love.graphics.translate( -x, -y )
+	love.graphics.polygon("fill", self.body:getWorldPoints( table.unpack( self.verts )))
+	-- love.graphics.translate( x, y )
+	-- love.graphics.polygon( "fill", self.verts )
+	-- love.graphics.translate( -x, -y )
 end

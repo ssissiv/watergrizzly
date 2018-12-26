@@ -1,1 +1,4 @@
 APP_TILE = "Space Monkey"
+
+PHYS_GROUP_PLAYER = 1
+PHYS_GROUP_OBJECT = 2
