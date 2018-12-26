@@ -33,6 +33,7 @@ require "game/StarField"
 require "game/Asteroid"
 require "game/SolarSystem"
 require "game/Star"
+require "game/components/EnergyGenerator"
 require "game/components/Scanner"
 require "game/frontend/game_screen"
 

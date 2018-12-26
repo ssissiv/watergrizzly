@@ -77,23 +77,25 @@ end
 
 function GameScreen:RenderHUD( entity )
 	local ui = imgui
-    ui.TextColored( 0, 0.9, 0, 1, "Energy:" )
-    ui.SameLine( 100 )
-    ui.PushStyleColor( "ImGuiCol_PlotHistogram", 0, 0.9, 0, 1 )
-    ui.ProgressBar( 0.2, 200, 14 )
-    ui.PopStyleColor()
+	if entity.energy then
+	    ui.TextColored( 0, 0.9, 0, 1, "Energy:" )
+	    ui.SameLine( 100 )
+	    ui.PushStyleColor( "ImGuiCol_PlotHistogram", 0, 0.9, 0, 1 )
+	    ui.ProgressBar( entity.energy:GetPercent(), 200, 14 )
+	    ui.PopStyleColor()
+	end
 
-    ui.TextColored( 0, 0.8, 0.9, 1, "Shields:" )
-    ui.SameLine( 100 )
-    ui.PushStyleColor( "ImGuiCol_PlotHistogram", 0, 0.8, 0.9, 1 )
-    ui.ProgressBar( 0.2, 200, 14 )
-    ui.PopStyleColor()
+    -- ui.TextColored( 0, 0.8, 0.9, 1, "Shields:" )
+    -- ui.SameLine( 100 )
+    -- ui.PushStyleColor( "ImGuiCol_PlotHistogram", 0, 0.8, 0.9, 1 )
+    -- ui.ProgressBar( 0.2, 200, 14 )
+    -- ui.PopStyleColor()
 
-    ui.TextColored( 0.8, 0.5, 0, 1, "Hull:" )
-    ui.SameLine( 100 )
-    ui.PushStyleColor( "ImGuiCol_PlotHistogram", 0.8, 0.5, 0, 1 )
-    ui.ProgressBar( 0.2, 200, 14 )
-    ui.PopStyleColor()
+    -- ui.TextColored( 0.8, 0.5, 0, 1, "Hull:" )
+    -- ui.SameLine( 100 )
+    -- ui.PushStyleColor( "ImGuiCol_PlotHistogram", 0.8, 0.5, 0, 1 )
+    -- ui.ProgressBar( 0.2, 200, 14 )
+    -- ui.PopStyleColor()
 
     if entity.scanner and #entity.scanner:GetTargets() > 0 then
     	ui.Text( "Targets:" )

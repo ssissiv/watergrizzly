@@ -23,6 +23,7 @@ function Ship:OnSpawnEntity( world, parent )
 	Ship._base.OnSpawnEntity( self, world, parent )
 
 	self.scanner = world:SpawnEntity( Component.Scanner:new(), self )
+	self.energy = world:SpawnEntity( Component.EnergyGenerator:new(), self )
 
 	self.body = love.physics.newBody( world.physics, 0, 0, "dynamic")
 	self.body:setUserData( self )
@@ -31,6 +32,8 @@ function Ship:OnSpawnEntity( world, parent )
 	self.fixture:setCategory( PHYS_GROUP_PLAYER )
 	self.body:setMass( 0.01 )
 	self.body:setPosition( 200, 200 )
+
+	world:ListenForEvent( WORLD_EVENT.INPUT, self, self.OnInputEvent )
 end
 
 function Ship:OnDespawnEntity()
@@ -46,44 +49,45 @@ function Ship:OnUpdateEntity( dt )
 	self:UpdateControls( dt )
 end
 
-function Ship:UpdateControls( dt )
-	if Input.IsPressed( "space" ) then
-		self.body:setLinearDamping( 5 )
-	else
-		self.body:setLinearDamping( 0 )
-		if Input.IsPressed( "up" ) then
-			if self.start_thrust == nil then
-				self.start_thrust = self.world:GetElapsedTime()
-			end
-			self.thrust = math.max( 1, math.sqrt( self.world:GetElapsedTime() - self.start_thrust ))
-			self.xvel = clamp( self.xvel + self.fwd[1] * self.thrust * dt, -1, 1 )
-			self.yvel = clamp( self.yvel + self.fwd[2] * self.thrust * dt, -1, 1 )
-			self.body:applyForce( self.fwd[1] * 1000 * dt , self.fwd[2] * 1000 * dt )
-		else
-			self.start_thrust = nil
-			self.thrust = nil
+function Ship:OnInputEvent( event_name, input )
+	if input.what == Input.KEY_DOWN then
+		if input.key == "space" then
+			self.body:setLinearDamping( 5 )
+
+		elseif input.key == "up" then
+			self.is_thrusting = true
 		end
 
-		if Input.IsPressed( "left" ) then
-			local da = math.pi * dt
-			self.angle = self.angle - da
-			self.fwd = { math.cos( self.angle ), math.sin( self.angle )}
-		end
+	elseif input.what == Input.KEY_UP then
+		if input.key == "space" then
+			self.body:setLinearDamping( 0 )
 
-		if Input.IsPressed( "right" ) then
-			local da = math.pi * dt
-			self.angle = self.angle + da
-			self.fwd = { math.cos( self.angle ), math.sin( self.angle )}
+		elseif input.key == "up" then
+			self.is_thrusting = nil
 		end
 	end
+end
 
-	local x1, y1, x2, y2 = self.world:GetBounds()
-	-- self.x = clamp( self.x + self.xvel, x1, x2 )
-	-- self.y = clamp( self.y + self.yvel, y1, y2 )
+function Ship:UpdateControls( dt )
+	if Input.IsPressed( "left" ) then
+		local da = math.pi * dt
+		self.angle = self.angle - da
+		self.fwd = { math.cos( self.angle ), math.sin( self.angle )}
+	end
 
-	if self.thrust then
-		self.thrust_particles:moveTo( self.x - self.fwd[1] * 10, self.y - self.fwd[2] * 10 )
-		self.thrust_particles:setEmissionRate( 16 )
+	if Input.IsPressed( "right" ) then
+		local da = math.pi * dt
+		self.angle = self.angle + da
+		self.fwd = { math.cos( self.angle ), math.sin( self.angle )}
+	end
+
+	if self.is_thrusting then
+		if self.energy:ConsumeEnergy( self, 10 * dt ) then
+			self.body:applyForce( self.fwd[1] * 1000 * dt , self.fwd[2] * 1000 * dt )
+
+			self.thrust_particles:moveTo( self.x - self.fwd[1] * 10, self.y - self.fwd[2] * 10 )
+			self.thrust_particles:setEmissionRate( 16 )
+		end
 	else
 		self.thrust_particles:setEmissionRate( 0 )
 	end
@@ -99,7 +103,4 @@ function Ship:OnRenderEntity()
 	love.graphics.polygon( "fill", self.verts )
 	love.graphics.rotate( -self.angle )
 	love.graphics.translate( -self.x, -self.y )
-
-	-- love.graphics.setColor(0.76, 0.18, 0.05) --set the drawing color to red for the ball
-	-- love.graphics.circle("fill", self.x, self.y, self.shape:getRadius())
 end
