@@ -8,12 +8,12 @@ function Ship:init()
 	self.xvel, self.yvel = 0, 0
 	self.verts = { 10, 0, -10, -5, -10, 5 }
 
-	local ps = love.graphics.newParticleSystem( Assets.IMGS.PARTICLE )
+	local ps = love.graphics.newParticleSystem( Assets.IMGS.PARTICLE, 32 )
 	ps:setParticleLifetime(1,2)
 	ps:setSizes( 0.1 )
-	ps:setColors(  1, 0, 0, 1, 0.2, 0.1, 0.1, 0 )
-	ps:setSpeed( 1 )
+	ps:setColors(  1, 0, 0, 1, 1, 0, 0, 0 )
 	ps:setEmissionArea( "uniform", 10, 10, 0 )
+	-- ps:setSpeed( 2 )
 	-- ps:setLinearAcceleration(-20, -5, 0, 0)
 
 	self.thrust_particles = ps
@@ -54,7 +54,7 @@ function Ship:UpdateEntity( dt )
 
 	if self.thrust then
 		self.thrust_particles:moveTo( self.x - self.fwd[1] * 10, self.y - self.fwd[2] * 10 )
-		self.thrust_particles:setEmissionRate( 12 )
+		self.thrust_particles:setEmissionRate( 16 )
 	else
 		self.thrust_particles:setEmissionRate( 0 )
 	end

@@ -63,7 +63,7 @@ function DebugRoot:RenderPanel( ui, panel, dbg )
 
     if self.game then
         panel:AppendTable( ui, self.game, "Game" )
-        panel:AppendTable( ui, self.game.world, "World" )
+        panel:AppendTable( ui, self.game.game_world, "World" )
     end
 
 
