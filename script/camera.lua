@@ -15,6 +15,10 @@ function Camera:UpdateCamera( dt )
 	self.y = (self.y + self.targety) * 0.5
 end
 
+function Camera:SetCameraBounds( x1, y1, x2, y2 )
+	self.bounds = { x1, y1, x2, y2 }
+end
+
 function Camera:ZoomTo( zoom )
 	assert( zoom > 0 )
 	self.zoom = zoom
@@ -66,14 +70,18 @@ function Camera:Pan( dx, dy )
 end
 
 function Camera:ClampToBounds( x, y )
+	if self.bounds == nil then
+		return x, y
+	end
+
 	local sw, sh = love.graphics.getWidth(), love.graphics.getHeight()
 	local x1 = 0 * self.zoom + x
 	local y1 = 0 * self.zoom + y
 	local x2 = sw * self.zoom + x
 	local y2 = sh * self.zoom + y
 
-	local xmin, xmax = CAMERA_BOUNDS_LEFT - (sw * 0.1), CAMERA_BOUNDS_RIGHT + (sw * 0.1)
-	local ymin, ymax = CAMERA_BOUNDS_BOTTOM - (sh * 0.1), CAMERA_BOUNDS_TOP + (sh * 0.1)
+	local xmin, xmax = self.bounds[1] - (sw * 0.1), self.bounds[3] + (sw * 0.1)
+	local ymin, ymax = self.bounds[2] - (sh * 0.1), self.bounds[4] + (sh * 0.1)
 	if x1 < xmin and x2 < xmax then
 		x = x + (xmin - x1)
 	elseif x2 > xmax and x1 > xmin then

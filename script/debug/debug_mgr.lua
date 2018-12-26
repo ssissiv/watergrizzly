@@ -274,7 +274,7 @@ function DebugManager:RenderDebugConsole()
 	    ui.Separator()
 	    ui.PushItemWidth( -40 )
 
-	    local changed, console_input = ui.InputText( self.input_id or "", self.last_console_input or "", 1028, "EnterReturnsTrue" )
+	    local console_input, changed = ui.InputText( self.input_id or "", self.last_console_input or "", 1028, "EnterReturnsTrue" )
 	    if changed and console_input then
 	    	if #console_input == 0 then
 	    		self:ToggleDebugConsole()

@@ -1,10 +1,10 @@
 class( "Screen", Engine.Entity )
 
-function Screen:UpdateEntity( dt )
+function Screen:OnUpdateEntity( dt )
 	self:UpdateScreen( dt )
 end
 
-function Screen:RenderEntity()
+function Screen:OnRenderEntity()
 	self:RenderScreen()
 end
 

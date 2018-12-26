@@ -4,6 +4,10 @@ Input.LEFT_MOUSE = 1
 Input.RIGHT_MOUSE = 2
 Input.MIDDLE_MOUSE = 3
 
+function Input.IsPressed( key )
+    return love.keyboard.isDown( key )
+end
+
 function Input.IsShift()
 	return love.keyboard.isDown( "lshift" ) or love.keyboard.isDown( "rshift" )
 end

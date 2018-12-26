@@ -8,7 +8,7 @@ function BaseWorld:init()
 	self.pause = {}
 
 	self.events = EventSystem()
-	self.events:ListenForAny( self, self.OnBaseWorldEvent )
+	self.events:ListenForAny( self, self.OnWorldEvent )
 
 	self.scheduled_events = {}
 	self.entities = {}
@@ -34,7 +34,7 @@ function BaseWorld:BroadcastEvent( event_name, ... )
 	self.events:BroadcastEvent( event_name, ... )
 end
 
-function BaseWorld:OnBaseWorldEvent( event_name, ... )
+function BaseWorld:OnWorldEvent( event_name, ... )
 	if event_name == BaseWorld_EVENT.LOG then
 		print( "BaseWorld_EVENT.LOG:", ... )
 	end
@@ -92,11 +92,11 @@ function BaseWorld:IsPaused()
 	return #self.pause > 0 or self:IsGameOver() 
 end
 
-function BaseWorld:GetBaseWorldSpeed()
+function BaseWorld:GetWorldSpeed()
  	return self.world_speed
 end
 
-function BaseWorld:SetBaseWorldSpeed( world_speed )
+function BaseWorld:SetWorldSpeed( world_speed )
  	self.world_speed = clamp( world_speed, 0, MAX_world_speed )
 end
 
@@ -131,7 +131,7 @@ function BaseWorld:UpdateWorld( dt )
 
 	for i = #self.entities, 1, -1 do
 		local ent = self.entities[i]
-		if ent.UpdateEntity then
+		if ent.parent == nil then
 			ent:UpdateEntity( dt )
 		end
 	end
@@ -140,23 +140,25 @@ function BaseWorld:UpdateWorld( dt )
 end
 
 function BaseWorld:RenderWorld( camera )
-	for i = #self.entities, 1, -1 do
+	for i = 1, #self.entities do
 		local ent = self.entities[i]
-		assert( ent.RenderEntity, tostring(ent))
-		ent:RenderEntity( camera )
+		if ent.parent == nil then
+			ent:RenderEntity( camera )
+		end
 	end
 
 	self:OnRenderWorld( camera )
 end
 
-function BaseWorld:SpawnEntity( entity )
+function BaseWorld:SpawnEntity( entity, parent )
 	assert( is_instance( entity, Engine.Entity ))
 	table.insert( self.entities, entity )
-	entity:SpawnEntity( self )
+	entity:OnSpawnEntity( self, parent )
+	return self
 end
 
 function BaseWorld:DespawnEntity( entity )
-	entity:DespawnEntity( self )
+	entity:OnDespawnEntity( self )
 	table.arrayremove( self.entities, entity )
 end
 

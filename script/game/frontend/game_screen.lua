@@ -6,7 +6,7 @@ function GameScreen:init()
 end
 
 function GameScreen:Reset()
-	self.world = World.new()
+	self.game_world = World.new()
 
 	self.zoom_level = 0
 	self.camera = Camera.new()
@@ -16,18 +16,19 @@ end
 
 function GameScreen:SaveWorld( filename )
 	assert( filename )
-	SerializeToFile( self.world, filename )
+	SerializeToFile( self.game_world, filename )
 end
 
 function GameScreen:LoadWorld( filename )
 	assert( filename )
-	self.world = DeserializeFromFile( filename )
+	self.game_world = DeserializeFromFile( filename )
 end
 
 function GameScreen:UpdateScreen( dt )
-	self.camera:UpdateCamera( dt )
+	self.game_world:UpdateWorld( dt )
 
-	self.world:UpdateWorld( dt )
+	self:CenterCamera( self.game_world.player:GetPosition())
+	self.camera:UpdateCamera( dt )
 end
 
 function GameScreen:RenderDebug()
@@ -59,7 +60,9 @@ function GameScreen:RenderScreen()
     	ui.EndMenuBar()
     end
 
-    self.world:RenderWorld( self.camera )
+    self.camera:PushCamera()
+    self.game_world:RenderWorld()
+    self.camera:PopCamera()
 
 	ui.End()
 end
@@ -93,11 +96,15 @@ end
 function GameScreen:MousePressed( mx, my, btn )
 	if btn == constants.buttons.MOUSE_LEFT then
 	end
+
+	return self.game_world:MousePressed( mx, my, btn )
 end
 
 function GameScreen:MouseReleased( mx, my, btn )
 	if btn == constants.buttons.MOUSE_LEFT then
 	end
+
+	return self.game_world:MouseReleased( mx, my, btn )
 end
 
 function GameScreen:KeyPressed( key )
@@ -130,12 +137,16 @@ function GameScreen:KeyPressed( key )
 	elseif key == "escape" then
 
 	end
+
+	return self.game_world:KeyPressed( key )
 end
 
 function GameScreen:KeyReleased( key )
 	if key == "space" and self.is_panning then
 		self.is_panning = nil
 	end
+
+	return self.game_world:KeyReleased( key )
 end
 
 function GameScreen:WheelMoved( dx, dy )

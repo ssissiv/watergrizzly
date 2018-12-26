@@ -100,10 +100,12 @@ end
 
 function ui:AddScreen( screen )
 	self:SpawnEntity( screen )
+	table.insert( self.screens, screen )
 end
 
 function ui:RemoveScreen( screen )
 	self:DespawnEntity( screen )
+	table.arrayremove( self.screens, screen )
 end
 
 ----------------------------------------------

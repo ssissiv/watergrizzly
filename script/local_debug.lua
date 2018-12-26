@@ -2,11 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"DBG(ALL_TILES)",
-			"t.speed = -100",
-			"t.speed = 0",
-			"world.location.speed = -100",
-			"world.location.speed = -10",
 			"world.location.speed = 0",
 			"world.location.speed = 10",
 			"world.location.speed = 100",
@@ -33,7 +28,12 @@ return {
 			"world.location.speed = -200",
 			"world.location.speed = -1000",
 			"world.location.speed = -100",
-			"world.location.speed = 0"
+			"world.location.speed = 0",
+			"print(world.ship:GetPosition())",
+			"print(world.player:GetPosition())",
+			"print( Assets.IMGS)",
+			"print( Assets.IMGS.PARTICLE)",
+			"DBG(Assets.IMGS)"
 		}
 	},
 	ROOT = {
