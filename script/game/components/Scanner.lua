@@ -1,6 +1,8 @@
-SCAN_RANGE = 150
-SCAN_LOSS_TIME = 3.0
-SCAN_ACQUIRE_TIME = 1.0
+local SCAN_RANGE = 150
+local SCAN_LOSS_TIME = 3.0
+local SCAN_ACQUIRE_TIME = 1.0
+
+-------------------------------------------------------------------
 
 local Scanner = class( "Component.Scanner", Engine.Component )
 
@@ -20,9 +22,6 @@ function Scanner:OnInputEvent( event_name, input )
 			end
 			self:SetPrimaryTarget( self.targets[ idx ] )
 			input.handled = true
-
-		elseif input.key == "return" and self.primary_target then
-			print( "ACTIVATE", self.primary_target )
 		end
 	end
 end
@@ -93,6 +92,10 @@ end
 
 function Scanner:Targets()
 	return ipairs( self.targets or table.empty )
+end
+
+function Scanner:IsTarget( target )
+	return self.targets and table.arrayfind( self.targets, target )
 end
 
 function Scanner:UpdateTarget( target, dt )

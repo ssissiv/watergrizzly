@@ -24,6 +24,7 @@ function Ship:OnSpawnEntity( world, parent )
 
 	self.scanner = world:SpawnEntity( Component.Scanner:new(), self )
 	self.energy = world:SpawnEntity( Component.EnergyGenerator:new(), self )
+	self.mining_laser = world:SpawnEntity( Component.MiningLaser:new(), self )
 
 	self.body = love.physics.newBody( world.physics, 0, 0, "dynamic")
 	self.body:setUserData( self )

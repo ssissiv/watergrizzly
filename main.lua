@@ -21,6 +21,8 @@ require "engine/baseworld"
 require "engine/entity"
 require "engine/Component"
 
+require "render/Particles"
+
 require "gui/ui"
 require "gui/Screen"
 
@@ -35,6 +37,7 @@ require "game/SolarSystem"
 require "game/Star"
 require "game/components/EnergyGenerator"
 require "game/components/Scanner"
+require "game/components/MiningLaser"
 require "game/frontend/game_screen"
 
 require "imgui"

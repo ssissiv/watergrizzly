@@ -3,7 +3,6 @@ local EnergyGenerator = class( "Component.EnergyGenerator", Engine.Component )
 
 function EnergyGenerator:init()
 	EnergyGenerator._base.init( self )
-	self.consumers = {}
 	self.max_amount = 100
 	self.amount = self.max_amount
 end
