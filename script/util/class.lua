@@ -20,7 +20,7 @@ class = function( name, baseclass )
         name = name_parts[i]
         local nextt = rawget( t, name )
         if nextt == nil then
-            nextt = {}
+            nextt = strictify( {} )
             rawset( t, name, nextt )
         end
         t = nextt

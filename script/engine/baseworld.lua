@@ -154,7 +154,7 @@ function BaseWorld:SpawnEntity( entity, parent )
 	assert( is_instance( entity, Engine.Entity ))
 	table.insert( self.entities, entity )
 	entity:OnSpawnEntity( self, parent )
-	return self
+	return entity
 end
 
 function BaseWorld:DespawnEntity( entity )

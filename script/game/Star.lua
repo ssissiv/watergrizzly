@@ -10,9 +10,9 @@ function Star:OnSpawnEntity( world, parent )
 	Star._base.OnSpawnEntity( self, world, parent )
 
 	self.body = love.physics.newBody( world.physics, 0, 0, "static")
+	self.body:setUserData( self )
 	self.shape = love.physics.newCircleShape( self.radius )
 	self.fixture = love.physics.newFixture( self.body, self.shape) -- Attach fixture to body and give it a density of 1.
-	self.fixture:setUserData( self )
 	self.fixture:setCategory( PHYS_GROUP_OBJECT )
 	self.fixture:setMask( PHYS_GROUP_OBJECT )
 end

@@ -2,15 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"world.location.speed = -1000",
-			"world.location.speed = -100",
-			"world.location.speed = 0",
-			"print(world.ship:GetPosition())",
-			"print(world.player:GetPosition())",
-			"print( Assets.IMGS)",
-			"print( Assets.IMGS.PARTICLE)",
-			"DBG(Assets.IMGS)",
-			"print( t.shape:computeMass() )",
 			"print( t.shape:computeMass( t.shape:getDensity() ) )",
 			"print(t.shape:getDensity())",
 			"print( t.shape:computeMass( 1 ) )",
@@ -33,7 +24,16 @@ return {
 			"print( t.body:getLinearVelocity() )",
 			"print( imgui.Style_PlotHistogram )",
 			"print( imgui.Style_Button )",
-			"print( imgui.ImGuiCol_PlotHistogram )"
+			"print( imgui.ImGuiCol_PlotHistogram )",
+			"DBG(player.scanner)",
+			"DBG(player)",
+			"DBG(player.scanner)",
+			"print(player:GetPosition())",
+			"DBG(world:GetEntitiesInRange( 483, 30, 100, {} ))",
+			"t = {}",
+			"DBG(world:GetEntitiesInRange( 483, 30, 100, t ))",
+			"world:GetEntitiesInRange( 483, 30, 100, t ); DBG(t)",
+			"print(t:GetPosition())"
 		}
 	},
 	ROOT = {

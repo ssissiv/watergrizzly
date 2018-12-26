@@ -17,15 +17,22 @@ function Asteroid:init( orbital_radius )
 	end
 end
 
+function Asteroid:GetPosition()
+	return self.body:getPosition()
+end
+
 function Asteroid:OnSpawnEntity( world, parent )
 	Asteroid._base.OnSpawnEntity( self, world, parent )
 
 	self.body = love.physics.newBody( world.physics, 0, 0, "kinematic")
+	self.body:setUserData( self )
 	self.shape = love.physics.newPolygonShape( table.unpack( self.verts ) )
 	self.fixture = love.physics.newFixture( self.body, self.shape, 1.0) -- Attach fixture to body and give it a density of 1.
-	self.fixture:setUserData( self )
 	self.fixture:setCategory( PHYS_GROUP_OBJECT )
 	self.fixture:setMask( PHYS_GROUP_OBJECT )
+
+	local x, y = math.cos( self.orbital_angle ) * self.orbital_radius, math.sin( self.orbital_angle ) * self.orbital_radius
+	self.body:setPosition( x, y )
 end
 
 function Asteroid:OnCollide( other, contact )
@@ -42,9 +49,9 @@ end
 function Asteroid:OnUpdateEntity( dt )
 	self.orbital_angle = self.orbital_angle + dt * self.orbital_velocity
 
-	local x, y = math.cos( self.orbital_angle ) * self.orbital_radius, math.sin( self.orbital_angle ) * self.orbital_radius
-	self.body:setPosition( x, y )
-    self.body:setLinearVelocity(0, 0)
+	-- local x, y = math.cos( self.orbital_angle ) * self.orbital_radius, math.sin( self.orbital_angle ) * self.orbital_radius
+	-- self.body:setPosition( x, y )
+ --    self.body:setLinearVelocity(0, 0)
 end
 
 function Asteroid:OnRenderEntity()

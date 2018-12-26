@@ -1,7 +1,7 @@
 local World = class( "World", Engine.World )
 
 local function beginContact( fixture1, fixture2, contact )
-	local ent1, ent2 = fixture1:getUserData(), fixture2:getUserData()
+	local ent1, ent2 = fixture1:getBody():getUserData(), fixture2:getBody():getUserData()
 	if ent1.OnCollide then
 		ent1:OnCollide( ent2, contact )
 	end

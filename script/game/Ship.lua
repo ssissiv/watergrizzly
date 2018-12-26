@@ -22,16 +22,19 @@ end
 function Ship:OnSpawnEntity( world, parent )
 	Ship._base.OnSpawnEntity( self, world, parent )
 
+	self.scanner = world:SpawnEntity( Component.Scanner:new(), self )
+
 	self.body = love.physics.newBody( world.physics, 0, 0, "dynamic")
+	self.body:setUserData( self )
 	self.shape = love.physics.newPolygonShape( table.unpack( self.verts ) )
 	self.fixture = love.physics.newFixture( self.body, self.shape ) -- Attach fixture to body and give it a density of 1.
-	self.fixture:setUserData( self )
 	self.fixture:setCategory( PHYS_GROUP_PLAYER )
 	self.body:setMass( 0.01 )
 	self.body:setPosition( 200, 200 )
 end
 
 function Ship:OnDespawnEntity()
+	Ship._base.OnDespawnEntity( self )
 	self.body:destroy()
 end
 
@@ -39,30 +42,39 @@ function Ship:GetPosition()
 	return self.x, self.y
 end
 
-function Ship:UpdateEntity( dt )
+function Ship:OnUpdateEntity( dt )
+	self:UpdateControls( dt )
+end
+
+function Ship:UpdateControls( dt )
 	if Input.IsPressed( "space" ) then
-		if self.start_thrust == nil then
-			self.start_thrust = self.world:GetElapsedTime()
-		end
-		self.thrust = math.max( 1, math.sqrt( self.world:GetElapsedTime() - self.start_thrust ))
-		self.xvel = clamp( self.xvel + self.fwd[1] * self.thrust * dt, -1, 1 )
-		self.yvel = clamp( self.yvel + self.fwd[2] * self.thrust * dt, -1, 1 )
-		self.body:applyForce( self.fwd[1] * 1000 * dt , self.fwd[2] * 1000 * dt )
+		self.body:setLinearDamping( 5 )
 	else
-		self.start_thrust = nil
-		self.thrust = nil
-	end
+		self.body:setLinearDamping( 0 )
+		if Input.IsPressed( "up" ) then
+			if self.start_thrust == nil then
+				self.start_thrust = self.world:GetElapsedTime()
+			end
+			self.thrust = math.max( 1, math.sqrt( self.world:GetElapsedTime() - self.start_thrust ))
+			self.xvel = clamp( self.xvel + self.fwd[1] * self.thrust * dt, -1, 1 )
+			self.yvel = clamp( self.yvel + self.fwd[2] * self.thrust * dt, -1, 1 )
+			self.body:applyForce( self.fwd[1] * 1000 * dt , self.fwd[2] * 1000 * dt )
+		else
+			self.start_thrust = nil
+			self.thrust = nil
+		end
 
-	if Input.IsPressed( "left" ) then
-		local da = math.pi * dt
-		self.angle = self.angle - da
-		self.fwd = { math.cos( self.angle ), math.sin( self.angle )}
-	end
+		if Input.IsPressed( "left" ) then
+			local da = math.pi * dt
+			self.angle = self.angle - da
+			self.fwd = { math.cos( self.angle ), math.sin( self.angle )}
+		end
 
-	if Input.IsPressed( "right" ) then
-		local da = math.pi * dt
-		self.angle = self.angle + da
-		self.fwd = { math.cos( self.angle ), math.sin( self.angle )}
+		if Input.IsPressed( "right" ) then
+			local da = math.pi * dt
+			self.angle = self.angle + da
+			self.fwd = { math.cos( self.angle ), math.sin( self.angle )}
+		end
 	end
 
 	local x1, y1, x2, y2 = self.world:GetBounds()

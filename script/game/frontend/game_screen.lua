@@ -84,6 +84,16 @@ function GameScreen:RenderScreen()
     ui.ProgressBar( 0.2, 200, 14 )
     ui.PopStyleColor()
 
+    if self.game_world.player:IsSpawned() then
+	    local t = self.game_world.player.body:getContacts()
+	    for i, c in ipairs( t ) do
+	    	local i, j = c:getFixtures()
+	    	i, j = i:getBody(), j:getBody()
+
+	    	ui.Text( loc.format( "Contact: {1}, {2}, {3}:{4}", i:getUserData(), j:getUserData(), c:getNormal() ))
+	    end
+	end
+
 	ui.Dummy( love.graphics.getWidth(), 0 )
 
 	ui.End()
