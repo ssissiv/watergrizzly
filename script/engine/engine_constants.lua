@@ -17,3 +17,10 @@ CAMERA_BOUNDS_TOP= 500
 
 PAUSE_TYPE = MakeEnum{ "DEBUG" }
 
+-- Engine world events
+
+WORLD_EVENT = MakeEnum{
+	"LOG",
+	"INPUT"
+}
+

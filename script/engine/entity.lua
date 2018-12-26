@@ -13,7 +13,9 @@ function Entity:OnSpawnEntity( world, parent )
 
 	if parent then
 		assert( is_instance( parent, Engine.Entity ))
+		assert( parent:IsSpawned() )
 		assert( self.parent == nil )
+
 		self.parent = parent
 		if parent.children == nil then
 			parent.children = {}
@@ -23,6 +25,10 @@ function Entity:OnSpawnEntity( world, parent )
 end
 
 function Entity:OnDespawnEntity()
+	while self.children and #self.children > 0 do
+		self.world:DespawnEntity( self.children[ #self.children ] )
+	end
+
 	if self.parent then
 		table.arrayremove( self.parent.children, self )
 		if #self.parent.children == 0 then

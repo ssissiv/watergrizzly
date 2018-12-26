@@ -17,6 +17,10 @@ function Star:OnSpawnEntity( world, parent )
 	self.fixture:setMask( PHYS_GROUP_OBJECT )
 end
 
+function Star:GetPosition()
+	return 0, 0
+end
+
 function Star:OnCollide( other, contact )
 	local x1, y1 = contact:getPositions()
 	self.world:AddExplosion( x1, y1 )

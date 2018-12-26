@@ -34,6 +34,12 @@ function World:ResetWorld()
 	self.physics = nil
 end
 
+function World:GetPlayer()
+	if self.player and self.player:IsSpawned() then
+		return self.player
+	end
+end
+
 function World:OnUpdateWorld( dt )
 	self.physics:update( dt )
 
@@ -82,13 +88,26 @@ end
 -- Input
 
 function World:MousePressed( mx, my, btn )
+	local input = { what = Input.MOUSE_DOWN, btn = btn, mx = mx, my = my, handled = false }
+	self:BroadcastEvent( WORLD_EVENT.INPUT, input )
+	return input.handled
 end
 
 function World:MouseReleased( mx, my, btn )
+	local input = { what = Input.MOUSE_UP, btn = btn, mx = mx, my = my, handled = false }
+	self:BroadcastEvent( WORLD_EVENT.INPUT, input )
+	return input.handled
 end
 
 function World:KeyPressed( key )
+	local input = { what = Input.KEY_DOWN, key = key, handled = false }
+	self:BroadcastEvent( WORLD_EVENT.INPUT, input )
+	return input.handled
 end
 
 function World:KeyReleased( key )
+	local input = { what = Input.KEY_UP, key = key, handled = false }
+	self:BroadcastEvent( WORLD_EVENT.INPUT, input )
+	return input.handled
 end
+

@@ -22,10 +22,6 @@ function BaseWorld:ListenForEvent( event, listener, fn, priority )
 	self.events:ListenForEvent( event, listener, fn, priority )
 end
 
-function BaseWorld:ListenForEvent( event, listener, fn, priority )
-	self.events:ListenForEvent( event, listener, fn, priority )
-end
-
 function BaseWorld:RemoveListener( listener )
 	self.events:RemoveListener( listener )
 end
@@ -35,8 +31,8 @@ function BaseWorld:BroadcastEvent( event_name, ... )
 end
 
 function BaseWorld:OnWorldEvent( event_name, ... )
-	if event_name == BaseWorld_EVENT.LOG then
-		print( "BaseWorld_EVENT.LOG:", ... )
+	if event_name == WORLD_EVENT.LOG then
+		print( "WORLD_EVENT.LOG:", ... )
 	end
 end
 
@@ -160,6 +156,7 @@ end
 function BaseWorld:DespawnEntity( entity )
 	entity:OnDespawnEntity( self )
 	table.arrayremove( self.entities, entity )
+	self:RemoveListener( entity )
 end
 
 

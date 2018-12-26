@@ -65,7 +65,18 @@ function GameScreen:RenderScreen()
     	ui.EndMenuBar()
     end
 
+    local player = self.game_world:GetPlayer()
+    if player then
+    	self:RenderHUD( player )
+    end
 
+	ui.Dummy( love.graphics.getWidth(), 0 )
+
+	ui.End()
+end
+
+function GameScreen:RenderHUD( entity )
+	local ui = imgui
     ui.TextColored( 0, 0.9, 0, 1, "Energy:" )
     ui.SameLine( 100 )
     ui.PushStyleColor( "ImGuiCol_PlotHistogram", 0, 0.9, 0, 1 )
@@ -84,19 +95,13 @@ function GameScreen:RenderScreen()
     ui.ProgressBar( 0.2, 200, 14 )
     ui.PopStyleColor()
 
-    if self.game_world.player:IsSpawned() then
-	    local t = self.game_world.player.body:getContacts()
-	    for i, c in ipairs( t ) do
-	    	local i, j = c:getFixtures()
-	    	i, j = i:getBody(), j:getBody()
-
-	    	ui.Text( loc.format( "Contact: {1}, {2}, {3}:{4}", i:getUserData(), j:getUserData(), c:getNormal() ))
-	    end
-	end
-
-	ui.Dummy( love.graphics.getWidth(), 0 )
-
-	ui.End()
+    if entity.scanner and #entity.scanner:GetTargets() > 0 then
+    	ui.Text( "Targets:" )
+    	for i, target in entity.scanner:Targets() do
+			ui.SameLine( 0, 20 )
+    		ui.Text( loc.format( "[{1}]", target ))
+    	end
+    end
 end
 
 function GameScreen:Pan( px, py )
@@ -167,7 +172,6 @@ function GameScreen:KeyPressed( key )
 		self.camera:ZoomToLevel( self.zoom_level, mx, my )
 
 	elseif key == "escape" then
-
 	end
 
 	return self.game_world:KeyPressed( key )

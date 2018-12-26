@@ -4,6 +4,11 @@ Input.LEFT_MOUSE = 1
 Input.RIGHT_MOUSE = 2
 Input.MIDDLE_MOUSE = 3
 
+Input.KEY_DOWN = "key_down"
+Input.KEY_UP = "key_up"
+Input.MOUSE_DOWN = "mouse_down"
+Input.MOUSE_UP = "mouse_up"
+
 function Input.IsPressed( key )
     return love.keyboard.isDown( key )
 end
