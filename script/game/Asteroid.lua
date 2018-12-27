@@ -40,7 +40,7 @@ function Asteroid:OnSpawnEntity( world, parent )
 	self.storage = world:SpawnEntity( Component.Storage:new(), self )
 	self.storage:AddItem( ITEM.ORE, math.random( 3, 10 ))
 
-	self.body = love.physics.newBody( world.physics, 0, 0, "kinematic")
+	self.body = love.physics.newBody( world.physics, 0, 0, "dynamic")
 	self.body:setUserData( self )
 	self.shape = love.physics.newPolygonShape( table.unpack( self.verts ) )
 	self.fixture = love.physics.newFixture( self.body, self.shape, 1.0) -- Attach fixture to body and give it a density of 1.
@@ -49,13 +49,27 @@ function Asteroid:OnSpawnEntity( world, parent )
 
 	local x, y = math.cos( self.orbital_angle ) * self.orbital_radius, math.sin( self.orbital_angle ) * self.orbital_radius
 	self.body:setPosition( x, y )
+	self.body:setMass( 0.1 )
+	local nx, ny = Math.Normalize( y, -x )
+	self.body:setLinearVelocity( nx * 100, ny * 100 )
+
 end
 
 function Asteroid:OnCollide( other, contact )
-	local vx, vy = other.body:getLinearVelocity()
 	local nx, ny = contact:getNormal()
-	vx, vy = nx * vx, ny * vy
-	if Math.Length( vx, vy ) > 100 then
+
+	-- Other body contributes the component of their velocity aligned with the normal
+	local vx1, vy1 = other.body:getLinearVelocity()
+	local speed1 = Math.Length( vx1, vy1 )
+	local impact1 = Math.Dot( vx1 / speed1, vy1 / speed1, nx, ny ) * speed1
+
+	-- Ditto for our body, but with opposite sign (since the normal points away from us)
+	local vx2, vy2 = self.body:getLinearVelocity()
+	local speed2 = Math.Length( vx2, vy2 )
+	local impact2 = Math.Dot( vx2 / speed2, vy2 / speed2, nx, ny ) * speed2
+
+	local impact = impact2 - impact1
+	if impact > 100 then
 		self.world:DespawnEntity( other )
 		local x1, y1 = contact:getPositions()
 		self.world:AddExplosion( x1, y1 )
@@ -65,9 +79,14 @@ end
 function Asteroid:OnUpdateEntity( dt )
 	self.orbital_angle = self.orbital_angle + dt * self.orbital_velocity
 
-	local x, y = math.cos( self.orbital_angle ) * self.orbital_radius, math.sin( self.orbital_angle ) * self.orbital_radius
-	self.body:setPosition( x, y )
-    self.body:setLinearVelocity(0, 0)
+	-- local x, y = math.cos( self.orbital_angle ) * self.orbital_radius, math.sin( self.orbital_angle ) * self.orbital_radius
+	-- self.body:setPosition( x, y )
+ --    self.body:setLinearVelocity(0, 0)
+	local x, y = self:GetPosition()
+	local r = Math.Dist( 0, 0, x, y )
+	local force = 10000 * self.body:getMass() / r
+	-- local nx, ny = Math.Normalize( y, -x )
+	self.body:applyForce( -x * force * dt, -y * force * dt )
 end
 
 function Asteroid:OnRenderEntity()
