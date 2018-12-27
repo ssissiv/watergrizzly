@@ -6,7 +6,6 @@ local Ship = class( "Ship", Engine.Entity )
 
 function Ship:init()
 	Ship._base.init( self )
-	self.x, self.y = 300, 300
 	self.fwd = { 1, 0 }
 	self.angle = 0
 	self.xvel, self.yvel = 0, 0
@@ -48,7 +47,12 @@ function Ship:OnDespawnEntity()
 end
 
 function Ship:GetPosition()
-	return self.x, self.y
+	return self.body:getPosition()
+end
+
+function Ship:GetAABB()
+	local x, y = self:GetPosition()
+	return x - 10, y - 10, x + 10, y + 10
 end
 
 function Ship:OnUpdateEntity( dt )

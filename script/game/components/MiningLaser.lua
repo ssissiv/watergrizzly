@@ -1,5 +1,6 @@
 local MINING_ENERGY = 5.0
 local MINING_PERIOD = 3.0
+local MINING_MAX_DISTANCE = 200
 
 -------------------------------------------------------------
 
@@ -34,6 +35,9 @@ function MiningLaser:CanMine( target )
 	end
 	if not is_instance( target, Asteroid ) then
 		return false, "Cannot mine this target"
+	end
+	if self.parent:GetDistance( target ) >= MINING_MAX_DISTANCE then
+		return false, "Too far"
 	end
 	if target.storage:GetAmount( ITEM.ORE ) <= 0 then
 		return false, "No ore available"

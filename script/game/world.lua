@@ -27,6 +27,9 @@ function World:init()
 
 	self.player = Ship:new()
 	self:SpawnEntity( self.player )
+
+	self.station = SpaceStation:new()
+	self:SpawnEntity( self.station )
 end
 
 function World:ResetWorld()

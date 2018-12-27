@@ -30,7 +30,10 @@ end
 function GameScreen:UpdateScreen( dt )
 	self.game_world:UpdateWorld( dt )
 
-	self:CenterCamera( self.game_world.player:GetPosition())
+	local player = self.game_world:GetPlayer()
+	if player then
+		self:CenterCamera( player:GetPosition())
+	end
 	self.camera:UpdateCamera( dt )
 end
 

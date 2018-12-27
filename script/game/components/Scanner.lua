@@ -132,41 +132,42 @@ function Scanner:OnRenderEntity()
 		if target.acquire_time then
 			local txt = loc.format( "LOCKED\n{2} meters", target.scan_time, math.floor( dist ))
 			if target.loss_time then
-				self:RenderTargetReticule( x, y, txt )
+				self:RenderTargetReticule( target.entity, txt )
 			else
-				self:RenderLockedReticule( x, y, txt, ent )
+				self:RenderLockedReticule( target.entity, txt )
 			end
 		else
 			local txt = loc.format( "{1%.1f}\n{2} meters", target.scan_time, math.floor( dist ))
-			self:RenderTargetReticule( x, y, txt )
+			self:RenderTargetReticule( target.entity, txt )
 		end
 	end
 end
 
-function Scanner:RenderLockedReticule( x, y, txt, entity )
+function Scanner:RenderLockedReticule( entity, txt )
 	if entity == self.primary_target then
 		love.graphics.setColor( 1, 1, 1 )
 	else
 		love.graphics.setColor( 0.6, 0.6, 0.6 )
 	end
 
-	local size = 55
-	love.graphics.rectangle( "line", x - size/2, y - size/2, size, size )
+	local x1, y1, x2, y2 = entity:GetAABB()
+	love.graphics.rectangle( "line", x1 - 2, y1 - 2, x2 - x1 + 2, y2 - y1 + 2 )
+	love.graphics.rectangle( "line", x1 - 4, y1 - 4, x2 - x1 + 4, y2 - y1 + 4 )
 
-	love.graphics.print( txt, x + size/2, y + size/2 )
+	love.graphics.print( txt, x1, y2 + 4 )
 end
 
-function Scanner:RenderTargetReticule( x, y, txt )
+function Scanner:RenderTargetReticule( entity, txt )
 	local alpha = math.sin( self.world:GetElapsedTime() * 5.0 ) * 0.5 + 0.5
 	love.graphics.setColor( 1, 0, 0, alpha )
-	local size = 50
-	love.graphics.rectangle( "line", x - size/2, y - size/2, size, size )
-	size = 55
-	love.graphics.rectangle( "line", x - size/2, y - size/2, size, size )
+
+	local x1, y1, x2, y2 = entity:GetAABB()
+	love.graphics.rectangle( "line", x1 - 2, y1 - 2, x2 - x1 + 2, y2 - y1 + 2 )
+	love.graphics.rectangle( "line", x1 - 4, y1 - 4, x2 - x1 + 4, y2 - y1 + 4 )
 
 	-- Label.
 	love.graphics.setColor( 1, 0.5, 0.5 )
-	love.graphics.print( txt, x + size/2, y + size/2 )
+	love.graphics.print( txt, x1, y2 + 4 )
 end
 
 

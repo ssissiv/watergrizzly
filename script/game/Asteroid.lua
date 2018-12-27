@@ -21,6 +21,19 @@ function Asteroid:GetPosition()
 	return self.body:getPosition()
 end
 
+function Asteroid:GetAABB()
+	local dx, dy = self:GetPosition()
+	local x1, y1, x2, y2 = math.huge, math.huge, -math.huge, -math.huge
+	for i = 1, #self.verts, 2 do
+		local x, y = self.verts[i], self.verts[i+1]
+		x1 = math.min( x, x1 )
+		x2 = math.max( x, x2 )
+		y1 = math.min( y, y1 )
+		y2 = math.max( y, y2 )
+	end
+	return x1 + dx, y1 + dy, x2 + dx, y2 + dy
+end
+
 function Asteroid:OnSpawnEntity( world, parent )
 	Asteroid._base.OnSpawnEntity( self, world, parent )
 
@@ -52,9 +65,9 @@ end
 function Asteroid:OnUpdateEntity( dt )
 	self.orbital_angle = self.orbital_angle + dt * self.orbital_velocity
 
-	-- local x, y = math.cos( self.orbital_angle ) * self.orbital_radius, math.sin( self.orbital_angle ) * self.orbital_radius
-	-- self.body:setPosition( x, y )
- --    self.body:setLinearVelocity(0, 0)
+	local x, y = math.cos( self.orbital_angle ) * self.orbital_radius, math.sin( self.orbital_angle ) * self.orbital_radius
+	self.body:setPosition( x, y )
+    self.body:setLinearVelocity(0, 0)
 end
 
 function Asteroid:OnRenderEntity()

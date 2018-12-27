@@ -21,6 +21,10 @@ function Star:GetPosition()
 	return 0, 0
 end
 
+function Star:GetAABB()
+	return -self.radius, -self.radius, self.radius, self.radius
+end
+
 function Star:OnCollide( other, contact )
 	local x1, y1 = contact:getPositions()
 	self.world:AddExplosion( x1, y1 )
