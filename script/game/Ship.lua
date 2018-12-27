@@ -1,3 +1,7 @@
+local THRUST_ENERGY = 2.0
+
+-------------------------------------------------
+
 local Ship = class( "Ship", Engine.Entity )
 
 function Ship:init()
@@ -25,6 +29,7 @@ function Ship:OnSpawnEntity( world, parent )
 	self.scanner = world:SpawnEntity( Component.Scanner:new(), self )
 	self.energy = world:SpawnEntity( Component.EnergyGenerator:new(), self )
 	self.mining_laser = world:SpawnEntity( Component.MiningLaser:new(), self )
+	self.storage = world:SpawnEntity( Component.Storage:new(), self )
 
 	self.body = love.physics.newBody( world.physics, 0, 0, "dynamic")
 	self.body:setUserData( self )
@@ -83,12 +88,14 @@ function Ship:UpdateControls( dt )
 	end
 
 	if self.is_thrusting then
-		if self.energy:ConsumeEnergy( self, 10 * dt ) then
+		if self.energy:ConsumeEnergy( self, THRUST_ENERGY * dt ) then
 			self.body:applyForce( self.fwd[1] * 1000 * dt , self.fwd[2] * 1000 * dt )
-
-			self.thrust_particles:moveTo( self.x - self.fwd[1] * 10, self.y - self.fwd[2] * 10 )
-			self.thrust_particles:setEmissionRate( 16 )
+		else
+			self.body:applyForce( self.fwd[1] * 100 * dt , self.fwd[2] * 100 * dt )
 		end
+
+		self.thrust_particles:moveTo( self.x - self.fwd[1] * 10, self.y - self.fwd[2] * 10 )
+		self.thrust_particles:setEmissionRate( 16 )
 	else
 		self.thrust_particles:setEmissionRate( 0 )
 	end

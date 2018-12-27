@@ -1,4 +1,5 @@
 local MINING_ENERGY = 5.0
+local MINING_PERIOD = 3.0
 
 -------------------------------------------------------------
 
@@ -28,11 +29,14 @@ function MiningLaser:OnInputEvent( event_name, input )
 end
 
 function MiningLaser:CanMine( target )
-	if not is_instance( target, Asteroid ) then
-		return false
-	end
 	if not target:IsSpawned() then
 		return false
+	end
+	if not is_instance( target, Asteroid ) then
+		return false, "Cannot mine this target"
+	end
+	if target.storage:GetAmount( ITEM.ORE ) <= 0 then
+		return false, "No ore available"
 	end
 	if not self.parent.scanner:IsTarget( target ) then
 		return false, "Not a target"
@@ -43,6 +47,7 @@ end
 function MiningLaser:ActivateMiningLaser( target )
 	self.target = target
 	self.particles = Particles.MiningEmitter()
+	self.time_left = MINING_PERIOD
 end
 
 function MiningLaser:DeactivateMiningLaser()
@@ -50,14 +55,33 @@ function MiningLaser:DeactivateMiningLaser()
 	self.particles = nil
 end
 
+function MiningLaser:UpdateMiningLaser( dt, target )
+	if not self:CanMine( target ) then
+		return false
+	end
+	if self.parent.energy and not self.parent.energy:ConsumeEnergy( self, MINING_ENERGY * dt ) then
+		return false
+	end
+
+	self.time_left = self.time_left - dt
+	if self.time_left <= 0 then
+		-- Cycle complete!
+		self.time_left = MINING_PERIOD
+
+		target.storage:TransferTo( self.parent.storage, ITEM.ORE, 1 )
+
+		return self:CanMine( target )
+	else
+		return true
+	end
+end
+
 function MiningLaser:OnUpdateEntity( dt )
 	if self.target then
-		if not self:CanMine( self.target ) then
+		if not self:UpdateMiningLaser( dt, self.target ) then
 			self:DeactivateMiningLaser()
 		end
-		if self.parent.energy and not self.parent.energy:ConsumeEnergy( self, MINING_ENERGY * dt ) then
-			self:DeactivateMiningLaser()
-		end
+
 		if self.particles then
 			self.particles:update( dt )
 		end

@@ -84,6 +84,16 @@ function GameScreen:RenderHUD( entity )
 	    ui.ProgressBar( entity.energy:GetPercent(), 200, 14 )
 	    ui.PopStyleColor()
 	end
+	if entity.storage then
+		local i = 1
+		for item, amount in entity.storage:Items() do
+			if i > 1 then
+				ui.SameLine( 0, 10 )
+			end
+			ui.Button( loc.format( "{1} ({2})", item, amount ))
+			i = i + 1
+		end
+	end
 
     -- ui.TextColored( 0, 0.8, 0.9, 1, "Shields:" )
     -- ui.SameLine( 100 )
@@ -98,10 +108,22 @@ function GameScreen:RenderHUD( entity )
     -- ui.PopStyleColor()
 
     if entity.scanner and #entity.scanner:GetTargets() > 0 then
+    	local primary_target = entity.scanner:GetPrimaryTarget()
     	ui.Text( "Targets:" )
     	for i, target in entity.scanner:Targets() do
 			ui.SameLine( 0, 20 )
-    		ui.Text( loc.format( "[{1}]", target ))
+			if target == primary_target then
+	    		ui.Text( loc.format( "[{1}]", target ))
+	    	else
+	    		ui.TextColored( 1, 0.5, 0.5, 1, loc.format( "[{1}]", target ))
+	    	end
+    	end
+    	if primary_target then
+    		if primary_target.storage then
+    			for id, amount in primary_target.storage:Items() do
+    				ui.Text( loc.format( "{1} : {2}", id, amount ))
+    			end
+    		end
     	end
     end
 end

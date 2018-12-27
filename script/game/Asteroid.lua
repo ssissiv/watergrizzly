@@ -24,6 +24,9 @@ end
 function Asteroid:OnSpawnEntity( world, parent )
 	Asteroid._base.OnSpawnEntity( self, world, parent )
 
+	self.storage = world:SpawnEntity( Component.Storage:new(), self )
+	self.storage:AddItem( ITEM.ORE, math.random( 3, 10 ))
+
 	self.body = love.physics.newBody( world.physics, 0, 0, "kinematic")
 	self.body:setUserData( self )
 	self.shape = love.physics.newPolygonShape( table.unpack( self.verts ) )
