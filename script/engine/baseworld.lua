@@ -7,11 +7,14 @@ function BaseWorld:init()
 	self.next_id = 1
 	self.pause = {}
 
+	self.queued_events = {}
 	self.events = EventSystem()
 	self.events:ListenForAny( self, self.OnWorldEvent )
 
 	self.scheduled_events = {}
-	self.entities = {}
+
+	self.tmp_entities = {} -- Working table.
+	self.entities = {} -- All spawned entities.
 end
 
 function BaseWorld:ListenForAny( listener, fn, priority )
@@ -24,6 +27,17 @@ end
 
 function BaseWorld:RemoveListener( listener )
 	self.events:RemoveListener( listener )
+end
+
+function BaseWorld:QueueEvent( event_name, ... )
+	table.insert( self.queued_events, { event_name, ... })
+end
+
+function BaseWorld:BroadcastQueuedEvents()
+	while #self.queued_events > 0 do
+		local t = table.remove( self.queued_events, 1 )
+		self:BroadcastEvent( table.unpack( t ))
+	end
 end
 
 function BaseWorld:BroadcastEvent( event_name, ... )
@@ -75,6 +89,7 @@ function BaseWorld:GetElapsedTime()
 end
 
 function BaseWorld:TogglePause( pause_type )
+	pause_type = pause_type or PAUSE_TYPE.DEBUG
 	assert( IsEnum( pause_type, PAUSE_TYPE ))
 	local idx = table.arrayfind( self.pause, pause_type )
 	if idx then
@@ -125,20 +140,28 @@ function BaseWorld:UpdateWorld( dt )
 
 	self.elapsed_time = self.elapsed_time + (dt * self.world_speed)
 
-	for i = #self.entities, 1, -1 do
-		local ent = self.entities[i]
-		if ent.parent == nil then
+	self:CheckScheduledEvents()
+
+	table.arraycopy( self.entities, self.tmp_entities )
+
+	for i = #self.tmp_entities, 1, -1 do
+		local ent = self.tmp_entities[i]
+		if ent:IsSpawned() and ent.parent == nil then
 			ent:UpdateEntity( dt )
 		end
 	end
 
 	self:OnUpdateWorld( dt )
+
+	self:BroadcastQueuedEvents()
 end
 
 function BaseWorld:RenderWorld( camera )
-	for i = 1, #self.entities do
-		local ent = self.entities[i]
-		if ent.parent == nil then
+	table.arraycopy( self.entities, self.tmp_entities )
+
+	for i = 1, #self.tmp_entities do
+		local ent = self.tmp_entities[i]
+		if ent:IsSpawned() and ent.parent == nil then
 			ent:RenderEntity( camera )
 		end
 	end

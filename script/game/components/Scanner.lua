@@ -75,7 +75,6 @@ function Scanner:SetPrimaryTarget( ent )
 end
 
 function Scanner:LoseTarget( ent )
-	print( "LostTarget:", ent )
 	self.scan_entities[ ent ] = nil
 
 	if self.targets then
@@ -99,6 +98,11 @@ function Scanner:IsTarget( target )
 end
 
 function Scanner:UpdateTarget( target, dt )
+	if not target.entity:IsSpawned() then
+		self:LoseTarget( target.entity )
+		return
+	end
+
 	local x, y = target.entity:GetPosition()
 	local x0, y0 = self.parent:GetPosition()
 	local now = self.world:GetElapsedTime()
@@ -127,18 +131,22 @@ function Scanner:OnRenderEntity()
 	local x0, y0 = self.parent:GetPosition()
 
 	for ent, target in pairs( self.scan_entities ) do
-		local x, y = target.entity:GetPosition()
-		local dist = Math.Dist( x0, y0, x, y )
-		if target.acquire_time then
-			local txt = loc.format( "LOCKED\n{2} meters", target.scan_time, math.floor( dist ))
-			if target.loss_time then
-				self:RenderTargetReticule( target.entity, txt )
+		if ent:IsSpawned() then
+			local x, y = target.entity:GetPosition()
+			local dist = Math.Dist( x0, y0, x, y )
+			if target.acquire_time then
+				local txt = loc.format( "LOCKED\n{2} meters", target.scan_time, math.floor( dist ))
+				if target.loss_time then
+					self:RenderTargetReticule( target.entity, txt )
+				else
+					self:RenderLockedReticule( target.entity, txt )
+				end
 			else
-				self:RenderLockedReticule( target.entity, txt )
+				local txt = loc.format( "{1%.1f}\n{2} meters", target.scan_time, math.floor( dist ))
+				self:RenderTargetReticule( target.entity, txt )
 			end
 		else
-			local txt = loc.format( "{1%.1f}\n{2} meters", target.scan_time, math.floor( dist ))
-			self:RenderTargetReticule( target.entity, txt )
+			print( "Dead scanned target", ent, ent:IsSpawned() )
 		end
 	end
 end

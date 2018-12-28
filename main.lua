@@ -31,6 +31,9 @@ require "game/Assets"
 require "game/world"
 require "game/WorldExt"
 require "game/EntityExt"
+
+require "game/Combat"
+
 require "game/components/EnergyGenerator"
 require "game/components/Scanner"
 require "game/components/MiningLaser"

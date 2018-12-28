@@ -59,6 +59,13 @@ function Ship:OnUpdateEntity( dt )
 	self:UpdateControls( dt )
 end
 
+function Ship:OnDamage( damage, damage_type )	
+	if damage > 100 then
+		self.world:AddExplosion( self:GetPosition() )
+		self.world:DespawnEntity( self )
+	end
+end
+
 function Ship:OnInputEvent( event_name, input )
 	if input.what == Input.KEY_DOWN then
 		if input.key == "space" then

@@ -2,7 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"print( t.shape:computeMass( 1 ) )",
 			"print(t.body)",
 			"print(t.body:getMass())",
 			"print(player.body:getMass())",
@@ -33,7 +32,8 @@ return {
 			"world:GetEntitiesInRange( 483, 30, 100, t ); DBG(t)",
 			"print(t:GetPosition())",
 			"print(t.body)",
-			"print(t.body:getLinearVelocity())"
+			"print(t.body:getLinearVelocity())",
+			"DBG(WORLD_EVENT)"
 		}
 	},
 	ROOT = {

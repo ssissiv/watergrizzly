@@ -31,6 +31,12 @@ function table.shallowcopy(orig, dest)
     return copy
 end
 
+function table.arraycopy( t, dest )
+    for i = 1, math.max( #t, #dest ) do
+        dest[i] = t[i]
+    end
+end
+
 function table.transform( t, fn )
     local j, n = 1, #t
     for i = 1, #t do

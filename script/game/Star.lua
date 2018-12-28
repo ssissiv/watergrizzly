@@ -14,7 +14,7 @@ function Star:OnSpawnEntity( world, parent )
 	self.shape = love.physics.newCircleShape( self.radius )
 	self.fixture = love.physics.newFixture( self.body, self.shape) -- Attach fixture to body and give it a density of 1.
 	self.fixture:setCategory( PHYS_GROUP_OBJECT )
-	self.fixture:setMask( PHYS_GROUP_OBJECT )
+	-- self.fixture:setMask( PHYS_GROUP_OBJECT )
 end
 
 function Star:GetPosition()
@@ -23,12 +23,6 @@ end
 
 function Star:GetAABB()
 	return -self.radius, -self.radius, self.radius, self.radius
-end
-
-function Star:OnCollide( other, contact )
-	local x1, y1 = contact:getPositions()
-	self.world:AddExplosion( x1, y1 )
-	self.world:DespawnEntity( other )
 end
 
 function Star:RenderEntity()

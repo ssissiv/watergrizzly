@@ -22,3 +22,7 @@ function Math.Dot( x1, y1, x2, y2 )
 	return x1 * x2 + y1 * y2
 end
 
+function Math.RandomDirection()
+    local angle = math.random() * 2 * math.pi
+    return math.cos( angle ), math.sin( angle )
+end

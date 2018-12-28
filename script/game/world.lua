@@ -2,12 +2,9 @@ local World = class( "World", Engine.World )
 
 local function beginContact( fixture1, fixture2, contact )
 	local ent1, ent2 = fixture1:getBody():getUserData(), fixture2:getBody():getUserData()
-	if ent1.OnCollide then
-		ent1:OnCollide( ent2, contact )
-	end
-	if ent2.OnCollide then
-		ent2:OnCollide( ent1, contact )
-	end
+
+	local damage = Combat.CalculateDamageFromImpact( contact )
+	ent1.world:QueueEvent( WORLD_EVENT.COLLISION, ent1, ent2, damage )
 end
 
 local function endContact( fixture1, fixture2, contact )
@@ -41,6 +38,20 @@ function World:GetPlayer()
 	if self.player and self.player:IsSpawned() then
 		return self.player
 	end
+end
+
+function World:OnWorldEvent( event_name, ... )
+	if event_name == WORLD_EVENT.COLLISION then
+		local ent1, ent2, damage = ...
+		if ent1.OnDamage then
+			ent1:OnDamage( damage, DAMAGE_TYPE.KINETIC )
+		end
+		if ent2.OnDamage then
+			ent2:OnDamage( damage, DAMAGE_TYPE.KINETIC )
+		end
+	end
+
+	World._base.OnWorldEvent( self, event_name, ... )
 end
 
 function World:OnUpdateWorld( dt )
