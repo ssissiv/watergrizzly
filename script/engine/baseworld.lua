@@ -165,8 +165,6 @@ function BaseWorld:RenderWorld( camera )
 			ent:RenderEntity( camera )
 		end
 	end
-
-	self:OnRenderWorld( camera )
 end
 
 function BaseWorld:SpawnEntity( entity, parent )

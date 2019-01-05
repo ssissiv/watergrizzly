@@ -48,7 +48,7 @@ end
 
 function GameScreen:RenderScreen()
     self.camera:PushCamera()
-    self.game_world:RenderWorld()
+    self.game_world:RenderWorld( self.camera )
     self.camera:PopCamera()
 
 	local ui = imgui
