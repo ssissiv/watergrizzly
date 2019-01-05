@@ -74,7 +74,15 @@ function DebugRoot:RenderPanel( ui, panel, dbg )
         ui.TreePop()
     end
 
-    if ui.TreeNodeEx( "Tools", { "DefaultOpen" } ) then
+    if ui.TreeNodeEx( "Textures", { "DefaultOpen" } ) then
+        for k, tex in pairs( Assets.IMGS ) do
+            if ui.TreeNode( k ) then
+                local w, h = tex:getWidth(), tex:getHeight()
+                ui.Text( w, h )
+                ui.Image( tex, w, h )
+                ui.TreePop()
+            end
+        end
         ui.TreePop()
     end
 end
