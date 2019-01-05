@@ -99,8 +99,12 @@ function BaseWorld:TogglePause( pause_type )
 	end
 end
 
-function BaseWorld:IsPaused()
-	return #self.pause > 0 or self:IsGameOver() 
+function BaseWorld:IsPaused( pause_type )
+	if pause_type then
+		return table.arraycontains( pause_type )
+	else
+		return #self.pause > 0 or self:IsGameOver()
+	end
 end
 
 function BaseWorld:GetWorldSpeed()

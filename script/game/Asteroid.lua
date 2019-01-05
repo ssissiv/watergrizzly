@@ -68,7 +68,10 @@ function Asteroid:OnDespawnEntity()
 end
 
 function Asteroid:OnDamage( damage, damage_type )
-	assert( self:IsSpawned() )
+	if not self:IsSpawned() then
+		return
+	end
+	
 	if damage > 100 then
 		local x1, y1 = self:GetPosition()
 

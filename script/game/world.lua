@@ -15,12 +15,8 @@ function World:init()
 
 	self.particles = {}
 
-	Shaders.nebula:send( "density", 0.15 )
-	Shaders.nebula:send( "falloff", 4.0 )
-	Shaders.nebula:send( "scale", 0.5 )
-	Shaders.nebula:send( "offset", { math.random() * 100, math.random() * 100 } )
-	Shaders.nebula:send( "tint", { math.random(), math.random(), math.random() } )
-
+	self.nebula = Render.CreateNebula()
+	
 	-- love.physics.setMeter(64) --the height of a meter our worlds will be 64px
 	self.physics = love.physics.newWorld( 0, 0, true )
 	self.physics:setCallbacks( beginContact, endContact )
@@ -73,11 +69,14 @@ function World:OnUpdateWorld( dt )
 end
 
 function World:RenderWorld( camera )
-	love.graphics.setShader( Shaders.nebula )
 	local x1, y1 = camera:ScreenToWorld( 0, 0 )
 	local x2, y2 = camera:ScreenToWorld( love.graphics.getWidth(), love.graphics.getHeight() )
-	love.graphics.rectangle( "fill", x1, y1, x2 - x1, y2 - y1 )
-	love.graphics.setShader()
+	local cx, cy = (x1 + x2)/2, (y1 + y2)/2
+	local nw, nh = self.nebula:getWidth(), self.nebula:getHeight()
+	-- local dx = x1 - (cx - 1024)
+	-- local k = math.log( math.abs(cx) ) * (cx >= 0 and 1.0 or -1.0)
+	-- local p = k / (1 + math.abs(k))
+	love.graphics.draw( self.nebula, cx - 1024, cy - 1024, 0, 2048 / nw, 2048 / nh )
 
 	World._base.RenderWorld( self, camera )
 	
