@@ -30,10 +30,13 @@ end
 function GameScreen:UpdateScreen( dt )
 	self.game_world:UpdateWorld( dt )
 
-	local player = self.game_world:GetPlayer()
-	if player then
-		self:CenterCamera( player:GetPosition())
+	if not self.world:IsPaused() then
+		local player = self.game_world:GetPlayer()
+		if player then
+			self:CenterCamera( player:GetPosition())
+		end
 	end
+
 	self.camera:UpdateCamera( dt )
 end
 
@@ -154,11 +157,21 @@ function GameScreen:CenterCamera( wx, wy )
 end
 
 function GameScreen:MouseMoved( mx, my )
+	if self.is_panning then
+		local x1, y1 = self.camera:ScreenToWorld( mx, my )
+		local x0, y0 = self.camera:ScreenToWorld( self.pan_start_mx, self.pan_start_my )
+		self.camera:MoveTo( self.pan_start_x - (x1 - x0), self.pan_start_y - (y1 -y0) )
+		return true
+	end
+
 	return false
 end
 
 function GameScreen:MousePressed( mx, my, btn )
-	if btn == constants.buttons.MOUSE_LEFT then
+	if btn == constants.buttons.MOUSE_LEFT and self.world:IsPaused() then
+		self.is_panning = true
+		self.pan_start_x, self.pan_start_y = self.camera:GetPosition()
+		self.pan_start_mx, self.pan_start_my = love.mouse.getPosition()
 	end
 
 	return self.game_world:MousePressed( mx, my, btn )
@@ -166,6 +179,9 @@ end
 
 function GameScreen:MouseReleased( mx, my, btn )
 	if btn == constants.buttons.MOUSE_LEFT then
+		if self.is_panning then
+			self.is_panning = nil
+		end
 	end
 
 	return self.game_world:MouseReleased( mx, my, btn )
@@ -175,9 +191,7 @@ function GameScreen:KeyPressed( key )
 	local pan_delta = Input.IsShift() and 0.5 or 0.1
 
 	if key == "space" then
-		self.is_panning = true
-		self.pan_start_x, self.pan_start_y = self.camera:GetPosition()
-		self.pan_start_mx, self.pan_start_my = love.mouse.getPosition()
+		self.world:TogglePause( PAUSE_TYPE.GAME )
 	elseif key == "backspace" then
 		self:PanTo( 0, 0 )
 	elseif key == "left" or key == "a" then
@@ -205,10 +219,6 @@ function GameScreen:KeyPressed( key )
 end
 
 function GameScreen:KeyReleased( key )
-	if key == "space" and self.is_panning then
-		self.is_panning = nil
-	end
-
 	return self.game_world:KeyReleased( key )
 end
 

@@ -14,8 +14,6 @@ function World:init()
 	World._base.init( self )
 
 	self.particles = {}
-
-	self.nebula = Render.CreateNebula()
 	
 	-- love.physics.setMeter(64) --the height of a meter our worlds will be 64px
 	self.physics = love.physics.newWorld( 0, 0, true )
@@ -26,9 +24,6 @@ function World:init()
 
 	self.player = Ship:new()
 	self:SpawnEntity( self.player )
-
-	self.station = SpaceStation:new()
-	self:SpawnEntity( self.station )
 end
 
 function World:ResetWorld()
@@ -69,15 +64,6 @@ function World:OnUpdateWorld( dt )
 end
 
 function World:RenderWorld( camera )
-	local x1, y1 = camera:ScreenToWorld( 0, 0 )
-	local x2, y2 = camera:ScreenToWorld( love.graphics.getWidth(), love.graphics.getHeight() )
-	local cx, cy = (x1 + x2)/2, (y1 + y2)/2
-	local nw, nh = self.nebula:getWidth(), self.nebula:getHeight()
-	-- local dx = x1 - (cx - 1024)
-	-- local k = math.log( math.abs(cx) ) * (cx >= 0 and 1.0 or -1.0)
-	-- local p = k / (1 + math.abs(k))
-	love.graphics.draw( self.nebula, cx - 1024, cy - 1024, 0, 2048 / nw, 2048 / nh )
-
 	World._base.RenderWorld( self, camera )
 	
 	love.graphics.setColor( 1, 1, 1 )
@@ -85,11 +71,6 @@ function World:RenderWorld( camera )
 		love.graphics.draw( t.particles, t.x, t.y )
 	end
 end
-
-function World:GetBounds()
-	return -1000, -1000, 1000, 1000
-end
-
 
 function World:AddExplosion( x, y )
 	local ps = love.graphics.newParticleSystem( Assets.IMGS.PARTICLE, 64 )

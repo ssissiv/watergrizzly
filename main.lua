@@ -10,7 +10,7 @@ constants = require "constants"
 require "debug/debug_mgr"
 debug_menus = require "debug/debug_menus"
 loc = require "localization/locstring"
-Shaders = require "render/shader_defs"
+require "render/Shaders"
 
 require "camera"
 require "input"

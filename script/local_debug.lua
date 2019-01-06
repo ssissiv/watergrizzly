@@ -2,8 +2,6 @@ return {
 	CONSOLE = {
 		docked = true,
 		history = {
-			"DBG(world:GetEntitiesInRange( 483, 30, 100, {} ))",
-			"t = {}",
 			"DBG(world:GetEntitiesInRange( 483, 30, 100, t ))",
 			"world:GetEntitiesInRange( 483, 30, 100, t ); DBG(t)",
 			"print(t:GetPosition())",
@@ -33,7 +31,9 @@ return {
 			"print( world.nebula:getWidth() )",
 			"print( world.nebula:getWidth() / 2048)",
 			"print( love.graphics.getWidth() )",
-			"print( Math.Sigmoid( 1.24 ))"
+			"print( Math.Sigmoid( 1.24 ))",
+			"print( game.zoom_level)",
+			"DBG(world.entities)"
 		}
 	},
 	ROOT = {

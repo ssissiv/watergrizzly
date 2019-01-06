@@ -68,7 +68,7 @@ end
 
 function Ship:OnInputEvent( event_name, input )
 	if input.what == Input.KEY_DOWN then
-		if input.key == "space" then
+		if input.key == "down" then
 			self.body:setLinearDamping( 5 )
 
 		elseif input.key == "up" then
@@ -76,7 +76,7 @@ function Ship:OnInputEvent( event_name, input )
 		end
 
 	elseif input.what == Input.KEY_UP then
-		if input.key == "space" then
+		if input.key == "down" then
 			self.body:setLinearDamping( 0 )
 
 		elseif input.key == "up" then

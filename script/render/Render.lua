@@ -8,12 +8,12 @@ function Render.CreateNebula()
 
 	local tintr, tintg, tintb = math.random(), math.random(), math.random()
 
-	Shaders.nebula:send( "density", 0.10 + 0.1 * math.random() )
-	Shaders.nebula:send( "falloff", 3.0 + 2.0 * math.random() )
-	Shaders.nebula:send( "scale", math.random() + 0.5 )
-	Shaders.nebula:send( "offset", { math.random() * 100, math.random() * 100 } )
-	Shaders.nebula:send( "tint", { tintr, tintg, tintb } )
-	love.graphics.setShader( Shaders.nebula )
+	Shaders.Nebula:send( "density", 0.10 + 0.1 * math.random() )
+	Shaders.Nebula:send( "falloff", 3.0 + 2.0 * math.random() )
+	Shaders.Nebula:send( "scale", math.random() + 0.5 )
+	Shaders.Nebula:send( "offset", { math.random() * 100, math.random() * 100 } )
+	Shaders.Nebula:send( "tint", { tintr, tintg, tintb } )
+	love.graphics.setShader( Shaders.Nebula )
 	love.graphics.rectangle( "fill", 0, 0, width, height )
 	love.graphics.setShader()
 

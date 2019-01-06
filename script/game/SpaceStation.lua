@@ -19,9 +19,6 @@ function SpaceStation:OnSpawnEntity( world, parent )
 	self.shape = love.physics.newCircleShape( self.radius )
 	self.fixture = love.physics.newFixture( self.body, self.shape ) -- Attach fixture to body and give it a density of 1.
 	self.fixture:setCategory( PHYS_GROUP_OBJECT )
-
-	local x1, y1, x2, y2 = world:GetBounds()
-	self.body:setPosition( math.random( x1, x2 ), math.random( y1, y2 ))
 end
 
 function SpaceStation:OnDespawnEntity()
@@ -31,6 +28,10 @@ end
 
 function SpaceStation:GetPosition()
 	return self.body:getPosition()
+end
+
+function SpaceStation:SetPosition( x, y )
+	self.body:setPosition( x, y )
 end
 
 function SpaceStation:GetAABB()
