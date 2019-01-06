@@ -36,7 +36,6 @@ function Ship:OnSpawnEntity( world, parent )
 	self.fixture = love.physics.newFixture( self.body, self.shape ) -- Attach fixture to body and give it a density of 1.
 	self.fixture:setCategory( PHYS_GROUP_PLAYER )
 	self.body:setMass( 0.01 )
-	self.body:setPosition( 200, 200 )
 
 	world:ListenForEvent( WORLD_EVENT.INPUT, self, self.OnInputEvent )
 end
@@ -44,6 +43,10 @@ end
 function Ship:OnDespawnEntity()
 	Ship._base.OnDespawnEntity( self )
 	self.body:destroy()
+end
+
+function Ship:SetPosition( x, y )
+	self.body:setPosition( x, y )
 end
 
 function Ship:GetPosition()

@@ -19,11 +19,25 @@ function World:init()
 	self.physics = love.physics.newWorld( 0, 0, true )
 	self.physics:setCallbacks( beginContact, endContact )
 
-	self.system = SolarSystem:new()
-	self:SpawnEntity( self.system )
+	self.systems = {}
+	local GRID_SIZE = 10000
+	for xgrid = 1, 3 do
+		for ygrid = 1, 3 do
+			local x, y = GRID_SIZE * (xgrid-1), GRID_SIZE * (ygrid-1)
+			x = x + GRID_SIZE/2 + math.random( GRID_SIZE )/2
+			y = y + GRID_SIZE/2 + math.random( GRID_SIZE )/2
+
+			local system = SolarSystem:new()
+			system:SetPosition( x, y )
+			table.insert( self.systems, system )
+			self:SpawnEntity( system )
+		end
+	end
 
 	self.player = Ship:new()
 	self:SpawnEntity( self.player )
+	local x, y = self.systems[1]:GetPosition()
+	self.player:SetPosition( x + 200, y + 200 )
 end
 
 function World:ResetWorld()

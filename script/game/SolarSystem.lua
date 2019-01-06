@@ -1,23 +1,35 @@
 class( "SolarSystem", Engine.Entity )
 
+function SolarSystem:init()
+	SolarSystem._base.init( self )
+	self.x, self.y = 0, 0
+end
+
 function SolarSystem:OnSpawnEntity( world, parent )
 	SolarSystem._base.OnSpawnEntity( self, world, parent )
-
-	self.x, self.y = 0, 0
 
 	self.nebula = Render.CreateNebula()
 
 	self.star = self.world:SpawnEntity( Star:new(), self )
+	self.star:SetPosition( self:GetPosition() )
 
-	for i = 1, 10 do
+	for i = 1, 5 do
 		local asteroid = Asteroid:new()
 		self.world:SpawnEntity( asteroid, self )
-		asteroid:SetOrbitalRadius( math.random( 300, 1000 ))
+		asteroid:SetOrbitalRadius( self.star, math.random( 300, 1000 ))
 	end
 
 	local x1, y1, x2, y2 = self:GetAABB()
 	self.station = self.world:SpawnEntity( SpaceStation:new(), self )
 	self.station:SetPosition( math.random( x1, x2 ), math.random( y1, y2 ))
+end
+
+function SolarSystem:GetPosition()
+	return self.x, self.y
+end
+
+function SolarSystem:SetPosition( x, y )
+	self.x, self.y = x, y
 end
 
 function SolarSystem:GetAABB()

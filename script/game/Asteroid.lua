@@ -35,14 +35,17 @@ function Asteroid:GetAABB()
 	return x1 + dx, y1 + dy, x2 + dx, y2 + dy
 end
 
-function Asteroid:SetOrbitalRadius( orbital_radius )
+function Asteroid:SetOrbitalRadius( orbital_entity, orbital_radius )
+	self.orbital_entity = orbital_entity
 	self.orbital_radius = orbital_radius
 
 	if self.orbital_radius then
 		local orbital_angle = math.random() * 2 * math.pi
-		local x, y = math.cos( orbital_angle ) * self.orbital_radius, math.sin( orbital_angle ) * self.orbital_radius
-		self.body:setPosition( x, y )
-		local nx, ny = Math.Normalize( y, -x )
+		local x0, y0 = orbital_entity:GetPosition()
+		local x1 = x0 + math.cos( orbital_angle ) * self.orbital_radius
+		local y1 = y0 + math.sin( orbital_angle ) * self.orbital_radius
+		self.body:setPosition( x1, y1 )
+		local nx, ny = Math.Normalize( (y1 - y0), -(x1 - x0) )
 		self.body:setLinearVelocity( nx * 100, ny * 100 )
 	end
 end
@@ -95,11 +98,13 @@ end
 
 function Asteroid:OnUpdateEntity( dt )
 	if self.orbital_radius then
-		local x, y = self:GetPosition()
-		local r = Math.Dist( 0, 0, x, y )
+		local x0, y0 = self.orbital_entity:GetPosition()
+		local x1, y1 = self:GetPosition()
+		local r = Math.Dist( x0, y0, x1, y1 )
 		local force = 10000 * self.body:getMass() / r
 		-- local nx, ny = Math.Normalize( y, -x )
-		self.body:applyForce( -x * force * dt, -y * force * dt )
+		self.fx, self.fy = (x0 - x1) * force * dt, (y0 - y1) * force * dt 
+		self.body:applyForce( self.fx, self.fy )
 	end
 end
 
