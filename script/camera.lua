@@ -35,10 +35,12 @@ function Camera:ZoomToLevel( level, x, y )
 	if level == 0 then
 		self:ZoomTo( DEFAULT_ZOOM )
 	elseif level > 0 then
-		self:ZoomTo( DEFAULT_ZOOM * (level/5 + 1) )
+		self:ZoomTo( DEFAULT_ZOOM * (level + 1) )
 	elseif level < 0 then
 		self:ZoomTo( DEFAULT_ZOOM / math.abs(level/5 - 1) )
 	end
+
+	self.zoom_level = level
 
 	if x and y then
 		-- zoom to this point

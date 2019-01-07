@@ -193,7 +193,11 @@ function GameScreen:KeyPressed( key )
 	if key == "space" then
 		self.world:TogglePause( PAUSE_TYPE.GAME )
 	elseif key == "backspace" then
-		self:PanTo( 0, 0 )
+		local player = self.game_world:GetPlayer()
+		if player then
+			self.camera:ZoomToLevel( 0 )
+			self:CenterCamera( player:GetPosition())
+		end
 	elseif key == "left" or key == "a" then
 		self:Pan( -pan_delta, 0 )
 	elseif key == "right" or key == "d" then
@@ -203,14 +207,18 @@ function GameScreen:KeyPressed( key )
 	elseif key == "down" or key == "s" then
 		self:Pan( 0, pan_delta )
 	elseif key == "=" then
-		self.zoom_level = clamp( (self.zoom_level + 1), MIN_ZOOM, MAX_ZOOM )
-		local mx, my = love.mouse.getPosition()
-		self.camera:ZoomToLevel( self.zoom_level, mx, my )
+		if self.world:IsPaused() then
+			self.zoom_level = clamp( (self.zoom_level + 1), MIN_ZOOM, MAX_ZOOM )
+			local mx, my = love.mouse.getPosition()
+			self.camera:ZoomToLevel( self.zoom_level, mx, my )
+		end
 
 	elseif key == "-" then
-		self.zoom_level = clamp( (self.zoom_level - 1), MIN_ZOOM, MAX_ZOOM )
-		local mx, my = love.mouse.getPosition()
-		self.camera:ZoomToLevel( self.zoom_level, mx, my )
+		if self.world:IsPaused() then
+			self.zoom_level = clamp( (self.zoom_level - 1), MIN_ZOOM, MAX_ZOOM )
+			local mx, my = love.mouse.getPosition()
+			self.camera:ZoomToLevel( self.zoom_level, mx, my )
+		end
 
 	elseif key == "escape" then
 	end
@@ -223,9 +231,11 @@ function GameScreen:KeyReleased( key )
 end
 
 function GameScreen:WheelMoved( dx, dy )
-	local mx, my = love.mouse.getPosition()
-	self.zoom_level = clamp( (self.zoom_level + dy/5), MIN_ZOOM, MAX_ZOOM )
-	self.camera:ZoomToLevel( self.zoom_level, mx, my )
+	if self.world:IsPaused() then
+		local mx, my = love.mouse.getPosition()
+		self.zoom_level = clamp( (self.zoom_level + dy/5), MIN_ZOOM, MAX_ZOOM )
+		self.camera:ZoomToLevel( self.zoom_level, mx, my )
+	end
 end
 
 return GameScreen
